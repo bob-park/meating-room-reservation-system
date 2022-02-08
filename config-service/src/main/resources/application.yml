@@ -1,0 +1,41 @@
+# server
+server:
+  port: 8888
+
+# spring
+spring:
+  application:
+    name: config-service
+  ## Local file system
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        ## Local file system
+        native:
+          search-locations:
+            - file:${config-path}
+
+# eureka
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+
+## management
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+
+## logging
+logging:
+  level:
+    web: debug
