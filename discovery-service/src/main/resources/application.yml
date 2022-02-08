@@ -1,0 +1,24 @@
+# server
+server:
+  port: 8761
+
+# spring
+spring:
+  application:
+    name: discovery-service
+
+# eureka
+eureka:
+  server:
+    response-cache-update-interval-ms: 5000
+    eviction-interval-timer-in-ms: 10000
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+## logging
+logging:
+  level:
+    root: info
+    com:
+      m2rs: debug
