@@ -6,3 +6,6 @@ pluginManagement {
 
 rootProject.name = 'meating-room-reservation-system'
 
+// modules
+include 'discovery-service'
+
