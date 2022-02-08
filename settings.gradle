@@ -8,4 +8,5 @@ rootProject.name = 'meating-room-reservation-system'
 
 // modules
 include 'discovery-service'
+include 'config-service'
 
