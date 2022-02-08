@@ -21,8 +21,8 @@ buildscript {
 
 allprojects {
     ext {
-        springCloudVersion = '3.0.3'
-        springCloudNetflixVersion = '3.0.3'
+        springCloudVersion = '3.0.4'
+        springCloudNetflixVersion = '3.0.4'
     }
 
 }
@@ -39,7 +39,7 @@ subprojects {
     }
 
     ext {
-        set('springCloudVersion', "2020.0.3")
+        set('springCloudVersion', "2021.0.0")
     }
 
     dependencies {
