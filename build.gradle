@@ -61,3 +61,9 @@ subprojects {
         }
     }
 }
+
+project(':m2rs-user-service') {
+    dependencies {
+        implementation project(':m2rs-core')
+    }
+}

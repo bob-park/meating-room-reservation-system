@@ -7,6 +7,9 @@ pluginManagement {
 rootProject.name = 'meating-room-reservation-system'
 
 /*  modules */
+// core
+include 'm2rs-core'
+
 // discovery
 include 'm2rs-discovery-service'
 
@@ -15,4 +18,6 @@ include 'm2rs-config-service'
 
 // user
 include 'm2rs-user-service'
+
+
 
