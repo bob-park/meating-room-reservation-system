@@ -46,8 +46,13 @@ subprojects {
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         implementation 'org.springframework.boot:spring-boot-starter-test'
-
         implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+        // guava
+        implementation 'com.google.guava:guava:31.0.1-jre'
+
+        // apache commons
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
 
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
