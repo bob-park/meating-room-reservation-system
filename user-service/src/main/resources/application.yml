@@ -1,0 +1,46 @@
+# server
+server:
+  port: 0 # random port 사용 - instance 가 여러개라도 eureka dashboard 에 단일로 표기됨
+
+## management
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - refresh
+          - health
+          - beans
+          - busrefresh
+          - info
+          - metrics
+          - prometheus
+
+# spring
+spring:
+  application:
+    name: user-service
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+
+
+# eureka
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${eureka-server-url}
+
+
+logging:
+  level:
+    root: info
+    web: debug
+    com.m2rs: debug
