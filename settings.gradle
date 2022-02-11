@@ -16,6 +16,9 @@ include 'm2rs-discovery-service'
 // config server
 include 'm2rs-config-service'
 
+// api gateway
+include 'm2rs-api-gateway-service'
+
 // user
 include 'm2rs-user-service'
 
