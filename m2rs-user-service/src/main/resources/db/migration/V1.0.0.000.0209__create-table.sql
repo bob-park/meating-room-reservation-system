@@ -4,7 +4,7 @@ create table company
 (
     id                 bigint      not null primary key,
     name               varchar(20) not null,
-    logo               blob,
+    logo_path          text,
     created_date       datetime    not null default now(),
     last_modified_date datetime
 ) CHARSET = utf8mb4
