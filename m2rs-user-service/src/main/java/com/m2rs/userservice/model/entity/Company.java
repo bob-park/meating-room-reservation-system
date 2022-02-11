@@ -41,13 +41,16 @@ public class Company extends BaseTimeEntity {
     private Company(Long id, String name, InputStream logo) {
 
         checkArgument(isNotEmpty(name), "name must be provided.");
-        checkArgument(isNotEmpty(logo), "logo must be provided.");
 
         this.id = id;
         this.name = name;
 
         try {
-            this.logo = IOUtils.toByteArray(logo);
+
+            if (isNotEmpty(logo)) {
+                this.logo = IOUtils.toByteArray(logo);
+            }
+
         } catch (IOException e) {
             throw new ServiceRuntimeException(e.getMessage());
         }
