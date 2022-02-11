@@ -26,7 +26,6 @@ decorator:
     p6spy:
       enable-logging: true
 
-
 # eureka
 eureka:
   instance:
@@ -37,7 +36,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${eureka-server-url}
-
 
 logging:
   level:
