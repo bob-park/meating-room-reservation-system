@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,7 +66,14 @@ public class CompanyServiceImpl implements CompanyService {
             .findById(id.value())
             .orElseThrow(() -> new NotFoundException(id.getClass(), id.value()));
 
-        String logoDir = userProperties.getCompany().getLogoDir();
+        if (isNotEmpty(company.getLogoPath())) {
+            try {
+                removePrevLogo(company.getLogoPath());
+            } catch (IOException e) {
+                throw new ServiceRuntimeException(e.getMessage());
+            }
+
+        }
 
         String fileName = UUID.randomUUID().toString();
         String extension = FilenameUtils.getExtension(logoFile.getOriginalFilename());
@@ -80,11 +84,8 @@ public class CompanyServiceImpl implements CompanyService {
             + "."
             + extension;
 
-        log.debug("logo_path={}", logoPath);
-
         try {
-            FileUtils.copyInputStreamToFile(logoFile.getInputStream(),
-                new File(logoDir + File.separatorChar + logoPath));
+            writeLogo(logoFile.getInputStream(), logoPath);
         } catch (IOException e) {
             throw new ServiceRuntimeException(e.getMessage());
         }
@@ -99,6 +100,39 @@ public class CompanyServiceImpl implements CompanyService {
             .lastModifiedDate(company.getLastModifiedDate())
             .build();
 
+    }
+
+    private void removePrevLogo(String logoPath) throws IOException {
+
+        File logoFile = new File(getAbsolutePath(logoPath));
+
+        if (!logoFile.exists()) {
+            log.warn("No exist prev logo file.");
+            return;
+        }
+
+        FileUtils.forceDelete(logoFile);
+
+        log.debug("success deleted prev logo file.");
+    }
+
+    private void writeLogo(InputStream input, String logoPath) throws IOException {
+        FileUtils.copyInputStreamToFile(input,
+            new File(getAbsolutePath(logoPath)));
+
+        log.debug("success saved logo file.");
+
+    }
+
+    private String getAbsolutePath(String logoPath) {
+
+        String absolutePath = userProperties.getCompany().getLogoDir()
+            + File.separatorChar
+            + logoPath;
+
+        log.debug("absolute logo path : {}", absolutePath);
+
+        return absolutePath;
     }
 
 }
