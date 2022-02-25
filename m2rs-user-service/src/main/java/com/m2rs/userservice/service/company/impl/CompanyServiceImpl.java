@@ -6,23 +6,30 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
+import com.m2rs.core.commons.model.api.response.PageResponse;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.configure.user.properties.UserProperties;
 import com.m2rs.userservice.model.api.company.CompanyResponse;
 import com.m2rs.userservice.model.api.company.CreateCompanyRequest;
+import com.m2rs.userservice.model.api.company.SearchCompanyRequest;
 import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.repository.company.CompanyRepository;
+import com.m2rs.userservice.repository.company.query.SearchCompanyCondition;
 import com.m2rs.userservice.service.company.CompanyService;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -37,6 +44,29 @@ public class CompanyServiceImpl implements CompanyService {
     private final UserProperties userProperties;
 
     private final CompanyRepository companyRepository;
+
+    @Override
+    public PageResponse<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest,
+        Pageable pageable) {
+
+        SearchCompanyCondition condition = SearchCompanyCondition.builder()
+            .name(searchCompanyRequest.getName())
+            .build();
+
+        Page<Company> pageResult = companyRepository.search(condition, pageable);
+
+        List<CompanyResponse> contents =
+            pageResult.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return PageResponse.<CompanyResponse>builder()
+            .contents(contents)
+            .totalCount(pageResult.getTotalElements())
+            .lastPage(pageResult.getTotalPages())
+            .page(pageResult.getNumber() + 1L)
+            .build();
+    }
 
     @Transactional
     @Override
