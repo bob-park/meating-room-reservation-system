@@ -18,8 +18,9 @@ import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.configure.user.properties.UserProperties;
-import com.m2rs.userservice.model.api.company.CompanyDto;
-import com.m2rs.userservice.model.api.company.CreateCompany;
+import com.m2rs.userservice.model.api.company.CompanyResponse;
+import com.m2rs.userservice.model.api.company.CreateCompanyRequest;
+import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.repository.company.CompanyRepository;
 import com.m2rs.userservice.service.company.CompanyService;
@@ -39,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Transactional
     @Override
-    public CompanyDto createCompany(CreateCompany createCompany) {
+    public CompanyResponse createCompany(CreateCompanyRequest createCompany) {
 
         checkArgument(isNotEmpty(createCompany.getName()), "name must be provided.");
 
@@ -49,18 +50,12 @@ public class CompanyServiceImpl implements CompanyService {
 
         company = companyRepository.save(company);
 
-        return CompanyDto.builder()
-            .id(company.getId())
-            .name(company.getName())
-            .logoPath(company.getLogoPath())
-            .createdDate(company.getCreatedDate())
-            .lastModifiedDate(company.getLastModifiedDate())
-            .build();
+        return toResponse(company);
     }
 
     @Transactional
     @Override
-    public CompanyDto changeLogo(Id<Company, Long> id, MultipartFile logoFile) {
+    public CompanyResponse changeLogo(Id<Company, Long> id, MultipartFile logoFile) {
 
         Company company = companyRepository
             .findById(id.value())
@@ -92,14 +87,22 @@ public class CompanyServiceImpl implements CompanyService {
 
         company.addLogoPath(logoPath);
 
-        return CompanyDto.builder()
-            .id(company.getId())
-            .name(company.getName())
-            .logoPath(company.getLogoPath())
-            .createdDate(company.getCreatedDate())
-            .lastModifiedDate(company.getLastModifiedDate())
-            .build();
+        return toResponse(company);
 
+    }
+
+    @Transactional
+    @Override
+    public CompanyResponse updateCompany(Id<Company, Long> id,
+        UpdateCompanyRequest updateCompanyRequest) {
+
+        Company company =
+            companyRepository.findById(id.value())
+                .orElseThrow(() -> new NotFoundException(Company.class, id.value()));
+
+        company.changeName(updateCompanyRequest.getName());
+
+        return toResponse(company);
     }
 
     private void removePrevLogo(String logoPath) throws IOException {
@@ -133,6 +136,17 @@ public class CompanyServiceImpl implements CompanyService {
         log.debug("absolute logo path : {}", absolutePath);
 
         return absolutePath;
+    }
+
+    private CompanyResponse toResponse(Company company) {
+
+        return CompanyResponse.builder()
+            .id(company.getId())
+            .name(company.getName())
+            .logoPath(company.getLogoPath())
+            .createdDate(company.getCreatedDate())
+            .lastModifiedDate(company.getLastModifiedDate())
+            .build();
     }
 
 }

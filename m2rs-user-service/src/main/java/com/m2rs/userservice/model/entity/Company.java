@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Getter
@@ -42,6 +43,14 @@ public class Company extends BaseTimeEntity {
 
     public void addLogoPath(String logoPath) {
         this.logoPath = logoPath;
+    }
 
+    public void changeName(String changeName) {
+
+        if (isEmpty(changeName)) {
+            return;
+        }
+
+        this.name = changeName;
     }
 }

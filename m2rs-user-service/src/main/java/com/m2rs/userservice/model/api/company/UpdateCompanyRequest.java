@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class CreateCompany {
+public class UpdateCompanyRequest {
 
     private String name;
 
