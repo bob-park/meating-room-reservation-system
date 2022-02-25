@@ -82,6 +82,7 @@ subprojects {
 
         // guava
         implementation 'com.google.guava:guava:31.0.1-jre'
+        implementation 'com.google.code.gson:gson:2.9.0'
 
         // apache commons
         implementation 'org.apache.commons:commons-lang3:3.12.0'
@@ -93,6 +94,7 @@ subprojects {
 
         // rest assured & asciidoc
         testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+
     }
 
     dependencyManagement {
