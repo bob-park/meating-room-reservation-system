@@ -45,6 +45,19 @@ subprojects {
         compileOnly {
             extendsFrom annotationProcessor
         }
+
+        testClasses {
+            extendsFrom(testImplementation)
+        }
+    }
+
+    task testJar(type: Jar) {
+        archiveClassifier.set('test')
+        from sourceSets.test.output
+    }
+
+    artifacts {
+        testClasses testJar
     }
 
     repositories {
@@ -93,7 +106,7 @@ subprojects {
         testAnnotationProcessor 'org.projectlombok:lombok'
 
         // rest assured & asciidoc
-        testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
     }
 
@@ -111,5 +124,7 @@ subprojects {
 project(':m2rs-user-service') {
     dependencies {
         implementation project(':m2rs-core')
+
+        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
     }
 }
