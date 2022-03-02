@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.model.api.response.ApiResult;
 
-import static com.m2rs.core.commons.model.api.response.ApiResult.ERROR;
+import static com.m2rs.core.commons.model.api.response.ApiResult.error;
 
 @Slf4j
 @RestControllerAdvice
@@ -21,7 +21,7 @@ public class GlobalControllerAdvice {
     public <T> ApiResult<T> badRequest(IllegalArgumentException e) {
         log.warn(e.getMessage());
 
-        return ERROR(e);
+        return error(e);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -29,7 +29,7 @@ public class GlobalControllerAdvice {
     public <T> ApiResult<T> notFound(NotFoundException e) {
         log.warn(e.getMessage());
 
-        return ERROR(e);
+        return error(e);
 
     }
 
@@ -38,7 +38,7 @@ public class GlobalControllerAdvice {
     public <T> ApiResult<T> internalServerError(Exception e) {
         log.error("Service Error - {}", e.getMessage(), e);
 
-        return ERROR(e);
+        return error(e);
     }
 
 }

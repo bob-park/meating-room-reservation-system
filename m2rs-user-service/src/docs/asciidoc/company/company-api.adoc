@@ -1,0 +1,19 @@
+== Company API
+
+=== Get Company
+
+====  설명
+
+해당 API 는 현재 시스템에 등록된 회사 목록을 조회한다.
+
+==== Request 예시
+
+include::{snippets}/company-controller-test/search-company-test/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/company-controller-test/search-company-test/custom-response-fields-result.adoc[]
+
+==== Response 예시
+
+include::{snippets}/company-controller-test/search-company-test/http-response.adoc[]

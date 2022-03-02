@@ -20,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
-import com.m2rs.core.commons.model.api.response.PageResponse;
+import com.m2rs.core.commons.model.api.response.Pagination;
+import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.configure.user.properties.UserProperties;
 import com.m2rs.userservice.model.api.company.CompanyResponse;
@@ -46,7 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public PageResponse<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest,
+    public ServicePage<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest,
         Pageable pageable) {
 
         SearchCompanyCondition condition = SearchCompanyCondition.builder()
@@ -60,11 +61,13 @@ public class CompanyServiceImpl implements CompanyService {
                 .map(this::toResponse)
                 .collect(Collectors.toList());
 
-        return PageResponse.<CompanyResponse>builder()
+        return ServicePage.<CompanyResponse>builder()
             .contents(contents)
-            .totalCount(pageResult.getTotalElements())
-            .lastPage(pageResult.getTotalPages())
-            .page(pageResult.getNumber() + 1L)
+            .page(Pagination.builder()
+                .totalCount(pageResult.getTotalElements())
+                .page(pageResult.getNumber())
+                .lastPage(pageResult.getTotalPages())
+                .build())
             .build();
     }
 
