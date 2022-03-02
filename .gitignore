@@ -39,3 +39,6 @@ out/
 ### ecrypt ###
 *.jks
 *.cer
+
+## docs ##
+!**/src/main/resources/static/docs
