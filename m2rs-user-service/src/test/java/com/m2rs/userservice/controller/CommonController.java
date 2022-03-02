@@ -10,7 +10,6 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -27,8 +26,10 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(properties = {
+    "spring.cloud.config.enabled=false",
+    "eureka.client.enabled=false"
+})
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class CommonController {
 
@@ -68,9 +69,39 @@ public abstract class CommonController {
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                     commonResponseFields(
                         null,
-                        subsectionWithPath("result").description("결과").type(JsonFieldType.VARIES),
-                        fieldWithPath("success").description("성공 여부").type(JsonFieldType.BOOLEAN),
-                        subsectionWithPath("error").description("에러").type(JsonFieldType.OBJECT)
+                        subsectionWithPath("result")
+                            .description("결과")
+                            .type(JsonFieldType.VARIES),
+                        fieldWithPath("success")
+                            .description("성공 여부")
+                            .type(JsonFieldType.BOOLEAN),
+                        // pagination
+                        subsectionWithPath("page.size")
+                            .description("페이지 당 표시 항목 수")
+                            .type(JsonFieldType.NUMBER)
+                            .optional(),
+                        subsectionWithPath("page.page")
+                            .description("현재 페이지")
+                            .type(JsonFieldType.NUMBER)
+                            .optional(),
+                        subsectionWithPath("page.totalCount")
+                            .description("전체 개수")
+                            .type(JsonFieldType.NUMBER)
+                            .optional(),
+                        subsectionWithPath("page.firstPage")
+                            .description("첫 페이지 번호")
+                            .type(JsonFieldType.NUMBER)
+                            .optional(),
+                        subsectionWithPath("page.lastPage")
+                            .description("마지막 페이지 번호")
+                            .type(JsonFieldType.NUMBER)
+                            .optional(),
+                        // error
+                        subsectionWithPath("error.message")
+                            .description("에러 메세지")
+                            .type(JsonFieldType.STRING)
+                            .optional()
+
                     )));
     }
 

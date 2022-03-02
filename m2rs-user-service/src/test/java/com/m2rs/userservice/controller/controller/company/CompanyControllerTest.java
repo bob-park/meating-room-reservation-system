@@ -1,4 +1,4 @@
-package com.m2rs.userservice.controller.controller;
+package com.m2rs.userservice.controller.controller.company;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
