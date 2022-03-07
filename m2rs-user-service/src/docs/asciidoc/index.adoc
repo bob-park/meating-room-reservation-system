@@ -24,4 +24,6 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 [[rest_api_doc]]
 = APIs
 '''
+
+
 include::{docdir}/company/company-api.adoc[]

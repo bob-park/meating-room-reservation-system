@@ -19,11 +19,6 @@ buildscript {
         }
     }
 
-
-}
-
-plugins {
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 allprojects {
@@ -31,7 +26,6 @@ allprojects {
         springCloudVersion = '3.0.4'
         springCloudNetflixVersion = '3.0.4'
     }
-
 }
 
 subprojects {
@@ -66,26 +60,8 @@ subprojects {
 
     ext {
         set('springCloudVersion', "2021.0.0")
-        snippetsDir = file('build/generated-snippets')
     }
 
-    asciidoctor {
-        dependsOn test
-        attributes 'snippets': snippetsDir
-        inputs.dir snippetsDir
-    }
-
-    asciidoctor.doFirst {
-        delete file('src/main/resources/static/docs') // 기존 docs 삭제해버리기
-    }
-
-    bootJar {
-        dependsOn asciidoctor
-        copy {
-            from "${asciidoctor.outputDir}"            // /html5를 사용하지 않는다!
-            into 'src/main/resources/static/docs'    // /static/docs로 복사!
-        }
-    }
 
     dependencies {
         developmentOnly 'org.springframework.boot:spring-boot-devtools'
