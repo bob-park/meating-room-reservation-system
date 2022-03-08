@@ -1,5 +1,5 @@
 plugins {
-    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id "org.asciidoctor.jvm.convert" version "3.3.0"
 }
 
 configurations {
@@ -35,7 +35,6 @@ dependencies {
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 
     asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-
 }
 
 ext {
@@ -43,20 +42,31 @@ ext {
 }
 
 asciidoctor {
+
+    sourceDir 'src/docs/asciidoc'
+
     inputs.dir snippetsDir
     configurations 'asciidoctorExt'
     attributes 'snippets': snippetsDir
+
     dependsOn test
 }
 
 asciidoctor.doFirst {
-    delete file('src/main/resources/static/docs') // 기존 docs 삭제해버리기
+    delete file('src/main/resources/static/docs')
 }
 
-bootJar {
-//    dependsOn asciidoctor
-    copy {
-        from "${asciidoctor.outputDir}"            // /html5를 사용하지 않는다!
-        into 'src/main/resources/static/docs'    // /static/docs 로 복사!
-    }
+test {
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
 }
