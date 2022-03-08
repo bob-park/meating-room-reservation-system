@@ -16,8 +16,6 @@ COPY --from=builder application/spring-boot-loader/ ./
 #COPY --from=builder application/snapshot-dependencies/ ./
 COPY --from=builder application/application/ ./
 
-EXPOSE 5005
-
 # jara -jar 가 아니라 Spring Boot Custom Launcher 로 Applicatino 을 실행한다.
 # 이 Launcher 는 Application 시작시 불필요한 Jar 파일 압축 해제를 하지 않으므로 효율적이다.
 ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]

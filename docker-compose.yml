@@ -8,6 +8,11 @@ services:
       - my-network
     ports:
       - "8761:8761"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://m2rs-discovery-service:8761/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
   m2rs-config-service:
     container_name: m2rs-config-service
     build: ./m2rs-config-service/.
@@ -21,12 +26,13 @@ services:
     volumes:
       - "/Users/hwpark/Documents/hwpark-workspace/m2rs/config:/root/home/config"
     depends_on:
-      - m2rs-discovery-service
+      m2rs-discovery-service:
+        condition: service_healthy
     healthcheck:
       test: [ "CMD", "curl", "--fail", "http://m2rs-config-service:8888/actuator/health" ]
-      interval: 30s
+      interval: 10s
       timeout: 10s
-      retries: 10
+      retries: 5
   m2rs-api-gateway-service:
     container_name: m2rs-api-gateway-service
     build: ./m2rs-api-gateway-service/.
@@ -42,7 +48,9 @@ services:
         condition: service_healthy
   m2rs-user-service:
     container_name: m2rs-user-service
-    build: ./m2rs-user-service/.
+    build:
+      context: ./m2rs-user-service/.
+      dockerfile: ./m2rs-user-service/Dockerfile
     networks:
       - my-network
     environment:

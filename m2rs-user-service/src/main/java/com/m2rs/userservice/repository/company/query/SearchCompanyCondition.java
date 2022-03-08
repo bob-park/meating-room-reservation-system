@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SearchCompanyCondition {
 
     private final String name;
