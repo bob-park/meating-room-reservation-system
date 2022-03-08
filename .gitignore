@@ -42,3 +42,8 @@ out/
 
 ## docs ##
 **/src/main/resources/static/docs/
+
+## docker ##
+*.generated.override.yml
+*-debug.yml
+*-debug
