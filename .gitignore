@@ -39,3 +39,11 @@ out/
 ### ecrypt ###
 *.jks
 *.cer
+
+## docs ##
+**/src/main/resources/static/docs/
+
+## docker ##
+*.generated.override.yml
+*-debug.yml
+*-debug

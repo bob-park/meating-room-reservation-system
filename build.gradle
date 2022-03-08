@@ -18,6 +18,8 @@ buildscript {
             classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.2.4'
         }
     }
+
+
 }
 
 allprojects {
@@ -25,10 +27,11 @@ allprojects {
         springCloudVersion = '3.0.4'
         springCloudNetflixVersion = '3.0.4'
     }
-
 }
 
 subprojects {
+
+
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
@@ -39,6 +42,22 @@ subprojects {
         compileOnly {
             extendsFrom annotationProcessor
         }
+
+        testClasses {
+            extendsFrom(testImplementation)
+        }
+
+        asciidoctorExt
+
+    }
+
+    task testJar(type: Jar) {
+        archiveClassifier.set('test')
+        from sourceSets.test.output
+    }
+
+    artifacts {
+        testClasses testJar
     }
 
     repositories {
@@ -57,6 +76,7 @@ subprojects {
 
         // guava
         implementation 'com.google.guava:guava:31.0.1-jre'
+        implementation 'com.google.code.gson:gson:2.9.0'
 
         // apache commons
         implementation 'org.apache.commons:commons-lang3:3.12.0'
@@ -65,6 +85,10 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         testCompileOnly 'org.projectlombok:lombok'
         testAnnotationProcessor 'org.projectlombok:lombok'
+
+        // rest assured & asciidoc
+        testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
     }
 
     dependencyManagement {
@@ -72,14 +96,12 @@ subprojects {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
     }
-
-    test {
-        useJUnitPlatform()
-    }
 }
 
 project(':m2rs-user-service') {
     dependencies {
         implementation project(':m2rs-core')
+
+        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
     }
 }

@@ -1,4 +1,13 @@
+plugins {
+    id "org.asciidoctor.jvm.convert" version "3.3.0"
+}
+
+configurations {
+    asciidoctorExt
+}
+
 dependencies {
+
     // db
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -24,4 +33,40 @@ dependencies {
 
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+}
+
+ext {
+    snippetsDir = file('build/generated-snippets')
+}
+
+asciidoctor {
+
+    sourceDir 'src/docs/asciidoc'
+
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    attributes 'snippets': snippetsDir
+
+    dependsOn test
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+test {
+    useJUnitPlatform()
+    outputs.dir snippetsDir
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
 }

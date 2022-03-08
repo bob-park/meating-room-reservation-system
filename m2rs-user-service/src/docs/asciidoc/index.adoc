@@ -1,0 +1,46 @@
+= M2RS #_User Service_# API Docs
+:toc: left
+:toc-title: INDEX
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectlinks:
+:docinfo: shared-head
+
+[[introduction]]
+== 소개
+이 API Docs 는 `User Service` API Guide 이다.
+
+
+[[common]]
+== Commons
+`User Service` API 의 Response 표준은 아래와 같다.
+
+=== Response 필드
+
+include::{snippets}/commons-response/custom-response-fields.adoc[]
+
+[[rest_api_doc]]
+= APIs
+'''
+
+== Company API
+
+=== Get Company
+
+====  설명
+
+해당 API 는 현재 시스템에 등록된 회사 목록을 조회한다.
+
+==== Request 예시
+
+include::{snippets}/company-controller-test/search-company-test/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/company-controller-test/search-company-test/custom-response-fields-result.adoc[]
+
+==== Response 예시
+
+include::{snippets}/company-controller-test/search-company-test/http-response.adoc[]

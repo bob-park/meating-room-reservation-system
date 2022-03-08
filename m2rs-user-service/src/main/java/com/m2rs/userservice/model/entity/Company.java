@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Getter
@@ -30,7 +33,8 @@ public class Company extends BaseTimeEntity {
     private String logoPath;
 
     @Builder
-    private Company(Long id, String name, String logoPath) {
+    private Company(Long id, String name, String logoPath, LocalDateTime createdDate,
+        LocalDateTime lastModifiedDate) {
 
         checkArgument(isNotEmpty(name), "name must be provided.");
 
@@ -38,10 +42,21 @@ public class Company extends BaseTimeEntity {
         this.name = name;
         this.logoPath = logoPath;
 
+        this.createdDate = createdDate;
+        this.lastModifiedDate = lastModifiedDate;
+
     }
 
     public void addLogoPath(String logoPath) {
         this.logoPath = logoPath;
+    }
 
+    public void changeName(String changeName) {
+
+        if (isEmpty(changeName)) {
+            return;
+        }
+
+        this.name = changeName;
     }
 }

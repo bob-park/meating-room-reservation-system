@@ -6,7 +6,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class CompanyDto {
+public class CompanyResponse {
 
     private final Long id;
     private final String name;
@@ -15,7 +15,7 @@ public class CompanyDto {
     private final LocalDateTime lastModifiedDate;
 
     @Builder
-    private CompanyDto(Long id, String name, String logoPath, LocalDateTime createdDate,
+    private CompanyResponse(Long id, String name, String logoPath, LocalDateTime createdDate,
         LocalDateTime lastModifiedDate) {
         this.id = id;
         this.name = name;
