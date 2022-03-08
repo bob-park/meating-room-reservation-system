@@ -89,6 +89,9 @@ subprojects {
         // rest assured & asciidoc
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
+        // jwt
+        implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
     }
 
     dependencyManagement {
