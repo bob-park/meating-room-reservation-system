@@ -1,5 +1,8 @@
 package com.m2rs.userservice.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,6 +35,9 @@ public class Company extends BaseTimeEntity {
     @Column(columnDefinition = "text")
     private String logoPath;
 
+    @OneToMany(mappedBy = "department")
+    private List<User> users = new ArrayList<>();
+
     @Builder
     private Company(Long id, String name, String logoPath, LocalDateTime createdDate,
         LocalDateTime lastModifiedDate) {
@@ -58,5 +64,9 @@ public class Company extends BaseTimeEntity {
         }
 
         this.name = changeName;
+    }
+
+    public void addUser(User user){
+        this.users.add(user);
     }
 }
