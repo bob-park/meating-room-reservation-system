@@ -20,4 +20,4 @@ EXPOSE 8761 5005
 
 # jara -jar 가 아니라 Spring Boot Custom Launcher 로 Applicatino 을 실행한다.
 # 이 Launcher 는 Application 시작시 불필요한 Jar 파일 압축 해제를 하지 않으므로 효율적이다.
-ENTRYPOINT ["java", "-Djava.security.egd", "-Xdebug", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
