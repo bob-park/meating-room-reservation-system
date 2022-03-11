@@ -10,19 +10,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Getter
 @ToString
 @Entity
+@Table(name = "roles")
 public class Role extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @ToString.Exclude
+    @Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pid")
     private Role parentRole;
@@ -30,7 +33,7 @@ public class Role extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private RoleType rolesName;
 
-    private String name;
+    private String rolesDescription;
 
 
 }
