@@ -1,5 +1,11 @@
 package com.m2rs.userservice.model.api.user;
 
+
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
+import com.m2rs.core.security.model.RoleType;
+import java.util.Collections;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,24 +13,17 @@ import lombok.Getter;
 public class UserResponse {
 
     private final Long id;
-    private final Long departmentId;
-    private final String departmentName;
     private final String email;
-    private final String encPassword;
     private final String name;
-    private final String phone;
-    private final String cellPhone;
+
+    private final List<RoleType> roleTypes;
 
     @Builder
-    private UserResponse(Long id, Long departmentId, String departmentName, String email,
-        String encPassword, String name, String phone, String cellPhone) {
+    private UserResponse(Long id, String email, String name, List<RoleType> roleTypes) {
         this.id = id;
-        this.departmentId = departmentId;
-        this.departmentName = departmentName;
         this.email = email;
-        this.encPassword = encPassword;
         this.name = name;
-        this.phone = phone;
-        this.cellPhone = cellPhone;
+
+        this.roleTypes = defaultIfNull(roleTypes, Collections.emptyList());
     }
 }
