@@ -4,10 +4,12 @@ package com.m2rs.userservice.configure.security;
 import com.m2rs.core.security.model.JwtClaimInfo;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
 import com.m2rs.userservice.security.filter.RestLoginProcessingFilter;
+import com.m2rs.userservice.security.filter.RestAuthenticationFilter;
 import com.m2rs.userservice.security.handler.RestAccessDeniedHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationFailureHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
-import com.m2rs.userservice.security.provider.CustomAuthenticationProvider;
+import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
+import com.m2rs.userservice.service.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,24 +18,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -41,8 +41,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JwtClaimInfo jwtClaimInfo;
-
-    private final UserDetailsService userDetailsService;
 
     private final String[] permitAllResources = {};
 
@@ -55,7 +53,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(getAuthenticationProvider());
+        auth.authenticationProvider(getAuthenticationProvider(null));
     }
 
     @Override
@@ -66,6 +64,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest()
             .authenticated()
             .accessDecisionManager(affirmativeBased());
+
+        http.addFilterBefore(getSecurityAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling()
             .authenticationEntryPoint(new RestLoginAuthenticationEntryPoint())
@@ -93,18 +94,18 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public RestAuthenticationProvider getAuthenticationProvider(UserService userService) {
+        return new RestAuthenticationProvider(userService, jwtClaimInfo);
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
-    public AuthenticationProvider getAuthenticationProvider() {
-        return new CustomAuthenticationProvider(userDetailsService, passwordEncoder());
-    }
-
-    @Bean
     public AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
-        return new RestAuthenticationSuccessHandler(jwtClaimInfo);
+        return new RestAuthenticationSuccessHandler();
     }
 
     @Bean
@@ -120,6 +121,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     /*
       filter
      */
+    @Bean
+    public RestAuthenticationFilter getSecurityAuthenticationFilter() {
+        return new RestAuthenticationFilter();
+    }
 
     /*
      Voter

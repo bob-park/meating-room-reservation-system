@@ -1,15 +1,17 @@
 package com.m2rs.userservice.service.user.impl;
 
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-
 import com.m2rs.userservice.exception.UserEmailNotFound;
 import com.m2rs.userservice.model.api.user.UserResponse;
-import com.m2rs.userservice.model.entity.Company;
+import com.m2rs.userservice.model.entity.Role;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.UserRepository;
 import com.m2rs.userservice.service.user.UserService;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,23 +23,39 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserResponse login(String email, String password) {
+
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() ->
+                new UsernameNotFoundException(String.format("Not found email. (%s)", email)));
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BadCredentialsException("Wrong password.");
+        }
+
+        return UserResponse.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .name(user.getName())
+            .roleTypes(user.getUserRoles().stream()
+                .map(Role::getRolesName)
+                .collect(Collectors.toList()))
+            .build();
+    }
+
     @Override
     public UserResponse getUser(String email) {
 
         User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UserEmailNotFound(email));
 
-        Company department = user.getDepartment();
-
         return UserResponse.builder()
             .id(user.getId())
-            .departmentId(isNotEmpty(department) ? department.getId() : null)
-            .departmentName(isNotEmpty(department) ? department.getName() : null)
             .email(user.getEmail())
-            .encPassword(user.getPassword())
             .name(user.getName())
-            .phone(user.getPhone())
-            .cellPhone(user.getCellPhone())
             .build();
     }
 }

@@ -3,7 +3,6 @@ package com.m2rs.userservice.security.handler;
 import static com.m2rs.core.commons.model.api.response.ApiResult.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.m2rs.core.commons.model.api.response.ApiResult;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
