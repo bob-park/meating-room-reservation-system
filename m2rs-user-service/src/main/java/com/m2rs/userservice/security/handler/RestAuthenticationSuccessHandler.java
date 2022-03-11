@@ -1,6 +1,7 @@
 package com.m2rs.userservice.security.handler;
 
 import static com.m2rs.core.commons.model.api.response.ApiResult.ok;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m2rs.core.security.model.JwtClaim;
@@ -38,7 +39,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         JwtClaim jwtClaim = JwtClaim.builder()
             .id(user.getId())
-            .departmentId(user.getDepartment().getId())
+            .departmentId(isNotEmpty(user.getDepartment()) ? user.getDepartment().getId() : null)
             .email(user.getEmail())
             .name(user.getName())
             .build();
