@@ -5,9 +5,9 @@ import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 
 public enum RoleType {
-    ADMIN("ROLE_ADMIN"),
-    MANAGER("ROLE_MANAGER"),
-    USER("ROLE_USER");
+    ROLE_ADMIN("ROLE_ADMIN"),
+    ROLE_MANAGER("ROLE_MANAGER"),
+    ROLE_USER("ROLE_USER");
 
     private final String roleName;
 
