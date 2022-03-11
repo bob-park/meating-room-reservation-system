@@ -4,14 +4,14 @@ import com.m2rs.core.commons.exception.NotFoundException;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 
-public enum Role {
+public enum RoleType {
     ADMIN("ROLE_ADMIN"),
     MANAGER("ROLE_MANAGER"),
     USER("ROLE_USER");
 
     private final String roleName;
 
-    Role(String roleName) {
+    RoleType(String roleName) {
         this.roleName = roleName;
     }
 
@@ -19,9 +19,9 @@ public enum Role {
         return roleName;
     }
 
-    public static Role findByName(String name) {
-        return Arrays.stream(Role.values())
-            .filter(role -> StringUtils.equalsIgnoreCase(name, role.getRoleName()))
+    public static RoleType findByName(String name) {
+        return Arrays.stream(RoleType.values())
+            .filter(roleType -> StringUtils.equalsIgnoreCase(name, roleType.getRoleName()))
             .findAny()
             .orElseThrow(() -> new NotFoundException("Role", name));
     }

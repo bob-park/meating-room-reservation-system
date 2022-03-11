@@ -13,7 +13,7 @@ public class JwtClaim {
     private final String departmentId;
     private final String email;
     private final String name;
-    private final Role role;
+    private final RoleType roleType;
 
 
     public Claims toClaims() {
@@ -23,7 +23,7 @@ public class JwtClaim {
         claims.put("departmentId", getDepartmentId());
         claims.put("email", getEmail());
         claims.put("name", getName());
-        claims.put("role", getRole());
+        claims.put("role", this.getRoleType());
 
         claims.setSubject(email);
 
