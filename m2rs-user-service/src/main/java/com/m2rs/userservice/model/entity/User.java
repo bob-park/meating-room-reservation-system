@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -46,6 +47,18 @@ public class User extends BaseTimeEntity {
 
     private String phone;
     private String cellPhone;
+
+    @Builder
+    private User(Long id, Company department, String email, String password, String name,
+        String phone, String cellPhone) {
+        this.id = id;
+        this.department = department;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.cellPhone = cellPhone;
+    }
 
     @Exclude
     @ManyToMany(fetch = FetchType.LAZY)
