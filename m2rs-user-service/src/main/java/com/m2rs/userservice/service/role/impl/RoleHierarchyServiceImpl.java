@@ -33,7 +33,7 @@ public class RoleHierarchyServiceImpl implements RoleHierarchyService {
             }
         }
 
-        log.debug("role hierarchy={}", concatRoles);
+        log.debug("role hierarchy=\n{}", concatRoles);
 
         return concatRoles.toString();
     }

@@ -145,7 +145,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public RoleHierarchy getRoleHierarchy() {
+    public RoleHierarchyImpl getRoleHierarchy() {
         return new RoleHierarchyImpl();
     }
 }
