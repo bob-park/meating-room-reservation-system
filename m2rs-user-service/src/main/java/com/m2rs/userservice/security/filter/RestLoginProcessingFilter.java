@@ -15,10 +15,12 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class RestLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
+    public static final String REST_LOGIN_URI = "/user/login";
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     public RestLoginProcessingFilter() {
-        super(new AntPathRequestMatcher("/login"));
+        super(new AntPathRequestMatcher(REST_LOGIN_URI));
     }
 
     @Override
