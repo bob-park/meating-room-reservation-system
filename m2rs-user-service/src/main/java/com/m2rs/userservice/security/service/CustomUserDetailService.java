@@ -5,6 +5,7 @@ import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.UserRepository;
 import com.m2rs.userservice.security.model.UserContext;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +29,15 @@ public class CustomUserDetailService implements UserDetailsService {
 
         User user = userRepository.findByEmail(username)
             .orElseThrow(() ->
-                new UsernameNotFoundException(String.format("Not found username. (%s)", username)));
+                new UsernameNotFoundException(String.format("Not found email. (%s)", username)));
 
-        List<SimpleGrantedAuthority> grantedAuthorities =
-            user.getUserRoles().stream()
-                .map(Role::getRolesName)
-                .collect(Collectors.toList()).stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
-                .collect(Collectors.toList());
+        Set<Role> userRoles = user.getUserRoles();
+
+        List<SimpleGrantedAuthority> grantedAuthorities = userRoles.stream()
+            .map(Role::getRolesName).collect(Collectors.toSet())
+            .stream()
+            .map(role -> new SimpleGrantedAuthority(role.getRoleName()))
+            .collect(Collectors.toList());
 
         return new UserContext(user, grantedAuthorities);
     }
