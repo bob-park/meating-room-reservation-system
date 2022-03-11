@@ -2,19 +2,27 @@ package com.m2rs.core.security.model;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.impl.DefaultClaims;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public class JwtClaim {
 
     private final Long id;
-    private final String departmentId;
+    private final Long departmentId;
     private final String email;
     private final String name;
     private final RoleType roleType;
 
+    @Builder
+    private JwtClaim(Long id, Long departmentId, String email, String name,
+        RoleType roleType) {
+        this.id = id;
+        this.departmentId = departmentId;
+        this.email = email;
+        this.name = name;
+        this.roleType = roleType;
+    }
 
     public Claims toClaims() {
         DefaultClaims claims = new DefaultClaims();
