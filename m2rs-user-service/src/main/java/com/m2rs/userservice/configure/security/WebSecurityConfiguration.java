@@ -8,10 +8,18 @@ import com.m2rs.userservice.security.handler.RestAccessDeniedHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationFailureHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
 import com.m2rs.userservice.security.provider.CustomAuthenticationProvider;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +31,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -35,8 +44,11 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
+    private final String[] permitAllResources = {};
+
     @Override
     public void configure(WebSecurity web) {
+        // static resource 관련 uri 는 ignore 될 수 있도록 함
         web.ignoring()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
@@ -50,9 +62,10 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers(RestLoginProcessingFilter.REST_LOGIN_URI).permitAll()
+            .antMatchers(RestLoginProcessingFilter.REST_LOGIN_URI, "/actuator/**").permitAll()
             .anyRequest()
-            .authenticated();
+            .authenticated()
+            .accessDecisionManager(affirmativeBased());
 
         http.exceptionHandling()
             .authenticationEntryPoint(new RestLoginAuthenticationEntryPoint())
@@ -102,5 +115,37 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDeniedHandler getAccessDeniedHandler() {
         return new RestAccessDeniedHandler();
+    }
+
+    /*
+      filter
+     */
+
+    /*
+     Voter
+     */
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+
+        List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
+
+        accessDecisionVoters.add(new WebExpressionVoter());
+        accessDecisionVoters.add(getRoleVoter());
+
+        return new AffirmativeBased(accessDecisionVoters);
+    }
+
+
+    /*
+     Role Hierarchy
+     */
+    @Bean
+    public AccessDecisionVoter<?> getRoleVoter() {
+        return new RoleHierarchyVoter(getRoleHierarchy());
+    }
+
+    @Bean
+    public RoleHierarchy getRoleHierarchy() {
+        return new RoleHierarchyImpl();
     }
 }
