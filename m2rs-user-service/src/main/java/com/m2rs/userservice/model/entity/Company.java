@@ -17,9 +17,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company extends BaseTimeEntity {
 
@@ -32,6 +35,7 @@ public class Company extends BaseTimeEntity {
     @Column(columnDefinition = "text")
     private String logoPath;
 
+    @Exclude
     @OneToMany(mappedBy = "department")
     private List<User> users = new ArrayList<>();
 

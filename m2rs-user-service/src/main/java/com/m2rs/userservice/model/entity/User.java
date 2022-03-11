@@ -1,9 +1,8 @@
 package com.m2rs.userservice.model.entity;
 
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,8 +16,11 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Getter
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "users")
@@ -28,6 +30,7 @@ public class User extends BaseTimeEntity {
     @GeneratedValue
     private Long id;
 
+    @Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Company department;
@@ -44,11 +47,12 @@ public class User extends BaseTimeEntity {
     private String phone;
     private String cellPhone;
 
+    @Exclude
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
         joinColumns = @JoinColumn(name = "user_id"),
         inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> userRoles = new ArrayList<>();
+    private Set<Role> userRoles = new HashSet<>();
 
     public void setDepartment(Company company) {
         company.addUser(this);
