@@ -1,4 +1,4 @@
-package com.m2rs.userservice.service.user;
+package com.m2rs.userservice.security.service;
 
 import com.m2rs.userservice.model.entity.Role;
 import com.m2rs.userservice.model.entity.User;
