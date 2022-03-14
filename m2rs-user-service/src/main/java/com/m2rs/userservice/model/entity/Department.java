@@ -1,11 +1,14 @@
 package com.m2rs.userservice.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,6 +31,9 @@ public class Department {
 
     private String name;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "department")
+    private List<User> users = new ArrayList<>();
+
     @Builder
     private Department(Long id, String name) {
         this.id = id;
@@ -38,6 +44,10 @@ public class Department {
         this.company = company;
 
         company.addDepartment(this);
+    }
+
+    public void addUser(User user){
+        users.add(user);
     }
 
 

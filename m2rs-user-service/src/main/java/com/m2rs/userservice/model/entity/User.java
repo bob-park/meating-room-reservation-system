@@ -1,8 +1,11 @@
 package com.m2rs.userservice.model.entity;
 
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +37,7 @@ public class User extends BaseTimeEntity {
     @Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    private Company department;
+    private Department department;
 
     @Column(nullable = false)
     private String email;
@@ -48,11 +51,17 @@ public class User extends BaseTimeEntity {
     private String phone;
     private String cellPhone;
 
+    @Exclude
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> userRoles = new HashSet<>();
+
     @Builder
-    private User(Long id, Company department, String email, String password, String name,
+    private User(Long id, String email, String password, String name,
         String phone, String cellPhone) {
         this.id = id;
-        this.department = department;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -60,16 +69,14 @@ public class User extends BaseTimeEntity {
         this.cellPhone = cellPhone;
     }
 
-    @Exclude
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> userRoles = new HashSet<>();
-
-    public void setDepartment(Company company) {
-        company.addUser(this);
-
-        this.department = company;
+    public void setDepartment(Department department) {
+        department.addUser(this);
+        this.department = department;
     }
+
+    public void setUserRoles(Set<Role> roles) {
+
+        this.userRoles = roles;
+    }
+
 }
