@@ -1,9 +1,12 @@
 package com.m2rs.userservice.service.role.impl;
 
+import com.google.common.collect.Maps;
 import com.m2rs.userservice.model.entity.Role;
 import com.m2rs.userservice.repository.role.RoleRepository;
 import com.m2rs.userservice.service.role.RoleHierarchyService;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,5 +39,26 @@ public class RoleHierarchyServiceImpl implements RoleHierarchyService {
         log.debug("role hierarchy=\n{}", concatRoles);
 
         return concatRoles.toString();
+    }
+
+    @Override
+    public Map<String, List<String>> getRoleHierarchyMap() {
+
+        Map<String, List<String>> roleHierarchy = Maps.newHashMap();
+
+        List<Role> roles = roleRepository.searchAll();
+
+        for (Role role : roles) {
+
+            if (!role.getChildRoles().isEmpty()) {
+                roleHierarchy.put(role.getRolesName().getRoleName(),
+                    role.getChildRoles().stream()
+                        .map(child -> child.getRolesName().getRoleName())
+                        .collect(Collectors.toList()));
+            }
+        }
+
+        return roleHierarchy;
+
     }
 }
