@@ -101,6 +101,14 @@ subprojects {
     }
 }
 
+project(':m2rs-api-gateway-service') {
+    dependencies {
+        implementation project(':m2rs-core')
+
+        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
+    }
+}
+
 project(':m2rs-user-service') {
     dependencies {
         implementation project(':m2rs-core')
