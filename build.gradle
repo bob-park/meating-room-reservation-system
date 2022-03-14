@@ -89,12 +89,23 @@ subprojects {
         // rest assured & asciidoc
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 
+        // jwt
+        implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
     }
 
     dependencyManagement {
         imports {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
+    }
+}
+
+project(':m2rs-api-gateway-service') {
+    dependencies {
+        implementation project(':m2rs-core')
+
+        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
     }
 }
 

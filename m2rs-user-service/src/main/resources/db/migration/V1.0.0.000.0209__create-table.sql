@@ -46,8 +46,21 @@ CREATE TABLE roles
     id                 bigint      NOT NULL primary key,
     pid                bigint,
     roles_name         varchar(20) NOT NULL,
-    roles_description  varchar(50) not null,
+    roles_description  varchar(50) NOT NULL,
     created_date       datetime    NOT NULL DEFAULT now(),
+    last_modified_date datetime
+) CHARSET = utf8mb4
+  collate = utf8mb4_general_ci;
+
+-- resources
+CREATE TABLE resources
+(
+    id                 bigint       NOT NULL primary key,
+    resource_name      varchar(255) NOT NULL,
+    http_method        varchar(10),
+    order_num          int(10) not null,
+    resource_type      varchar(10)  not null,
+    created_date       datetime     NOT NULL DEFAULT now(),
     last_modified_date datetime
 ) CHARSET = utf8mb4
   collate = utf8mb4_general_ci;
@@ -64,20 +77,14 @@ CREATE TABLE users_roles
 ) CHARSET = utf8mb4
   collate = utf8mb4_general_ci;
 
+-- resources_roles
+CREATE TABLE resources_roles
+(
+    id          bigint NOT NULL primary key,
+    resource_id bigint NOT NULL,
+    role_id     bigint NOT NULL,
 
-/* DML */
--- default user
-insert into users (id, department_id, email, password, name)
-values (1, null, 'admin@admin.com',
-        '{bcrypt}$2a$12$Ng5UfR3Vvk8ku3jZT1HA7.9fNG21yt3WgfdVZUzZdS7PBOmazMjwa', 'admin');
-
--- default roles
-insert into roles (id, pid, roles_name, roles_description)
-values (1, null, 'ROLE_ADMIN', '시스템 관리자'),
-       (2, 1, 'ROLE_MANAGER', '매니저'),
-       (3, 2, 'ROLE_USER', '사용자');
-
--- default user roles
-insert into m2rs_db.users_roles (id, user_id, role_id)
-values (1, 1, 1);
-
+    foreign key (resource_id) references resources (id),
+    foreign key (role_id) references roles (id)
+) CHARSET = utf8mb4
+  collate = utf8mb4_general_ci;

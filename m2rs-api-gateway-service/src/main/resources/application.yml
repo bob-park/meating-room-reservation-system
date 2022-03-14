@@ -20,12 +20,21 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: user-service
+        - id: user-service # login
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/user/login
+            - Method=POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service # user-service
           uri: lb://user-service
           predicates:
             - Path=/user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
 # eureka
 eureka:

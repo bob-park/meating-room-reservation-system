@@ -3,7 +3,7 @@ package com.m2rs.core.commons.exception;
 public class NotFoundException extends ServiceRuntimeException {
 
     public NotFoundException(Class<?> clazz, Object value) {
-        this(clazz.getName(), value);
+        this(clazz.getSimpleName(), value);
     }
 
     public NotFoundException(String targetName, Object value) {
