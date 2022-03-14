@@ -50,8 +50,8 @@ public class Role extends BaseTimeEntity {
     private String rolesDescription;
 
     @Exclude
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "userRoles")
-    private Set<User> users = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "role")
+    private List<UserRoles> userRoles = new ArrayList<>();
 
     @Builder
     private Role(Long id, RoleType rolesName, String rolesDescription) {

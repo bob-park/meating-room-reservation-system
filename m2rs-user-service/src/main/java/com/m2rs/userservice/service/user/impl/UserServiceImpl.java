@@ -13,6 +13,7 @@ import com.m2rs.userservice.model.api.user.UserResponse;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.Role;
 import com.m2rs.userservice.model.entity.User;
+import com.m2rs.userservice.model.entity.UserRoles;
 import com.m2rs.userservice.repository.department.DepartmentRepository;
 import com.m2rs.userservice.repository.role.RoleRepository;
 import com.m2rs.userservice.repository.user.UserRepository;
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService {
             .email(user.getEmail())
             .name(user.getName())
             .roleTypes(user.getUserRoles().stream()
-                .map(Role::getRolesName)
+                .map(userRoles -> userRoles.getRole().getRolesName())
                 .collect(Collectors.toList()))
             .build();
     }
@@ -102,7 +103,10 @@ public class UserServiceImpl implements UserService {
         createUser.setDepartment(department);
 
         // TODO 추후 나중에 다중 권한을 적용해보자
-        createUser.setUserRoles(Collections.singleton(role));
+        createUser.addRole(UserRoles.builder()
+            .user(createUser)
+            .role(role)
+            .build());
 
         User savedUser = userRepository.save(createUser);
 
@@ -111,7 +115,7 @@ public class UserServiceImpl implements UserService {
             .email(savedUser.getEmail())
             .name(savedUser.getName())
             .roleTypes(savedUser.getUserRoles().stream()
-                .map(Role::getRolesName)
+                .map(userRoles -> userRoles.getRole().getRolesName())
                 .collect(Collectors.toList()))
             .build();
     }

@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,11 +53,8 @@ public class User extends BaseTimeEntity {
     private String cellPhone;
 
     @Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> userRoles = new HashSet<>();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserRoles> userRoles = new ArrayList<>();
 
     @Builder
     private User(Long id, String email, String password, String name,
@@ -74,9 +72,12 @@ public class User extends BaseTimeEntity {
         this.department = department;
     }
 
-    public void setUserRoles(Set<Role> roles) {
+    public void addRole(UserRoles userRoles) {
+        this.userRoles.add(userRoles);
+    }
 
-        this.userRoles = roles;
+    public void removeRole(UserRoles userRoles) {
+        this.userRoles.remove(userRoles);
     }
 
 }
