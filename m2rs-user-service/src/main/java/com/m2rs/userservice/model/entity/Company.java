@@ -36,8 +36,8 @@ public class Company extends BaseTimeEntity {
     private String logoPath;
 
     @Exclude
-    @OneToMany(mappedBy = "department")
-    private List<User> users = new ArrayList<>();
+    @OneToMany(mappedBy = "company")
+    private List<Department> departments = new ArrayList<>();
 
     @Builder
     private Company(Long id, String name, String logoPath, LocalDateTime createdDate,
@@ -67,7 +67,7 @@ public class Company extends BaseTimeEntity {
         this.name = changeName;
     }
 
-    public void addUser(User user){
-        this.users.add(user);
+    public void addDepartment(Department department) {
+        this.departments.add(department);
     }
 }
