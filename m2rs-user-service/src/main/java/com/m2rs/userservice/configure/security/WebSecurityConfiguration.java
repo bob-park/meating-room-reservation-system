@@ -3,22 +3,30 @@ package com.m2rs.userservice.configure.security;
 
 import com.m2rs.core.security.model.JwtClaimInfo;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
-import com.m2rs.userservice.security.filter.RestLoginProcessingFilter;
+import com.m2rs.userservice.security.factory.UrlResourcesMapFactoryBean;
+import com.m2rs.userservice.security.filter.PermitAllFilter;
 import com.m2rs.userservice.security.filter.RestAuthenticationFilter;
+import com.m2rs.userservice.security.filter.RestLoginProcessingFilter;
 import com.m2rs.userservice.security.handler.RestAccessDeniedHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationFailureHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
+import com.m2rs.userservice.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
+import com.m2rs.userservice.service.resource.SecurityResourceService;
+import com.m2rs.userservice.service.role.RoleHierarchyService;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,15 +38,22 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final SecurityResourceService securityResourceService;
+
+
+    private final RoleHierarchyService roleHierarchyService;
 
     private final JwtClaimInfo jwtClaimInfo;
 
@@ -60,13 +75,13 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-            .antMatchers(RestLoginProcessingFilter.REST_LOGIN_URI, "/actuator/**").permitAll()
             .anyRequest()
-            .authenticated()
-            .accessDecisionManager(affirmativeBased());
+            .authenticated();
 
-        http.addFilterBefore(getSecurityAuthenticationFilter(),
-            UsernamePasswordAuthenticationFilter.class);
+        http
+            .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
+            .addFilterBefore(getSecurityAuthenticationFilter(),
+                UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling()
             .authenticationEntryPoint(new RestLoginAuthenticationEntryPoint())
@@ -77,6 +92,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
             .csrf().disable()
             .cors().disable();
+
     }
 
     @Bean
@@ -126,6 +142,33 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new RestAuthenticationFilter();
     }
 
+    @Bean
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+
+        permitAllFilter.setSecurityMetadataSource(
+            urlFilterInvocationSecurityMetadataSource());
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
+
+        return permitAllFilter;
+    }
+
+    /*
+     metadata source
+     */
+    @Bean
+    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
+        return new UrlFilterInvocationSecurityMetadataSource(
+            urlResourcesMapFactoryBean().getObject(), securityResourceService);
+    }
+
+    @Bean
+    public UrlResourcesMapFactoryBean urlResourcesMapFactoryBean() {
+        return new UrlResourcesMapFactoryBean(securityResourceService);
+    }
+
     /*
      Voter
      */
@@ -134,7 +177,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
 
-        accessDecisionVoters.add(new WebExpressionVoter());
         accessDecisionVoters.add(getRoleVoter());
 
         return new AffirmativeBased(accessDecisionVoters);
@@ -142,15 +184,28 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
     /*
-     Role Hierarchy
+     voter
      */
     @Bean
     public AccessDecisionVoter<?> getRoleVoter() {
         return new RoleHierarchyVoter(getRoleHierarchy());
     }
 
+    /*
+     role hierarchy
+     */
     @Bean
     public RoleHierarchyImpl getRoleHierarchy() {
-        return new RoleHierarchyImpl();
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+
+        Map<String, List<String>> roleHierarchyMap = roleHierarchyService.getRoleHierarchyMap();
+
+        String roles = RoleHierarchyUtils.roleHierarchyFromMap(roleHierarchyMap);
+
+        log.debug("roleHierarchy={}", roles);
+
+        roleHierarchy.setHierarchy(roles);
+
+        return roleHierarchy;
     }
 }

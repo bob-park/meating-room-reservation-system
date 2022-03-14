@@ -8,7 +8,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Component
+//@Component
 public class SecurityInitializer implements ApplicationRunner {
 
     private final RoleHierarchyService roleHierarchyService;
