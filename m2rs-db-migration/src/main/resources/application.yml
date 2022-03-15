@@ -7,7 +7,6 @@ management:
           - health
           - info
 
-
 logging:
   level:
     root: info
