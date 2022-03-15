@@ -42,6 +42,13 @@ spring:
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
+        - id: meeting-room-service # meeting-room-service
+          uri: lb://meeting-room-service
+          predicates:
+            - Path=/meeting-room-service/**
+          filters:
+            - RewritePath=/meeting-room-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
 
 # eureka
 eureka:
