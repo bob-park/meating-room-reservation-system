@@ -13,6 +13,8 @@ import com.m2rs.userservice.model.entity.Company;
 
 public interface CompanyService {
 
+    CompanyResponse getCompany(Id<Company, Long> id);
+
     ServicePage<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest, Pageable pageable);
 
     CompanyResponse createCompany(CreateCompanyRequest createCompany);

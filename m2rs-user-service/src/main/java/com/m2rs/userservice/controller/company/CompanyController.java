@@ -48,6 +48,11 @@ public class CompanyController {
         return ok(result.getContents(), result.getPage());
     }
 
+    @GetMapping(path = "{companyId}")
+    public ApiResult<CompanyResponse> getCompany(@PathVariable Long companyId) {
+        return ok(companyService.getCompany(Id.of(Company.class, companyId)));
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public ApiResult<CompanyResponse> createCompany(

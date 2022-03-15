@@ -47,6 +47,20 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
+    public CompanyResponse getCompany(Id<Company, Long> id) {
+        Company company = companyRepository.findById(id.value())
+            .orElseThrow(() -> new NotFoundException(Company.class, id));
+
+        return CompanyResponse.builder()
+            .id(company.getId())
+            .name(company.getName())
+            .logoPath(company.getLogoPath())
+            .createdDate(company.getCreatedDate())
+            .lastModifiedDate(company.getLastModifiedDate())
+            .build();
+    }
+
+    @Override
     public ServicePage<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest,
         Pageable pageable) {
 
