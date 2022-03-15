@@ -116,3 +116,11 @@ project(':m2rs-user-service') {
         testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
     }
 }
+
+project(':m2rs-meeting-room-service') {
+    dependencies {
+        implementation project(':m2rs-core')
+
+        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
+    }
+}
