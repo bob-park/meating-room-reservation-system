@@ -26,16 +26,6 @@ dependencies {
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
     annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
 
-
-
     implementation project(':m2rs-core')
     testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
 }
-
-
-
-
-
-
-
-
