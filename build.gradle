@@ -101,22 +101,24 @@ subprojects {
             testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
 
             if (project.name != "m2rs-discovery-service") {
-                implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${springCloudNetflixVersion}"
-                implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-                implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+                if (project.name != 'm2rs-db-migration') {
+                    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${springCloudNetflixVersion}"
+                    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+                    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+                }
 
                 implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 
                 if (project.name != "m2rs-config-service") {
                     implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
+                    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
-                    if (project.name != "m2rs-api-gateway-service") {
+                    if (project.name != 'm2rs-db-migration' && project.name != "m2rs-api-gateway-service") {
                         // db
                         implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
                         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-                        implementation 'org.flywaydb:flyway-core'
-                        runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
                         // spring security
                         implementation 'org.springframework.boot:spring-boot-starter-security'

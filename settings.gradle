@@ -10,6 +10,9 @@ rootProject.name = 'meeting-room-reservation-system-back-end'
 // core
 include 'm2rs-core'
 
+// db migration
+include 'm2rs-db-migration'
+
 // discovery
 include 'm2rs-discovery-service'
 
