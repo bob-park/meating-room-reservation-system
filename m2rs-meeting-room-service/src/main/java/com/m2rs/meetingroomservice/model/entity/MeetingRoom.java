@@ -1,6 +1,6 @@
 package com.m2rs.meetingroomservice.model.entity;
 
-import com.m2rs.meetingroomservice.model.entity.base.BaseUserEntity;
+import com.m2rs.meetingroomservice.model.entity.base.BaseTimeEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "meeting_rooms")
-public class MeetingRoom extends BaseUserEntity {
+public class MeetingRoom extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
