@@ -21,6 +21,10 @@ decorator:
     p6spy:
       enable-logging: true
 
+spring:
+  application:
+    name: user-service
+
 # eureka
 eureka:
   instance:
