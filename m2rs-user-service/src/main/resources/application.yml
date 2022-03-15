@@ -16,11 +16,6 @@ management:
           - metrics
           - prometheus
 
-# spring
-spring:
-  application:
-    name: user-service
-
 decorator:
   datasource:
     p6spy:

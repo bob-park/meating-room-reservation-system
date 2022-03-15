@@ -16,10 +16,6 @@ management:
           - metrics
           - prometheus
 
-# spring
-spring:
-  application:
-    name: user-service
 
 decorator:
   datasource:
@@ -36,6 +32,7 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${eureka-server-url}
+
 
 logging:
   level:
