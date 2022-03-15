@@ -48,9 +48,7 @@ services:
         condition: service_healthy
   m2rs-user-service:
     container_name: m2rs-user-service
-    build:
-      context: ./m2rs-user-service/.
-      dockerfile: ./m2rs-user-service/Dockerfile
+    build: ./m2rs-user-service/.
     networks:
       - my-network
     environment:
