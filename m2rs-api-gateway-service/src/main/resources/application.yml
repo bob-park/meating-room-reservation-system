@@ -28,6 +28,13 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user_service # company 조회
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/company/**
+            - Method=GET
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service # user-service
           uri: lb://user-service
           predicates:
