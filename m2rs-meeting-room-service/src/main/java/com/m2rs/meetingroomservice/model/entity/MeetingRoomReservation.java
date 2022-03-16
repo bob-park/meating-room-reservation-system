@@ -20,7 +20,7 @@ import lombok.ToString.Exclude;
 @Entity
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "meetingRoomReservation")
+@Table(name = "meeting_room_reservations")
 public class MeetingRoomReservation extends BaseUserEntity {
 
     @Id
