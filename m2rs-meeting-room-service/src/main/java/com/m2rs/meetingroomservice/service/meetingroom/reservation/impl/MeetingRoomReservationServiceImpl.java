@@ -4,12 +4,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.model.Id;
+import com.m2rs.meetingroomservice.exception.AlreadyReservationException;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.CreateMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.MeetingRoomReservationResponse;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.MeetingRoomReservationRepository;
+import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,16 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
         MeetingRoom meetingRoom = meetingRoomRepository.findById(reservationRequest.getMrId())
             .orElseThrow(() ->
                 new NotFoundException(MeetingRoom.class, reservationRequest.getMrId()));
+
+        boolean availableReservation = meetingRoomReservationRepository
+            .checkAvailableReservation(Id.of(MeetingRoom.class, reservationRequest.getMrId()),
+                reservationRequest.getStartDate(),
+                reservationRequest.getEndDate());
+
+        if (!availableReservation) {
+            throw new AlreadyReservationException(reservationRequest.getStartDate(),
+                reservationRequest.getEndDate());
+        }
 
         MeetingRoomReservation savedReservation =
             meetingRoomReservationRepository.save(MeetingRoomReservation.builder()
