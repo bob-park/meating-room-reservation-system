@@ -1,11 +1,13 @@
 package com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.impl;
 
+import static com.m2rs.meetingroomservice.model.entity.QMeetingRoom.meetingRoom;
 import static com.m2rs.meetingroomservice.model.entity.QMeetingRoomReservation.meetingRoomReservation;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 import com.m2rs.core.model.Id;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
+import com.m2rs.meetingroomservice.model.entity.QMeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationQueryRepository;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
 import com.querydsl.core.BooleanBuilder;
@@ -30,6 +32,7 @@ public class MeetingRoomReservationQueryRepositoryImpl implements
     @Override
     public List<MeetingRoomReservation> search(MeetingRoomReservationSearchCondition condition) {
         return query.selectFrom(meetingRoomReservation)
+            .join(meetingRoomReservation.meetingRoom, meetingRoom).fetchJoin()
             .where(mappingCondition(condition))
             .orderBy(meetingRoomReservation.startDate.asc())
             .fetch();
