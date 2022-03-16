@@ -15,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Getter
 @ToString
@@ -31,6 +32,7 @@ public class MeetingRoom extends BaseTimeEntity {
     private String name;
     private Boolean isActive;
 
+    @Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "meetingRoom")
     private List<MeetingRoomReservation> meetingRoomReservationList;
 

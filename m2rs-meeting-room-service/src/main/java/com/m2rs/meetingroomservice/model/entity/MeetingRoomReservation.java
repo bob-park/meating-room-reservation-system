@@ -13,9 +13,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @Getter
 @Entity
+@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "meetingRoomReservation")
 public class MeetingRoomReservation extends BaseUserEntity {
@@ -24,6 +27,7 @@ public class MeetingRoomReservation extends BaseUserEntity {
     @GeneratedValue
     private Long id;
 
+    @Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mr_id")
     private MeetingRoom meetingRoom;
