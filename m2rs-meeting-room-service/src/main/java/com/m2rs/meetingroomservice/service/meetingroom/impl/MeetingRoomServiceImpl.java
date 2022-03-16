@@ -35,8 +35,8 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
         checkArgument(isNotEmpty(createRequest.getComId()), "comId must be provided.");
         checkArgument(isNotEmpty(createRequest.getName()), "name must be provided.");
 
-        ApiResult<CompanyResponse> companyResponse = userServiceClient.getCompany(
-            createRequest.getComId());
+        ApiResult<CompanyResponse> companyResponse =
+            userServiceClient.getCompany(createRequest.getComId());
 
         log.debug("company={}", companyResponse.getResult());
 
