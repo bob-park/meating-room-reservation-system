@@ -9,4 +9,8 @@ public class NotFoundException extends ServiceRuntimeException {
     public NotFoundException(String targetName, Object value) {
         super(String.format("Could not found '%s' with query values (%s)", targetName, value));
     }
+
+    public NotFoundException(String message){
+        super(message);
+    }
 }
