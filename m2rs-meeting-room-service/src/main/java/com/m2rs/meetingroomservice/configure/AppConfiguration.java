@@ -39,7 +39,7 @@ public class AppConfiguration {
 
             Claims claims = JwtUtils.verify(token, jwtClaimInfo);
 
-            Long userId = claims.get("userId", Long.class);
+            Long userId = claims.get("id", Long.class);
 
             return Optional.ofNullable(userId);
 
