@@ -1,6 +1,13 @@
 version: "3.8"
 
 services:
+  m2rs-zipkin:
+    container_name: m2rs-zipkin
+    image: openzipkin/zipkin
+    networks:
+      - my-network
+    ports:
+      - "9411:9411"
   m2rs-discovery-service:
     container_name: m2rs-discovery-service
     build: ./m2rs-discovery-service/.
