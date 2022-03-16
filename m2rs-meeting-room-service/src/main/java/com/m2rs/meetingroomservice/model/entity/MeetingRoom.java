@@ -1,5 +1,7 @@
 package com.m2rs.meetingroomservice.model.entity;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
 import com.m2rs.meetingroomservice.model.entity.base.BaseTimeEntity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +33,6 @@ public class MeetingRoom extends BaseTimeEntity {
         this.id = id;
         this.comId = comId;
         this.name = name;
-        this.isActive = isActive;
+        this.isActive = defaultIfNull(isActive, true);
     }
 }
