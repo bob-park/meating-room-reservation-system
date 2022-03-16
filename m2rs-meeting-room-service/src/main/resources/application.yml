@@ -16,7 +16,6 @@ management:
           - metrics
           - prometheus
 
-
 decorator:
   datasource:
     p6spy:
@@ -36,7 +35,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${eureka-server-url}
-
 
 logging:
   level:

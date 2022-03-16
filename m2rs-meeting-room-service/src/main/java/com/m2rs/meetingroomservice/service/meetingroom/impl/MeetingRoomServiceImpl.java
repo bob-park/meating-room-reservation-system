@@ -12,7 +12,10 @@ import com.m2rs.meetingroomservice.model.api.meetingroom.CreateMeetingRoomReques
 import com.m2rs.meetingroomservice.model.api.meetingroom.MeetingRoomResponse;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
+import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomSearchCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.MeetingRoomService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,5 +60,22 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
             .createdDate(savedMeetingRoom.getCreatedDate())
             .lastModifiedDate(savedMeetingRoom.getLastModifiedDate())
             .build();
+    }
+
+    @Override
+    public List<MeetingRoomResponse> search(MeetingRoomSearchCondition condition) {
+
+        List<MeetingRoom> result = meetingRoomRepository.search(condition);
+
+        return result.stream()
+            .map(item -> MeetingRoomResponse.builder()
+                .id(item.getId())
+                .comId(item.getComId())
+                .name(item.getName())
+                .createdDate(item.getCreatedDate())
+                .lastModifiedDate(item.getLastModifiedDate())
+                .build())
+            .collect(Collectors.toList());
+
     }
 }
