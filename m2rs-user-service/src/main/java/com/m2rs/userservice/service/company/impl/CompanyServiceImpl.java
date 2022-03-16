@@ -49,7 +49,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyResponse getCompany(Id<Company, Long> id) {
         Company company = companyRepository.findById(id.value())
-            .orElseThrow(() -> new NotFoundException(Company.class, id));
+            .orElseThrow(() -> new NotFoundException(Company.class, id.value()));
 
         return CompanyResponse.builder()
             .id(company.getId())
