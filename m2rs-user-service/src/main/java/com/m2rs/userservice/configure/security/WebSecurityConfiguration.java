@@ -90,9 +90,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authenticated();
 
         http
+            .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
             .addFilterBefore(getSecurityAuthenticationFilter(),
-                UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
+                UsernamePasswordAuthenticationFilter.class);
 
         http.exceptionHandling()
             .authenticationEntryPoint(new RestLoginAuthenticationEntryPoint())

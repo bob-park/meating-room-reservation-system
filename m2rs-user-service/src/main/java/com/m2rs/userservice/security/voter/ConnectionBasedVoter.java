@@ -23,6 +23,9 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
     private static final SimpleGrantedAuthority GRANT_MANAGER =
         new SimpleGrantedAuthority(RoleType.ROLE_MANAGER.getRoleName());
 
+    private static final SimpleGrantedAuthority GRANT_ADMIN =
+        new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.getRoleName());
+
     private final RequestMatcher requiresAuthorizationRequestMatcher;
 
     private final Function<String, Id<User, Long>> idExtractor;
@@ -59,7 +62,8 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
 
         // 본인 자신 또는 MANAGER 권한인 경우
         if (jwtAuth.getId().equals(targetId.value())
-            || authentication.getAuthorities().contains(GRANT_MANAGER)) {
+            || authentication.getAuthorities().contains(GRANT_MANAGER)
+            || authentication.getAuthorities().contains(GRANT_ADMIN)) {
             return ACCESS_GRANTED;
         }
 

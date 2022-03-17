@@ -1,5 +1,6 @@
 package com.m2rs.userservice.model.entity;
 
+import com.m2rs.userservice.type.ResourceKind;
 import com.m2rs.userservice.type.ResourceType;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,10 @@ public class Resource {
     private Long id;
 
     private String resourceName;
+
+    @Enumerated(EnumType.STRING)
+    private ResourceKind resourceKind;
+
     private String httpMethod;
     private int orderNum;
 
