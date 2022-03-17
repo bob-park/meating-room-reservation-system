@@ -11,6 +11,7 @@ import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.exception.UserEmailNotFound;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
+import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.UserResponse;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.Role;
@@ -161,6 +162,32 @@ public class UserServiceImpl implements UserService {
             .roleTypes(Collections.singletonList(user.getUserRoles()
                 .getRole()
                 .getRolesName()))
+            .phone(user.getPhone())
+            .cellPhone(user.getCellPhone())
+            .createdDate(user.getCreatedDate())
+            .lastModifiedDate(user.getLastModifiedDate())
+            .build();
+    }
+
+    @Transactional
+    @Override
+    public UserResponse modifyUser(Id<User, Long> id, ModifyUserRequest modifyRequest) {
+
+        checkArgument(isNotEmpty(id.value()), "id must be provided.");
+
+        User user = userRepository.findById(id.value())
+            .orElseThrow(() -> new NotFoundException(User.class, id.value()));
+
+        if (isNotEmpty(modifyRequest.getPassword())) {
+            user.modifyPassword(passwordEncoder.encode(modifyRequest.getPassword()));
+        }
+
+        user.modify(modifyRequest);
+
+        return UserResponse.builder()
+            .id(user.getId())
+            .email(user.getEmail())
+            .name(user.getName())
             .phone(user.getPhone())
             .cellPhone(user.getCellPhone())
             .createdDate(user.getCreatedDate())

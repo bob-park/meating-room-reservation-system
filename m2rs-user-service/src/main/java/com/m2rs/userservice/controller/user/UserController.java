@@ -8,6 +8,7 @@ import com.m2rs.core.commons.model.api.response.ApiResult;
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
+import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.UserResponse;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.query.UserSearchCondition;
@@ -20,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +42,12 @@ public class UserController {
     public ApiResult<UserResponse> getUser(@PathVariable Long userId) {
 
         return ok(userService.getUser(Id.of(User.class, userId)));
+    }
+
+    @PutMapping(path = "{userId}")
+    public ApiResult<UserResponse> updateUser(@PathVariable Long userId,
+        @RequestBody ModifyUserRequest modifyRequest) {
+        return ok(userService.modifyUser(Id.of(User.class, userId), modifyRequest));
     }
 
     @GetMapping(path = "check")

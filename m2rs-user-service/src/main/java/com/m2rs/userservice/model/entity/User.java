@@ -1,5 +1,8 @@
 package com.m2rs.userservice.model.entity;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
+import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +20,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.ToString.Exclude;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @ToString
@@ -66,8 +70,18 @@ public class User extends BaseTimeEntity {
         this.department = department;
     }
 
-    public void setUserRoles(UserRoles userRoles){
+    public void setUserRoles(UserRoles userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public void modifyPassword(String encPassword) {
+        this.password = encPassword;
+    }
+
+    public void modify(ModifyUserRequest request) {
+        this.name = defaultIfNull(request.getName(), this.name);
+        this.phone = defaultIfNull(request.getPhone(), this.phone);
+        this.cellPhone = defaultIfNull(request.getCellPhone(), this.cellPhone);
     }
 
 }
