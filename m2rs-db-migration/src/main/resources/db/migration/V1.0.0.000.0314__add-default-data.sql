@@ -31,10 +31,11 @@ values (1, 1, 1),
        (3, 3, 3);
 
 -- default resource
-insert into m2rs_db.resources (id, resource_name, http_method, order_num, resource_type)
-values (1, '/user/check', 'GET', 1, 'URL'),
-       (2, '/user', 'POST', 2, 'URL'),
-       (3, '/department', 'POST', 3, 'URL');
+insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num,
+                               resource_type)
+values (1, '/user/check', 'PATH', 'GET', 1, 'URL'),
+       (2, '/user', 'PATH', 'POST', 2, 'URL'),
+       (3, '/department', 'PATH', 'POST', 3, 'URL');
 
 insert into m2rs_db.resources_roles (id, resource_id, role_id)
 values (1, 1, 3),
