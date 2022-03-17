@@ -79,6 +79,18 @@ services:
     depends_on:
       m2rs-db-migration:
         condition: service_healthy
+  m2rs-meeting-room-service:
+    container_name: m2rs-user-service
+    build: ./m2rs-meeting-room-service/.
+    networks:
+      - my-network
+    environment:
+      eureka-server-url: http://m2rs-discovery-service:8761/eureka
+      config-server-url: http://m2rs-config-service:8888
+    depends_on:
+      m2rs-db-migration:
+        condition: service_healthy
+
 
 networks:
   my-network:
