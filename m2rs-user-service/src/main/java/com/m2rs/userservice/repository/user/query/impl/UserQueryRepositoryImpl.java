@@ -1,8 +1,9 @@
 package com.m2rs.userservice.repository.user.query.impl;
 
+import static com.m2rs.userservice.model.entity.QRole.role;
 import static com.m2rs.userservice.model.entity.QUser.user;
+import static com.m2rs.userservice.model.entity.QUserRoles.userRoles;
 
-import com.m2rs.userservice.model.entity.QUser;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.query.UserQueryRepository;
 import com.m2rs.userservice.repository.user.query.UserSearchCondition;
@@ -30,6 +31,8 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     public Page<User> search(UserSearchCondition condition, Pageable pageable) {
 
         List<User> contents = query.selectFrom(user)
+            .join(user.userRoles, userRoles).fetchJoin()
+            .join(userRoles.role, role).fetchJoin()
             .where(mappingCondition(condition))
             .orderBy(user.name.asc())
             .limit(pageable.getPageSize())
