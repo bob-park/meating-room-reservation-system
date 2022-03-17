@@ -18,8 +18,10 @@ buildscript {
             classpath 'gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:2.2.4'
         }
     }
+}
 
-
+plugins {
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 allprojects {
@@ -31,8 +33,8 @@ allprojects {
 
 subprojects {
 
-
     apply plugin: 'java'
+    apply plugin: 'org.asciidoctor.jvm.convert'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
@@ -88,9 +90,62 @@ subprojects {
 
         // rest assured & asciidoc
         testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+        asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
         // jwt
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+
+        if (project.name != 'm2rs-core') {
+            implementation project(':m2rs-core')
+            testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
+
+            if (project.name != "m2rs-discovery-service") {
+
+                if (project.name != 'm2rs-db-migration') {
+                    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${springCloudNetflixVersion}"
+                    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+                    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+                }
+
+                implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+
+                if (project.name != "m2rs-config-service") {
+                    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+                    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+                    if (project.name != 'm2rs-db-migration' && project.name != "m2rs-api-gateway-service") {
+                        // db
+                        implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
+                        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+                        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+
+                        // querydsl
+                        implementation("com.querydsl:querydsl-jpa:${queryDslVersion}")
+                        annotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+                        testAnnotationProcessor("com.querydsl:querydsl-apt:${queryDslVersion}:jpa")
+
+                        annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+                        annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+
+                        // spring cloud sleuth
+                        implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+
+                        // spring cloud zipkin
+                        implementation 'org.springframework.cloud:spring-cloud-starter-zipkin:2.2.8.RELEASE'
+
+                        if(project.name == 'm2rs-user-service'){
+                            // spring security
+                            implementation 'org.springframework.boot:spring-boot-starter-security'
+                            testImplementation 'org.springframework.security:spring-security-test'
+                        }
+                    }
+                }
+            }
+        }
+
 
     }
 
@@ -99,20 +154,39 @@ subprojects {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
     }
-}
 
-project(':m2rs-api-gateway-service') {
-    dependencies {
-        implementation project(':m2rs-core')
-
-        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
+    ext {
+        snippetsDir = file('./build/generated-snippets')
     }
-}
 
-project(':m2rs-user-service') {
-    dependencies {
-        implementation project(':m2rs-core')
 
-        testImplementation project(path: ':m2rs-core', configuration: 'testClasses')
+    test {
+        useJUnitPlatform()
+        outputs.dir snippetsDir
     }
+
+    asciidoctor {
+        sourceDir 'src/docs/asciidoc'
+
+        inputs.dir snippetsDir
+        configurations 'asciidoctorExt'
+        attributes 'snippets': snippetsDir
+
+        dependsOn test
+    }
+
+    asciidoctor.doFirst {
+        delete file('src/main/resources/static/docs')
+    }
+
+    task copyDocument(type: Copy) {
+        dependsOn asciidoctor
+        from file("build/docs/asciidoc")
+        into file("src/main/resources/static/docs")
+    }
+
+    build {
+        dependsOn copyDocument
+    }
+
 }

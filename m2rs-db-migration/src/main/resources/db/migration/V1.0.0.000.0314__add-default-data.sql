@@ -1,7 +1,8 @@
 /* DML */
 -- default company
 insert into m2rs_db.company (id, name, logo_path, created_date, last_modified_date)
-values  (1, 'hwpark-co', '1/5ef0604c-cd4d-472d-accd-4cdc2c5c8683.png', '2022-02-11 15:24:58', '2022-02-25 15:42:04');
+values (1, 'hwpark-co', '1/5ef0604c-cd4d-472d-accd-4cdc2c5c8683.png', '2022-02-11 15:24:58',
+        '2022-02-25 15:42:04');
 
 -- default user
 insert into m2rs_db.users (id, department_id, email, password, name, phone, cell_phone,
@@ -28,3 +29,14 @@ insert into m2rs_db.users_roles (id, user_id, role_id)
 values (1, 1, 1),
        (2, 2, 2),
        (3, 3, 3);
+
+-- default resource
+insert into m2rs_db.resources (id, resource_name, http_method, order_num, resource_type)
+values (1, '/user/check', 'GET', 1, 'URL'),
+       (2, '/user', 'POST', 2, 'URL'),
+       (3, '/department', 'POST', 3, 'URL');
+
+insert into m2rs_db.resources_roles (id, resource_id, role_id)
+values (1, 1, 3),
+       (2, 2, 2),
+       (3, 3, 2);

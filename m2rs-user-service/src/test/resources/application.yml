@@ -22,3 +22,7 @@ spring:
 user:
   company:
     logo-dir: /Users/hwpark/Documents/hwpark-workspace/m2rs/logo
+
+jwt:
+  client-secret: 12345
+  issuer: user-service

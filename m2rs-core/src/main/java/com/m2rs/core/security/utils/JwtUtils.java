@@ -45,8 +45,32 @@ public final class JwtUtils {
             .getBody();
     }
 
+    public static boolean isJwtValid(String jwt, JwtClaimInfo info){
+        boolean returnValue = true;
+
+        String subject = null;
+
+        try {
+            subject =
+                Jwts.parser()
+                    .setSigningKey(info.getClientSecret())
+                    .parseClaimsJws(jwt)
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
+            returnValue = false;
+        }
+
+        if (subject == null || subject.isEmpty()) {
+            returnValue = false;
+        }
+
+        return returnValue;
+    }
+
     private static Date toDate(LocalDateTime time) {
         return Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
     }
+
 
 }

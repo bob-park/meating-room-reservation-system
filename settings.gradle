@@ -4,11 +4,14 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'meating-room-reservation-system'
+rootProject.name = 'meeting-room-reservation-system-back-end'
 
 /*  modules */
 // core
 include 'm2rs-core'
+
+// db migration
+include 'm2rs-db-migration'
 
 // discovery
 include 'm2rs-discovery-service'
@@ -21,6 +24,9 @@ include 'm2rs-api-gateway-service'
 
 // user
 include 'm2rs-user-service'
+
+// meeting-room-service
+include 'm2rs-meeting-room-service'
 
 
 

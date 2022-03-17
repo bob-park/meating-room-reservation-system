@@ -1,6 +1,13 @@
 version: "3.8"
 
 services:
+  m2rs-zipkin:
+    container_name: m2rs-zipkin
+    image: openzipkin/zipkin
+    networks:
+      - my-network
+    ports:
+      - "9411:9411"
   m2rs-discovery-service:
     container_name: m2rs-discovery-service
     build: ./m2rs-discovery-service/.
@@ -9,7 +16,7 @@ services:
     ports:
       - "8761:8761"
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://m2rs-discovery-service:8761/actuator/health" ]
+      test: [ "CMD", "curl", "--fail", "m2rs-discovery-service:8761/actuator/health" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -29,7 +36,22 @@ services:
       m2rs-discovery-service:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "curl", "--fail", "http://m2rs-config-service:8888/actuator/health" ]
+      test: [ "CMD", "curl", "--fail", "m2rs-config-service:8888/actuator/health" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+  m2rs-db-migration:
+    container_name: m2rs-db-migration
+    build: ./m2rs-db-migration/.
+    networks:
+      - my-network
+    environment:
+      config-server-url: http://m2rs-config-service:8888
+    depends_on:
+      m2rs-config-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "m2rs-db-migration:8080/actuator/health" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -48,16 +70,14 @@ services:
         condition: service_healthy
   m2rs-user-service:
     container_name: m2rs-user-service
-    build:
-      context: ./m2rs-user-service/.
-      dockerfile: ./m2rs-user-service/Dockerfile
+    build: ./m2rs-user-service/.
     networks:
       - my-network
     environment:
       eureka-server-url: http://m2rs-discovery-service:8761/eureka
       config-server-url: http://m2rs-config-service:8888
     depends_on:
-      m2rs-config-service:
+      m2rs-db-migration:
         condition: service_healthy
 
 networks:
@@ -69,4 +89,3 @@ networks:
       config:
         - gateway: 172.18.0.1
           subnet: 172.18.0.0/16
-

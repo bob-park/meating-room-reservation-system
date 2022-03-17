@@ -28,12 +28,26 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user_service # company 조회
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/company/**
+            - Method=GET
+          filters:
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service # user-service
           uri: lb://user-service
           predicates:
             - Path=/user-service/**
           filters:
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
+        - id: meeting-room-service # meeting-room-service
+          uri: lb://meeting-room-service
+          predicates:
+            - Path=/meeting-room-service/**
+          filters:
+            - RewritePath=/meeting-room-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter
 
 # eureka

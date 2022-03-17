@@ -5,10 +5,13 @@ import lombok.Getter;
 @Getter
 public class ApiResult<T> {
 
-    private final T result;
-    private final Pagination page;
-    private final boolean success;
-    private final Error error;
+    private T result;
+    private Pagination page;
+    private boolean success;
+    private Error error;
+
+    public ApiResult() {
+    }
 
     public ApiResult(T result, Pagination page,
         boolean success, Error error) {
