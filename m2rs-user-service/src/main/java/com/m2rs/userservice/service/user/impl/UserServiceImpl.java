@@ -5,6 +5,8 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.commons.model.api.response.Pagination;
+import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.exception.UserEmailNotFound;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
@@ -16,10 +18,14 @@ import com.m2rs.userservice.model.entity.UserRoles;
 import com.m2rs.userservice.repository.department.DepartmentRepository;
 import com.m2rs.userservice.repository.role.RoleRepository;
 import com.m2rs.userservice.repository.user.UserRepository;
+import com.m2rs.userservice.repository.user.query.UserSearchCondition;
 import com.m2rs.userservice.service.user.UserService;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,9 +59,9 @@ public class UserServiceImpl implements UserService {
             .id(user.getId())
             .email(user.getEmail())
             .name(user.getName())
-            .roleTypes(user.getUserRoles().stream()
-                .map(userRoles -> userRoles.getRole().getRolesName())
-                .collect(Collectors.toList()))
+            .roleTypes(Collections.singletonList(user.getUserRoles()
+                .getRole()
+                .getRolesName()))
             .build();
     }
 
@@ -100,7 +106,7 @@ public class UserServiceImpl implements UserService {
         createUser.setDepartment(department);
 
         // TODO 추후 나중에 다중 권한을 적용해보자
-        createUser.addRole(UserRoles.builder()
+        createUser.setUserRoles(UserRoles.builder()
             .user(createUser)
             .role(role)
             .build());
@@ -111,9 +117,33 @@ public class UserServiceImpl implements UserService {
             .id(savedUser.getId())
             .email(savedUser.getEmail())
             .name(savedUser.getName())
-            .roleTypes(savedUser.getUserRoles().stream()
-                .map(userRoles -> userRoles.getRole().getRolesName())
+            .roleTypes(Collections.singletonList(savedUser.getUserRoles()
+                .getRole()
+                .getRolesName()))
+            .build();
+    }
+
+    @Override
+    public ServicePage<UserResponse> searchUser(UserSearchCondition condition, Pageable pageable) {
+
+        Page<User> result = userRepository.search(condition, pageable);
+
+        return ServicePage.<UserResponse>builder()
+            .contents(result.getContent().stream()
+                .map(item -> UserResponse.builder()
+                    .id(item.getId())
+                    .email(item.getEmail())
+                    .name(item.getName())
+                    .roleTypes(Collections.singletonList(item.getUserRoles()
+                        .getRole()
+                        .getRolesName()))
+                    .build())
                 .collect(Collectors.toList()))
+            .page(Pagination.builder()
+                .totalCount(result.getTotalElements())
+                .page(result.getNumber())
+                .lastPage(result.getTotalPages())
+                .build())
             .build();
     }
 }

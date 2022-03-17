@@ -1,10 +1,6 @@
 package com.m2rs.userservice.model.entity;
 
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,8 +47,8 @@ public class User extends BaseTimeEntity {
     private String cellPhone;
 
     @Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
-    private List<UserRoles> userRoles = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    private UserRoles userRoles;
 
     @Builder
     private User(Long id, String email, String password, String name,
@@ -72,12 +66,8 @@ public class User extends BaseTimeEntity {
         this.department = department;
     }
 
-    public void addRole(UserRoles userRoles) {
-        this.userRoles.add(userRoles);
-    }
-
-    public void removeRole(UserRoles userRoles) {
-        this.userRoles.remove(userRoles);
+    public void setUserRoles(UserRoles userRoles){
+        this.userRoles = userRoles;
     }
 
 }
