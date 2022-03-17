@@ -1,7 +1,11 @@
 package com.m2rs.userservice.configure.security;
 
 
+import static org.apache.commons.lang3.math.NumberUtils.toLong;
+
+import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.JwtClaimInfo;
+import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
 import com.m2rs.userservice.security.factory.UrlResourcesMapFactoryBean;
 import com.m2rs.userservice.security.filter.PermitAllFilter;
@@ -12,12 +16,15 @@ import com.m2rs.userservice.security.handler.RestAuthenticationFailureHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
 import com.m2rs.userservice.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
+import com.m2rs.userservice.security.voter.ConnectionBasedVoter;
 import com.m2rs.userservice.service.resource.SecurityResourceService;
 import com.m2rs.userservice.service.role.RoleHierarchyService;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -28,7 +35,9 @@ import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.ConsensusBased;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -37,12 +46,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -79,9 +90,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authenticated();
 
         http
-            .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class)
             .addFilterBefore(getSecurityAuthenticationFilter(),
-                UsernamePasswordAuthenticationFilter.class);
+                UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(customFilterSecurityInterceptor(), FilterSecurityInterceptor.class);
 
         http.exceptionHandling()
             .authenticationEntryPoint(new RestLoginAuthenticationEntryPoint())
@@ -149,7 +160,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         permitAllFilter.setSecurityMetadataSource(
             urlFilterInvocationSecurityMetadataSource());
-        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAccessDecisionManager(unanimousBased());
         permitAllFilter.setAuthenticationManager(authenticationManagerBean());
 
         return permitAllFilter;
@@ -170,16 +181,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /*
-     Voter
+     Access Decision Manager
      */
     @Bean
-    public AccessDecisionManager affirmativeBased() {
+    public AccessDecisionManager unanimousBased() {
 
         List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
 
+        accessDecisionVoters.add(getConnectionBasedVoter());
         accessDecisionVoters.add(getRoleVoter());
 
-        return new AffirmativeBased(accessDecisionVoters);
+        return new UnanimousBased(accessDecisionVoters);
     }
 
 
@@ -189,6 +201,22 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public AccessDecisionVoter<?> getRoleVoter() {
         return new RoleHierarchyVoter(getRoleHierarchy());
+    }
+
+    @Bean
+    public ConnectionBasedVoter getConnectionBasedVoter() {
+
+        Pattern pattern = Pattern.compile("^/user/(\\d+)");
+
+        RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
+
+        return new ConnectionBasedVoter(regexRequestMatcher, url -> {
+            Matcher matcher = pattern.matcher(url);
+
+            long userId = matcher.find() ? toLong(matcher.group(1), -1) : -1;
+
+            return Id.of(User.class, userId);
+        });
     }
 
     /*

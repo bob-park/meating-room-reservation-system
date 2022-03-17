@@ -39,7 +39,8 @@ public class SecurityResourceServiceImpl implements SecurityResourceService {
                         configAttributeList.add(
                             new SecurityConfig(role.getRolesName().getRoleName())));
 
-                result.put(new AntPathRequestMatcher(resource.getResourceName()),
+                result.put(new AntPathRequestMatcher(resource.getResourceName(),
+                        resource.getHttpMethod()),
                     configAttributeList);
             });
 
