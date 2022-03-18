@@ -13,6 +13,7 @@ import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
@@ -23,16 +24,14 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
     private static final SimpleGrantedAuthority GRANT_MANAGER =
         new SimpleGrantedAuthority(RoleType.ROLE_MANAGER.getRoleName());
 
-    private static final SimpleGrantedAuthority GRANT_ADMIN =
-        new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.getRoleName());
-
     private final RequestMatcher requiresAuthorizationRequestMatcher;
-
     private final Function<String, Id<User, Long>> idExtractor;
+    private final RoleHierarchy roleHierarchy;
 
     public ConnectionBasedVoter(
         RequestMatcher requiresAuthorizationRequestMatcher,
-        Function<String, Id<User, Long>> idExtractor) {
+        Function<String, Id<User, Long>> idExtractor,
+        RoleHierarchy roleHierarchy) {
 
         checkNotNull(requiresAuthorizationRequestMatcher,
             "requiresAuthorizationRequestMatcher must be provided.");
@@ -40,6 +39,7 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
 
         this.requiresAuthorizationRequestMatcher = requiresAuthorizationRequestMatcher;
         this.idExtractor = idExtractor;
+        this.roleHierarchy = roleHierarchy;
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
 
         // 본인 자신 또는 MANAGER 권한인 경우
         if (jwtAuth.getId().equals(targetId.value())
-            || authentication.getAuthorities().contains(GRANT_MANAGER)
-            || authentication.getAuthorities().contains(GRANT_ADMIN)) {
+            || roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities()).
+            contains(GRANT_MANAGER)) {
             return ACCESS_GRANTED;
         }
 
