@@ -9,19 +9,17 @@ insert into m2rs_db.departments (id, com_id, name)
 values (1, 1, '혀누 부서');
 
 -- default user
-insert into m2rs_db.users (id, department_id, email, password, name, phone, cell_phone,
-                           created_date, last_modified_date)
+insert into m2rs_db.users (id, department_id, email, password, name, phone, cell_phone)
 values (1, null, 'admin@admin.com',
-        '{bcrypt}$2a$12$Ng5UfR3Vvk8ku3jZT1HA7.9fNG21yt3WgfdVZUzZdS7PBOmazMjwa', 'admin', null, null,
-        '2022-02-11 06:22:35', null),
+        '{bcrypt}$2a$12$Ng5UfR3Vvk8ku3jZT1HA7.9fNG21yt3WgfdVZUzZdS7PBOmazMjwa', 'admin', null,
+        null),
        (2, 1, 'manager@manager.com',
         '{bcrypt}$2a$12$daP6XcPKuSs5WZfijnbSSO6MPTW1PgWqZXjN91PvbFL4XXd8pg37a', 'manager', null,
-        null, '2022-03-14 01:13:23', null),
+        null),
        (3, 1, 'user@user.com',
-        '{bcrypt}$2a$12$NXoIqhAD8ZYBkK1oOp2i7uXmGIMw6xIDNK8ziX1eDKaad2C5Yf97e', 'user', null, null,
-        '2022-03-14 00:55:10', null),
+        '{bcrypt}$2a$12$NXoIqhAD8ZYBkK1oOp2i7uXmGIMw6xIDNK8ziX1eDKaad2C5Yf97e', 'user', null, null),
        (4, 1, 'hwpark@hwpark.com',
-        '{bcrypt}$2a$10$ccF8WU4asfO7MTF/CpLy0.7NxPUHhcgUNZeXWec7d8YUm47gE.jyW', '혀누 팤');
+        '{bcrypt}$2a$10$ccF8WU4asfO7MTF/CpLy0.7NxPUHhcgUNZeXWec7d8YUm47gE.jyW', '혀누 팤', null, null);
 
 -- default roles
 insert into roles (id, pid, roles_name, roles_description)
