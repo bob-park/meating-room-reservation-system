@@ -5,7 +5,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.security.model.JwtClaimInfo;
 import com.m2rs.core.security.utils.JwtUtils;
-import com.m2rs.userservice.security.model.RestAuthentication;
+import com.m2rs.userservice.security.model.RestPrincipal;
 import com.m2rs.userservice.security.model.RestAuthenticationToken;
 import io.jsonwebtoken.Claims;
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class RestAuthenticationFilter extends GenericFilterBean {
                     if (isNotEmpty(email) && !authorities.isEmpty()) {
 
                         RestAuthenticationToken authentication = new RestAuthenticationToken(
-                            RestAuthentication.builder()
+                            RestPrincipal.builder()
                                 .id(id)
                                 .comId(comId)
                                 .departmentId(departmentId)

@@ -12,7 +12,7 @@ import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.UserResponse;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.query.UserSearchCondition;
-import com.m2rs.userservice.security.model.RestAuthentication;
+import com.m2rs.userservice.security.model.RestPrincipal;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class UserController {
 
     @GetMapping(path = "check")
     public ApiResult<UserResponse> checkUser(
-        @AuthenticationPrincipal RestAuthentication authentication) {
+        @AuthenticationPrincipal RestPrincipal authentication) {
 
         checkArgument(isNotEmpty(authentication.getEmail()), "email must be provided.");
 

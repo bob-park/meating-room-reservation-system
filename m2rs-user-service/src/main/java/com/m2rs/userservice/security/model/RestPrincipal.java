@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class RestAuthentication {
+public class RestPrincipal {
 
     private final Long id;
     private final Long comId;
@@ -13,7 +13,7 @@ public class RestAuthentication {
     private final String name;
 
     @Builder
-    private RestAuthentication(Long id, Long comId, Long departmentId, String email,
+    private RestPrincipal(Long id, Long comId, Long departmentId, String email,
         String name) {
         this.id = id;
         this.comId = comId;
