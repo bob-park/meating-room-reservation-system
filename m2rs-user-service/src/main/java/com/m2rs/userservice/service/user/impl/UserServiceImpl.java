@@ -13,6 +13,7 @@ import com.m2rs.userservice.exception.UserEmailNotFound;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.UserResponse;
+import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.Role;
 import com.m2rs.userservice.model.entity.User;
@@ -57,8 +58,13 @@ public class UserServiceImpl implements UserService {
             throw new BadCredentialsException("Wrong password.");
         }
 
+        Department department = user.getDepartment();
+        Company company = isNotEmpty(department) ? department.getCompany() : null;
+
         return UserResponse.builder()
             .id(user.getId())
+            .comId(isNotEmpty(company) ? company.getId() : null)
+            .departmentId(isNotEmpty(department) ? department.getId() : null)
             .email(user.getEmail())
             .name(user.getName())
             .roleTypes(Collections.singletonList(user.getUserRoles()
@@ -155,8 +161,13 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id.value())
             .orElseThrow(() -> new NotFoundException(User.class, id.value()));
 
+        Department department = user.getDepartment();
+        Company company = isNotEmpty(department) ? department.getCompany() : null;
+
         return UserResponse.builder()
             .id(user.getId())
+            .comId(isNotEmpty(company) ? company.getId() : null)
+            .departmentId(isNotEmpty(department) ? department.getId() : null)
             .email(user.getEmail())
             .name(user.getName())
             .roleTypes(Collections.singletonList(user.getUserRoles()

@@ -53,6 +53,8 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
             String token = JwtUtils.newToken(
                 JwtClaim.builder()
                     .id(userResponse.getId())
+                    .comId(userResponse.getComId())
+                    .departmentId(userResponse.getDepartmentId())
                     .email(userResponse.getEmail())
                     .name(userResponse.getName())
                     .roleType(userResponse.getRoleTypes().stream().findFirst().orElse(null))

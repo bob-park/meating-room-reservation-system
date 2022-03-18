@@ -58,6 +58,8 @@ public class RestAuthenticationFilter extends GenericFilterBean {
                     }
 
                     Long id = claims.get("id", Long.class);
+                    Long comId = claims.get("comId", Long.class);
+                    Long departmentId = claims.get("departmentId", Long.class);
                     String email = claims.get("email", String.class);
                     String name = claims.get("name", String.class);
 
@@ -68,6 +70,8 @@ public class RestAuthenticationFilter extends GenericFilterBean {
                         RestAuthenticationToken authentication = new RestAuthenticationToken(
                             RestAuthentication.builder()
                                 .id(id)
+                                .comId(comId)
+                                .departmentId(departmentId)
                                 .email(email)
                                 .name(name)
                                 .build(),

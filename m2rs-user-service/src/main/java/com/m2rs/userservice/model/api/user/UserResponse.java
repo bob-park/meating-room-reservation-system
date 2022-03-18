@@ -14,6 +14,8 @@ import lombok.Getter;
 public class UserResponse {
 
     private final Long id;
+    private final Long comId;
+    private final Long departmentId;
     private final String email;
     private final String name;
 
@@ -26,10 +28,14 @@ public class UserResponse {
     private final LocalDateTime lastModifiedDate;
 
     @Builder
-    private UserResponse(Long id, String email, String name, List<RoleType> roleTypes,
+    private UserResponse(Long id, Long comId, Long departmentId, String email,
+        String name,
+        List<RoleType> roleTypes,
         String phone, String cellPhone, LocalDateTime createdDate,
         LocalDateTime lastModifiedDate) {
         this.id = id;
+        this.comId = comId;
+        this.departmentId = departmentId;
         this.email = email;
         this.name = name;
 
