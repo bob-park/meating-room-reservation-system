@@ -7,14 +7,15 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.model.entity.Company;
+import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.security.model.RestAuthenticationToken;
 import com.m2rs.userservice.security.model.RestPrincipal;
 import java.util.Collection;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -127,6 +128,13 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
                 return true;
             }
 
+            boolean isNotNullDepartment = isNotEmpty(principal.getDepartmentId())
+                && isNotEmpty(userConnect.getDepartmentId());
+
+            if (isNotNullDepartment) {
+                return principal.getDepartmentId().equals(userConnect.getDepartmentId().value());
+            }
+
             // check manager authority
             return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
                 .contains(GRANT_MANAGER);
@@ -138,11 +146,21 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
     }
 
     @Getter
-    @RequiredArgsConstructor
     public static class UserConnect {
 
         private final Id<Company, Long> comId;
+        private final Id<Department, Long> departmentId;
         private final Id<User, Long> userId;
+
+        @Builder
+        private UserConnect(
+            Id<Company, Long> comId,
+            Id<Department, Long> departmentId,
+            Id<User, Long> userId) {
+            this.comId = comId;
+            this.departmentId = departmentId;
+            this.userId = userId;
+        }
     }
 
 }

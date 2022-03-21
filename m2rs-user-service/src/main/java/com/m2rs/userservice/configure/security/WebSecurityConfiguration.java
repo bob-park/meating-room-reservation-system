@@ -7,6 +7,7 @@ import com.m2rs.core.commons.exception.ServiceRuntimeException;
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.JwtClaimInfo;
 import com.m2rs.userservice.model.entity.Company;
+import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
 import com.m2rs.userservice.security.factory.UrlResourcesMapFactoryBean;
@@ -188,7 +189,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
 
-        accessDecisionVoters.add(getConnectionBasedVoter());
+        accessDecisionVoters.add(connectionUserVoter());
+        accessDecisionVoters.add(connectionDepartmentVoter());
         accessDecisionVoters.add(getRoleVoter());
 
         return new UnanimousBased(accessDecisionVoters);
@@ -204,7 +206,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ConnectionBasedVoter getConnectionBasedVoter() {
+    public ConnectionBasedVoter connectionUserVoter() {
 
         Pattern pattern = Pattern.compile("^/company/(\\d+)/user/(\\d+)");
 
@@ -222,7 +224,35 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             long comId = toLong(matcher.group(1), -1);
             long userId = toLong(matcher.group(2), -1);
 
-            return new UserConnect(Id.of(Company.class, comId), Id.of(User.class, userId));
+            return UserConnect.builder()
+                .comId(Id.of(Company.class, comId))
+                .userId(Id.of(User.class, userId))
+                .build();
+        }, getRoleHierarchy());
+    }
+
+    @Bean
+    public ConnectionBasedVoter connectionDepartmentVoter() {
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/department/(\\d+)");
+
+        RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
+
+        return new ConnectionBasedVoter(regexRequestMatcher, url -> {
+            Matcher matcher = pattern.matcher(url);
+
+            boolean matched = matcher.find();
+
+            if (!matched) {
+                throw new ServiceRuntimeException("not matched request uri.");
+            }
+
+            long comId = toLong(matcher.group(1), -1);
+            long departmentId = toLong(matcher.group(2), -1);
+
+            return UserConnect.builder()
+                .comId(Id.of(Company.class, comId))
+                .departmentId(Id.of(Department.class, departmentId))
+                .build();
         }, getRoleHierarchy());
     }
 

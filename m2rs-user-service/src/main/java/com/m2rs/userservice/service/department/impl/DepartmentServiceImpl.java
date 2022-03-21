@@ -1,10 +1,12 @@
 package com.m2rs.userservice.service.department.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.google.common.base.Preconditions;
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.department.CreateDepartmentRequest;
 import com.m2rs.userservice.model.api.department.DepartmentResponse;
 import com.m2rs.userservice.model.entity.Company;
@@ -29,13 +31,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Transactional
     @Override
-    public DepartmentResponse createDepartment(CreateDepartmentRequest request) {
+    public DepartmentResponse createDepartment(Id<Company, Long> comId,
+        CreateDepartmentRequest request) {
 
-        checkArgument(isNotEmpty(request.getComId()), "comId must be provided.");
-        checkArgument(isNotEmpty(request.getName()), "name must be provided.");
+        checkNotNull(comId, "comId must be provided.");
+        checkNotNull(request.getName(), "name must be provided.");
 
-        Company company = companyRepository.findById(request.getComId())
-            .orElseThrow(() -> new NotFoundException(Company.class, request.getComId()));
+        Company company = companyRepository.findById(comId.value())
+            .orElseThrow(() -> new NotFoundException(Company.class, comId.value()));
 
         Department department = Department.builder()
             .name(request.getName())
