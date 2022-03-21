@@ -2,15 +2,19 @@ package com.m2rs.userservice.security.voter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.ClassUtils.isAssignable;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.RoleType;
+import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.User;
-import com.m2rs.userservice.security.model.RestPrincipal;
 import com.m2rs.userservice.security.model.RestAuthenticationToken;
+import com.m2rs.userservice.security.model.RestPrincipal;
 import java.util.Collection;
 import java.util.function.Function;
 import javax.servlet.http.HttpServletRequest;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -25,13 +29,16 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
     private static final GrantedAuthority GRANT_MANAGER =
         new SimpleGrantedAuthority(RoleType.ROLE_MANAGER.getRoleName());
 
+    private static final GrantedAuthority GRANT_ADMIN =
+        new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.getRoleName());
+
     private final RequestMatcher requiresAuthorizationRequestMatcher;
-    private final Function<String, Id<User, Long>> idExtractor;
+    private final Function<String, UserConnect> idExtractor;
     private final RoleHierarchy roleHierarchy;
 
     public ConnectionBasedVoter(
         RequestMatcher requiresAuthorizationRequestMatcher,
-        Function<String, Id<User, Long>> idExtractor,
+        Function<String, UserConnect> idExtractor,
         RoleHierarchy roleHierarchy) {
 
         checkNotNull(requiresAuthorizationRequestMatcher,
@@ -80,24 +87,62 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
         return requiresAuthorizationRequestMatcher.matches(request);
     }
 
-    private Id<User, Long> obtainTargetId(HttpServletRequest request) {
+    private UserConnect obtainTargetId(HttpServletRequest request) {
         return idExtractor.apply(request.getRequestURI());
     }
 
     /**
      * 권한 확인하는 메서드
+     * <p>
+     * - 사용자인 경우
+     * <pre>
+     *     - 같은 company && 같은 user
+     * </pre>
+     * <p>
+     * - 매니저인 경우
+     * <pre>
+     *     - 같은 company && 모든 user
+     * </pre>
+     * <p>
+     * - 관리자인 경우
+     * <pre>
+     *     - 모든 company && 모든 user
+     * </pre>
      *
      * @param authentication authentication
-     * @param id             User id
+     * @param userConnect    userConnect
      * @return boolean
      */
-    private boolean availableAccess(Authentication authentication, Id<User, Long> id) {
+    private boolean availableAccess(Authentication authentication, UserConnect userConnect) {
 
         RestPrincipal principal = (RestPrincipal) authentication.getPrincipal();
 
-        return principal.getId().equals(id.value())
-            || roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
-            .contains(GRANT_MANAGER);
+        boolean isEqualCompany = isNotEmpty(principal.getComId())
+            && principal.getComId().equals(userConnect.getComId().value());
+
+        if (isEqualCompany) {
+
+            // check user authority
+            if (principal.getId().equals(userConnect.getUserId().value())) {
+                return true;
+            }
+
+            // check manager authority
+            return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+                .contains(GRANT_MANAGER);
+        }
+
+        // check admin authority
+        return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+            .contains(GRANT_ADMIN);
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public static class UserConnect {
+
+        private final Id<Company, Long> comId;
+        private final Id<User, Long> userId;
     }
 
 }

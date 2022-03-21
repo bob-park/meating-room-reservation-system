@@ -3,8 +3,10 @@ package com.m2rs.userservice.configure.security;
 
 import static org.apache.commons.lang3.math.NumberUtils.toLong;
 
+import com.m2rs.core.commons.exception.ServiceRuntimeException;
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.JwtClaimInfo;
+import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
 import com.m2rs.userservice.security.factory.UrlResourcesMapFactoryBean;
@@ -17,10 +19,10 @@ import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
 import com.m2rs.userservice.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
 import com.m2rs.userservice.security.voter.ConnectionBasedVoter;
+import com.m2rs.userservice.security.voter.ConnectionBasedVoter.UserConnect;
 import com.m2rs.userservice.service.resource.SecurityResourceService;
 import com.m2rs.userservice.service.role.RoleHierarchyService;
 import com.m2rs.userservice.service.user.UserAuthenticationService;
-import com.m2rs.userservice.service.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -204,16 +206,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public ConnectionBasedVoter getConnectionBasedVoter() {
 
-        Pattern pattern = Pattern.compile("^/user/(\\d+)");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/user/(\\d+)");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
         return new ConnectionBasedVoter(regexRequestMatcher, url -> {
             Matcher matcher = pattern.matcher(url);
 
-            long userId = matcher.find() ? toLong(matcher.group(1), -1) : -1;
+            boolean matched = matcher.find();
 
-            return Id.of(User.class, userId);
+            if (!matched) {
+                throw new ServiceRuntimeException("not matched request uri.");
+            }
+
+            long comId = toLong(matcher.group(1), -1);
+            long userId = toLong(matcher.group(2), -1);
+
+            return new UserConnect(Id.of(Company.class, comId), Id.of(User.class, userId));
         }, getRoleHierarchy());
     }
 
