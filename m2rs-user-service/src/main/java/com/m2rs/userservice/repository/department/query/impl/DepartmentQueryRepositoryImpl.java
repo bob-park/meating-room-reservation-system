@@ -28,7 +28,7 @@ public class DepartmentQueryRepositoryImpl implements DepartmentQueryRepository 
     @Override
     public List<Department> search(SearchDepartmentQueryCondition condition) {
         return query.selectFrom(department)
-            .join(department.company, company)
+            .join(department.company, company).fetchJoin()
             .where(mappingCondition(condition))
             .orderBy(department.name.asc())
             .fetch();

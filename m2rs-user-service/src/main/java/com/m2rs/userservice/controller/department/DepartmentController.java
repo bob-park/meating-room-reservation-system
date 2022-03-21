@@ -11,6 +11,7 @@ import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.service.department.DepartmentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +30,13 @@ public class DepartmentController {
     public ApiResult<DepartmentResponse> createDepartment(@PathVariable Long comId,
         @RequestBody CreateDepartmentRequest request) {
         return ok(departmentService.createDepartment(Id.of(Company.class, comId), request));
+    }
+
+    @GetMapping(path = "{departmentId}")
+    public ApiResult<DepartmentResponse> getDepartment(@PathVariable Long comId,
+        @PathVariable Long departmentId) {
+        return ok(departmentService.getDepartment(Id.of(Company.class, comId),
+            Id.of(Department.class, departmentId)));
     }
 
     @PutMapping(path = "{departmentId}")
