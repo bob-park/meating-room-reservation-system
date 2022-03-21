@@ -1,18 +1,25 @@
 package com.m2rs.userservice.repository.user.query.impl;
 
+import static com.m2rs.userservice.model.entity.QCompany.company;
+import static com.m2rs.userservice.model.entity.QDepartment.department;
 import static com.m2rs.userservice.model.entity.QRole.role;
 import static com.m2rs.userservice.model.entity.QUser.user;
 import static com.m2rs.userservice.model.entity.QUserRoles.userRoles;
 
+import com.m2rs.core.model.Id;
+import com.m2rs.userservice.model.entity.Company;
+import com.m2rs.userservice.model.entity.QCompany;
+import com.m2rs.userservice.model.entity.QDepartment;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.user.query.UserQueryRepository;
-import com.m2rs.userservice.repository.user.query.UserSearchCondition;
+import com.m2rs.userservice.repository.user.query.SearchUserQueryCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import javax.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -28,7 +35,7 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
     }
 
     @Override
-    public Page<User> search(UserSearchCondition condition, Pageable pageable) {
+    public Page<User> search(SearchUserQueryCondition condition, Pageable pageable) {
 
         List<User> contents = query.selectFrom(user)
             .join(user.userRoles, userRoles).fetchJoin()
@@ -46,11 +53,24 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Optional<User> getUser(Id<Company, Long> comId, Id<User, Long> id) {
+
+        User result = query.selectFrom(user)
+            .join(user.department, department).fetchJoin()
+            .join(department.company, company).fetchJoin()
+            .where(user.id.eq(id.value()), user.department.company.id.eq(comId.value()))
+            .fetchOne();
+
+        return Optional.ofNullable(result);
+    }
+
     // == mapping condition == //
-    private Predicate mappingCondition(UserSearchCondition condition) {
+    private Predicate mappingCondition(SearchUserQueryCondition condition) {
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(eqId(condition.getId()))
+            .and(eqComId(condition.getComId()))
             .and(eqDepartmentId(condition.getDepartmentId()))
             .and(eqEmail(condition.getEmail()))
             .and(containName(condition.getName()));
@@ -72,5 +92,9 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
 
     private BooleanExpression containName(String name) {
         return StringUtils.isNotBlank(name) ? user.name.containsIgnoreCase(name) : null;
+    }
+
+    private BooleanExpression eqComId(Long comId) {
+        return comId != null ? user.department.company.id.eq(comId) : null;
     }
 }

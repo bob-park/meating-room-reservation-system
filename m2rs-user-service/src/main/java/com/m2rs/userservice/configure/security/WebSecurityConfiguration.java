@@ -19,6 +19,7 @@ import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
 import com.m2rs.userservice.security.voter.ConnectionBasedVoter;
 import com.m2rs.userservice.service.resource.SecurityResourceService;
 import com.m2rs.userservice.service.role.RoleHierarchyService;
+import com.m2rs.userservice.service.user.UserAuthenticationService;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,6 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final SecurityResourceService securityResourceService;
-
 
     private final RoleHierarchyService roleHierarchyService;
 
@@ -118,8 +118,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public RestAuthenticationProvider getAuthenticationProvider(UserService userService) {
-        return new RestAuthenticationProvider(userService, jwtClaimInfo);
+    public RestAuthenticationProvider getAuthenticationProvider(
+        UserAuthenticationService authenticationService) {
+        return new RestAuthenticationProvider(authenticationService, jwtClaimInfo);
     }
 
     @Bean

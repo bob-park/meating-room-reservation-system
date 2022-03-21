@@ -7,6 +7,7 @@ import com.m2rs.userservice.model.api.user.UserLoginRequest;
 import com.m2rs.userservice.model.api.user.UserResponse;
 import com.m2rs.userservice.security.model.RestAuthenticationResult;
 import com.m2rs.userservice.security.model.RestAuthenticationToken;
+import com.m2rs.userservice.service.user.UserAuthenticationService;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @RequiredArgsConstructor
 public class RestAuthenticationProvider implements AuthenticationProvider {
 
-    private final UserService userService;
+    private final UserAuthenticationService authenticationService;
     private final JwtClaimInfo jwtClaimInfo;
 
     @Override
@@ -39,7 +40,7 @@ public class RestAuthenticationProvider implements AuthenticationProvider {
 
     private Authentication processUserAuthentication(UserLoginRequest request) {
         try {
-            UserResponse userResponse = userService.login(request.getEmail(),
+            UserResponse userResponse = authenticationService.login(request.getEmail(),
                 request.getPassword());
 
             RestAuthenticationToken authentication =
