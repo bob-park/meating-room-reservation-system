@@ -40,7 +40,7 @@ insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, or
 values (1, '/user/check', 'PATH', 'GET', 1, 'URL'),
        (2, '/user', 'PATH', 'POST', 2, 'URL'),
        (3, '/department', 'PATH', 'POST', 3, 'URL'),
-       (4, '^/user/(\\d+)', 'REGEX', null, 4, 'URL');
+       (4, '^/company/(\d+)/user/(\d+)', 'REGEX', null, 4, 'URL');
 
 insert into m2rs_db.resources_roles (id, resource_id, role_id)
 values (1, 1, 3),
