@@ -1,14 +1,12 @@
 package com.m2rs.userservice.configure.security;
 
 
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.math.NumberUtils.toLong;
 
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
-import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.JwtClaimInfo;
-import com.m2rs.userservice.model.entity.Company;
-import com.m2rs.userservice.model.entity.Department;
-import com.m2rs.userservice.model.entity.User;
+import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.security.entrypoint.RestLoginAuthenticationEntryPoint;
 import com.m2rs.userservice.security.factory.UrlResourcesMapFactoryBean;
 import com.m2rs.userservice.security.filter.PermitAllFilter;
@@ -18,9 +16,9 @@ import com.m2rs.userservice.security.handler.RestAccessDeniedHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationFailureHandler;
 import com.m2rs.userservice.security.handler.RestAuthenticationSuccessHandler;
 import com.m2rs.userservice.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
+import com.m2rs.userservice.security.model.RestPrincipal;
 import com.m2rs.userservice.security.provider.RestAuthenticationProvider;
 import com.m2rs.userservice.security.voter.ConnectionBasedVoter;
-import com.m2rs.userservice.security.voter.ConnectionBasedVoter.UserConnect;
 import com.m2rs.userservice.service.resource.SecurityResourceService;
 import com.m2rs.userservice.service.role.RoleHierarchyService;
 import com.m2rs.userservice.service.user.UserAuthenticationService;
@@ -36,6 +34,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyUtils;
 import org.springframework.security.access.vote.RoleHierarchyVoter;
@@ -46,6 +45,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -189,8 +189,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
 
-        accessDecisionVoters.add(connectionUserVoter());
-        accessDecisionVoters.add(connectionDepartmentVoter());
+        accessDecisionVoters.add(connectionUserVoter(null));
+        accessDecisionVoters.add(connectionDepartmentVoter(null));
         accessDecisionVoters.add(getRoleVoter());
 
         return new UnanimousBased(accessDecisionVoters);
@@ -206,39 +206,55 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ConnectionBasedVoter connectionUserVoter() {
+    public ConnectionBasedVoter connectionUserVoter(RoleHierarchy roleHierarchy) {
 
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/user/(\\d+)");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/user(/(\\d+))?");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
-        return new ConnectionBasedVoter(regexRequestMatcher, url -> {
-            Matcher matcher = pattern.matcher(url);
+        return new ConnectionBasedVoter(regexRequestMatcher, (uri, authentication) -> {
+
+            Matcher matcher = pattern.matcher(uri);
 
             boolean matched = matcher.find();
 
             if (!matched) {
                 throw new ServiceRuntimeException("not matched request uri.");
             }
+
+            RestPrincipal principal = (RestPrincipal) authentication.getPrincipal();
 
             long comId = toLong(matcher.group(1), -1);
             long userId = toLong(matcher.group(2), -1);
 
-            return UserConnect.builder()
-                .comId(Id.of(Company.class, comId))
-                .userId(Id.of(User.class, userId))
-                .build();
-        }, getRoleHierarchy());
+            boolean isEqualsComId =
+                isNotEmpty(principal.getComId()) && comId == principal.getComId();
+
+            if (isEqualsComId) {
+                // check user authorization
+                if (userId != -1) {
+                    return principal.getId() == userId;
+                }
+
+                // check manager authorization
+                return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+                    .contains(new SimpleGrantedAuthority(RoleType.ROLE_MANAGER.getRoleName()));
+            }
+
+            // check admin authorization
+            return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+                .contains(new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.getRoleName()));
+        });
     }
 
     @Bean
-    public ConnectionBasedVoter connectionDepartmentVoter() {
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/department/(\\d+)");
+    public ConnectionBasedVoter connectionDepartmentVoter(RoleHierarchy roleHierarchy) {
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/department(/(\\d+))?");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
-        return new ConnectionBasedVoter(regexRequestMatcher, url -> {
-            Matcher matcher = pattern.matcher(url);
+        return new ConnectionBasedVoter(regexRequestMatcher, (uri, authentication) -> {
+            Matcher matcher = pattern.matcher(uri);
 
             boolean matched = matcher.find();
 
@@ -246,14 +262,23 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 throw new ServiceRuntimeException("not matched request uri.");
             }
 
-            long comId = toLong(matcher.group(1), -1);
-            long departmentId = toLong(matcher.group(2), -1);
+            RestPrincipal principal = (RestPrincipal) authentication.getPrincipal();
 
-            return UserConnect.builder()
-                .comId(Id.of(Company.class, comId))
-                .departmentId(Id.of(Department.class, departmentId))
-                .build();
-        }, getRoleHierarchy());
+            long comId = toLong(matcher.group(1), -1);
+
+            boolean isEqualsComId =
+                isNotEmpty(principal.getComId()) && comId == principal.getComId();
+
+            if (isEqualsComId) {
+                // check manager authorization
+                return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+                    .contains(new SimpleGrantedAuthority(RoleType.ROLE_MANAGER.getRoleName()));
+            }
+
+            // check admin authorization
+            return roleHierarchy.getReachableGrantedAuthorities(authentication.getAuthorities())
+                .contains(new SimpleGrantedAuthority(RoleType.ROLE_ADMIN.getRoleName()));
+        });
     }
 
     /*
