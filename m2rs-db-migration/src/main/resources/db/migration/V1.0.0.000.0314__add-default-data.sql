@@ -27,23 +27,31 @@ values (1, null, 'ROLE_ADMIN', '시스템 관리자'),
        (2, 1, 'ROLE_MANAGER', '매니저'),
        (3, 2, 'ROLE_USER', '사용자');
 
--- default user roles
+-- default users_roles
 insert into m2rs_db.users_roles (id, user_id, role_id)
 values (1, 1, 1),
        (2, 2, 2),
        (3, 3, 3),
        (4, 4, 3);
 
--- default resource
-insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num,
-                               resource_type)
-values (1, '/user/check', 'PATH', 'GET', 1, 'URL'),
-       (2, '/user', 'PATH', 'POST', 2, 'URL'),
-       (3, '/department', 'PATH', 'POST', 3, 'URL'),
-       (4, '^/company/(\d+)/user/(\d+)', 'REGEX', null, 4, 'URL');
+-- default resources
+insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num, resource_type)
+values  (1, '/admin/**', 'PATH', null, 1, 'URL'),
+        (1000, '/company/**', 'PATH', null, 1000, 'URL'),
+        (1011, '^/company/(\\d+)', 'REGEX', 'POST', 1011, 'URL'),
+        (1012, '^/company/(\\d+)', 'REGEX', 'GET', 1012, 'URL'),
+        (1015, '^/company/(\\d+)/logo', 'REGEX', 'GET', 1015, 'URL'),
+        (1101, '^/company/(\\d+)/user', 'REGEX', 'POST', 1101, 'URL'),
+        (1110, '^/company/(\\d+)/user/(\\d+)', 'REGEX', null, 1110, 'URL'),
+        (1201, '^/company/(\\d+)/department', 'REGEX', 'POST', 1201, 'URL'),
+        (1211, '^/company/(\\d+)/department/(\\d+)', 'REGEX', null, 1211, 'URL');
 
+-- default resources_roles
 insert into m2rs_db.resources_roles (id, resource_id, role_id)
-values (1, 1, 3),
-       (2, 2, 2),
-       (3, 3, 2),
-       (4, 4, 3);
+values  (1, 1, 1),
+        (1000, 1000, 3),
+        (1011, 1011, 2),
+        (1101, 1101, 2),
+        (1110, 1110, 3),
+        (1201, 1201, 2),
+        (1211, 1211, 2);
