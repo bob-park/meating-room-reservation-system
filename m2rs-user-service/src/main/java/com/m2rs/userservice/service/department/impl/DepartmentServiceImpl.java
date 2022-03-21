@@ -9,6 +9,7 @@ import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.department.CreateDepartmentRequest;
 import com.m2rs.userservice.model.api.department.DepartmentResponse;
+import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.repository.company.CompanyRepository;
@@ -51,6 +52,24 @@ public class DepartmentServiceImpl implements DepartmentService {
         return DepartmentResponse.builder()
             .id(savedDepartment.getId())
             .name(savedDepartment.getName())
+            .build();
+    }
+
+    @Transactional
+    @Override
+    public DepartmentResponse modifyDepartment(Id<Department, Long> departmentId,
+        ModifyDepartmentRequest modifyRequest) {
+
+        checkNotNull(departmentId, "departmentId must be provided.");
+
+        Department department = departmentRepository.findById(departmentId.value())
+            .orElseThrow(() -> new NotFoundException(Department.class, departmentId.value()));
+
+        department.modify(modifyRequest);
+
+        return DepartmentResponse.builder()
+            .id(department.getId())
+            .name(department.getName())
             .build();
     }
 }

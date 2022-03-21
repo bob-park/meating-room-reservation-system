@@ -124,15 +124,10 @@ public class ConnectionBasedVoter implements AccessDecisionVoter<FilterInvocatio
         if (isEqualCompany) {
 
             // check user authority
-            if (principal.getId().equals(userConnect.getUserId().value())) {
-                return true;
-            }
+            boolean isNotNullUserId = isNotEmpty(userConnect.getUserId());
 
-            boolean isNotNullDepartment = isNotEmpty(principal.getDepartmentId())
-                && isNotEmpty(userConnect.getDepartmentId());
-
-            if (isNotNullDepartment) {
-                return principal.getDepartmentId().equals(userConnect.getDepartmentId().value());
+            if (isNotNullUserId) {
+                return principal.getId().equals(userConnect.getUserId().value());
             }
 
             // check manager authority
