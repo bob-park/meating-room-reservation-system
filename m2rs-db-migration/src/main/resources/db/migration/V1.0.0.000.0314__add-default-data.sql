@@ -35,23 +35,24 @@ values (1, 1, 1),
        (4, 4, 3);
 
 -- default resources
-insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num, resource_type)
-values  (1, '/admin/**', 'PATH', null, 1, 'URL'),
-        (1000, '/company/**', 'PATH', null, 1000, 'URL'),
-        (1011, '^/company/(\\d+)', 'REGEX', 'POST', 1011, 'URL'),
-        (1012, '^/company/(\\d+)', 'REGEX', 'GET', 1012, 'URL'),
-        (1015, '^/company/(\\d+)/logo', 'REGEX', 'GET', 1015, 'URL'),
-        (1101, '^/company/(\\d+)/user', 'REGEX', 'POST', 1101, 'URL'),
-        (1110, '^/company/(\\d+)/user/(\\d+)', 'REGEX', null, 1110, 'URL'),
-        (1201, '^/company/(\\d+)/department', 'REGEX', 'POST', 1201, 'URL'),
-        (1211, '^/company/(\\d+)/department/(\\d+)', 'REGEX', null, 1211, 'URL');
+insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num,
+                               resource_type)
+values (1, '/admin/**', 'PATH', null, 1, 'URL'),
+       (1000, '/company/**', 'PATH', null, 1000, 'URL'),
+       (1001, '/company', 'PATH', 'POST', 1001, 'URL'),
+       (1012, '^/company/(\\d+)', 'REGEX', 'GET', 1012, 'URL'),
+       (1015, '^/company/(\\d+)/logo', 'REGEX', 'GET', 1015, 'URL'),
+       (1101, '^/company/(\\d+)/user', 'REGEX', 'POST', 1101, 'URL'),
+       (1110, '^/company/(\\d+)/user/(\\d+)', 'REGEX', null, 1110, 'URL'),
+       (1201, '^/company/(\\d+)/department', 'REGEX', 'POST', 1201, 'URL'),
+       (1211, '^/company/(\\d+)/department/(\\d+)', 'REGEX', null, 1211, 'URL');
 
 -- default resources_roles
 insert into m2rs_db.resources_roles (id, resource_id, role_id)
-values  (1, 1, 1),
-        (1000, 1000, 3),
-        (1011, 1011, 2),
-        (1101, 1101, 2),
-        (1110, 1110, 3),
-        (1201, 1201, 2),
-        (1211, 1211, 2);
+values (1, 1, 1),
+       (1000, 1000, 3),
+       (1001, 1001, 1),
+       (1101, 1101, 2),
+       (1110, 1110, 3),
+       (1201, 1201, 2),
+       (1211, 1211, 2);
