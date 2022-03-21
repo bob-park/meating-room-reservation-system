@@ -72,4 +72,10 @@ public class DepartmentServiceImpl implements DepartmentService {
             .name(department.getName())
             .build();
     }
+
+    @Override
+    public DepartmentResponse getDepartment(Id<Company, Long> comId,
+        Id<Department, Long> departmentId) {
+        return null;
+    }
 }

@@ -14,4 +14,5 @@ public interface DepartmentService {
     DepartmentResponse modifyDepartment(Id<Department, Long> departmentId,
         ModifyDepartmentRequest modifyRequest);
 
+    DepartmentResponse getDepartment(Id<Company, Long> comId, Id<Department, Long> departmentId);
 }
