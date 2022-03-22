@@ -23,4 +23,6 @@ public interface CompanyService {
 
     CompanyResponse updateCompany(Id<Company, Long> id, UpdateCompanyRequest updateCompanyRequest);
 
+    CompanyResponse removeCompany(Id<Company, Long> id);
+
 }
