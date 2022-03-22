@@ -60,8 +60,8 @@ public class UserController {
 
     }
 
-    @GetMapping(path = "check/email")
-    public ApiResult<Boolean> checkEmail(@PathVariable Long comId, @RequestParam String email) {
+    @GetMapping(path = "exist/email")
+    public ApiResult<Boolean> existEmail(@PathVariable Long comId, @RequestParam String email) {
         return ok(userService.isExistEmail(Id.of(Company.class, comId), email));
     }
 

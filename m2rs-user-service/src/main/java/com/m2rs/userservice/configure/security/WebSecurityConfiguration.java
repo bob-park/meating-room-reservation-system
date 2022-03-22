@@ -201,14 +201,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      voter
      */
     @Bean
-    public AccessDecisionVoter<?> getRoleVoter() {
+    public AccessDecisionVoter<Object> getRoleVoter() {
         return new RoleHierarchyVoter(getRoleHierarchy());
     }
 
     @Bean
     public ConnectionBasedVoter connectionUserVoter(RoleHierarchy roleHierarchy) {
 
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/user(/(\\d+))?(/(\\w+))?");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/user(/(\\d+))?[/\\w]*(\\?(.*))?");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
@@ -225,7 +225,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             RestPrincipal principal = (RestPrincipal) authentication.getPrincipal();
 
             long comId = toLong(matcher.group(1), -1);
-            long userId = toLong(matcher.group(2), -1);
+            long userId = toLong(matcher.group(3), -1);
 
             boolean isEqualsComId =
                 isNotEmpty(principal.getComId()) && comId == principal.getComId();
@@ -249,7 +249,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ConnectionBasedVoter connectionDepartmentVoter(RoleHierarchy roleHierarchy) {
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/department(/(\\d+))?(/(\\w+))?");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/department(/(\\d+))?[/\\w]*");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
