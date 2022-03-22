@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -169,5 +170,14 @@ public class UserServiceImpl implements UserService {
             .createdDate(user.getCreatedDate())
             .lastModifiedDate(user.getLastModifiedDate())
             .build();
+    }
+
+    @Override
+    public Boolean isExistEmail(Id<Company, Long> comId, String email) {
+
+        checkNotNull(comId, "comId must be provided.");
+        checkArgument(StringUtils.isNotBlank(email), "email must be provided.");
+
+        return userRepository.isExistEmail(comId, email);
     }
 }

@@ -21,4 +21,6 @@ public interface UserService {
 
     UserResponse modifyUser(Id<User, Long> id, ModifyUserRequest modifyRequest);
 
+    Boolean isExistEmail(Id<Company, Long> comId, String email);
+
 }

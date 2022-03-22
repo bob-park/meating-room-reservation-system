@@ -5,6 +5,7 @@ import static com.m2rs.userservice.model.entity.QDepartment.department;
 import static com.m2rs.userservice.model.entity.QRole.role;
 import static com.m2rs.userservice.model.entity.QUser.user;
 import static com.m2rs.userservice.model.entity.QUserRoles.userRoles;
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.entity.Company;
@@ -21,6 +22,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,6 +65,17 @@ public class UserQueryRepositoryImpl implements UserQueryRepository {
             .fetchOne();
 
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public boolean isExistEmail(Id<Company, Long> comId, String email) {
+
+        Long count = query.select(user.id.count())
+            .from(user)
+            .where(user.email.eq(email))
+            .fetchOne();
+
+        return defaultIfNull(count, 0L) > 0;
     }
 
     // == mapping condition == //

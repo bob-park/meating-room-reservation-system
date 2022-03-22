@@ -13,4 +13,6 @@ public interface UserQueryRepository {
 
     Optional<User> getUser(Id<Company, Long> comId, Id<User, Long> id);
 
+    boolean isExistEmail(Id<Company, Long> comId, String email);
+
 }

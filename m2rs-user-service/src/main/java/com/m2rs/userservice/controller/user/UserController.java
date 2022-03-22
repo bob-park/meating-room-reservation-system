@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -57,6 +58,11 @@ public class UserController {
 
         return ok(userResponseServicePage.getContents(), userResponseServicePage.getPage());
 
+    }
+
+    @GetMapping(path = "check/email")
+    public ApiResult<Boolean> checkEmail(@PathVariable Long comId, @RequestParam String email) {
+        return ok(userService.isExistEmail(Id.of(Company.class, comId), email));
     }
 
 }
