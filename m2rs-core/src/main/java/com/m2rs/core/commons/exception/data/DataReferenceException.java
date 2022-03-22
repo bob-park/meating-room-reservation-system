@@ -1,6 +1,9 @@
-package com.m2rs.core.commons.exception;
+package com.m2rs.core.commons.exception.data;
 
-public class DataReferenceException extends ServiceRuntimeException {
+import com.m2rs.core.commons.exception.DataException;
+import com.m2rs.core.commons.exception.ServiceRuntimeException;
+
+public class DataReferenceException extends DataException {
 
     public DataReferenceException(Class<?> reference, Class<?> target) {
         super(String.format("'%s' exist that uses '%s'.",

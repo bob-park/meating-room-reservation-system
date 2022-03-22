@@ -2,7 +2,7 @@ package com.m2rs.userservice.service.department.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import com.m2rs.core.commons.exception.DataReferenceException;
+import com.m2rs.core.commons.exception.data.DataReferenceException;
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.company.CompanyResponse;

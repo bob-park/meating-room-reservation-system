@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
+import com.m2rs.core.commons.exception.data.AlreadyExistDataException;
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.model.api.response.Pagination;
 import com.m2rs.core.commons.model.service.page.ServicePage;
@@ -30,8 +31,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +58,15 @@ public class UserServiceImpl implements UserService {
 
         Department department = departmentRepository.findById(request.getDepartmentId())
             .orElseThrow(() -> new NotFoundException(Department.class, request.getDepartmentId()));
+
+        // 해당 email 이 존재하는지 확인
+        boolean existEmail = userRepository.isExistEmail(
+            Id.of(Company.class, department.getCompany().getId()),
+            request.getEmail());
+
+        if (existEmail) {
+            throw new AlreadyExistDataException(User.class, request.getEmail());
+        }
 
         RoleType requestRole = defaultIfNull(request.getRole(), RoleType.ROLE_USER);
 
