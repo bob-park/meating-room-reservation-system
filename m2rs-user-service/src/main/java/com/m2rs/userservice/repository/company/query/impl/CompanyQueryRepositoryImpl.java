@@ -14,7 +14,7 @@ import org.springframework.data.support.PageableExecutionUtils;
 import com.google.common.collect.Lists;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.repository.company.query.CompanyQueryRepository;
-import com.m2rs.userservice.repository.company.query.SearchCompanyCondition;
+import com.m2rs.userservice.repository.company.query.SearchCompanyQueryCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -35,7 +35,7 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
     }
 
     @Override
-    public Page<Company> search(SearchCompanyCondition condition, Pageable pageable) {
+    public Page<Company> search(SearchCompanyQueryCondition condition, Pageable pageable) {
 
         List<Company> contents = query
             .selectFrom(company)
@@ -52,7 +52,7 @@ public class CompanyQueryRepositoryImpl implements CompanyQueryRepository {
         return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchOne);
     }
 
-    private Predicate mappingCondition(SearchCompanyCondition condition) {
+    private Predicate mappingCondition(SearchCompanyQueryCondition condition) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

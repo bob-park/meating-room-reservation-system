@@ -7,6 +7,6 @@ import com.m2rs.userservice.model.entity.Company;
 
 public interface CompanyQueryRepository {
 
-    Page<Company> search(SearchCompanyCondition condition, Pageable pageable);
+    Page<Company> search(SearchCompanyQueryCondition condition, Pageable pageable);
 
 }

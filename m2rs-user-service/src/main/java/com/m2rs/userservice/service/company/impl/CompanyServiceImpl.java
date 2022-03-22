@@ -32,7 +32,7 @@ import com.m2rs.userservice.model.api.company.SearchCompanyRequest;
 import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.repository.company.CompanyRepository;
-import com.m2rs.userservice.repository.company.query.SearchCompanyCondition;
+import com.m2rs.userservice.repository.company.query.SearchCompanyQueryCondition;
 import com.m2rs.userservice.service.company.CompanyService;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -67,7 +67,7 @@ public class CompanyServiceImpl implements CompanyService {
     public ServicePage<CompanyResponse> search(SearchCompanyRequest searchCompanyRequest,
         Pageable pageable) {
 
-        SearchCompanyCondition condition = SearchCompanyCondition.builder()
+        SearchCompanyQueryCondition condition = SearchCompanyQueryCondition.builder()
             .name(searchCompanyRequest.getName())
             .build();
 
@@ -84,6 +84,7 @@ public class CompanyServiceImpl implements CompanyService {
                 .totalCount(pageResult.getTotalElements())
                 .page(pageResult.getNumber())
                 .lastPage(pageResult.getTotalPages())
+                .size(pageResult.getSize())
                 .build())
             .build();
     }
