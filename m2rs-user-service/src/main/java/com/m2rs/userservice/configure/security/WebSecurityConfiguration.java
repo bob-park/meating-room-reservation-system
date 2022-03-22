@@ -208,7 +208,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public ConnectionBasedVoter connectionUserVoter(RoleHierarchy roleHierarchy) {
 
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/user(/(\\d+))?");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/user(/(\\d+))?(/(\\w+))?");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
@@ -249,7 +249,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public ConnectionBasedVoter connectionDepartmentVoter(RoleHierarchy roleHierarchy) {
-        Pattern pattern = Pattern.compile("^/company/(\\d+)/department(/(\\d+))?");
+        Pattern pattern = Pattern.compile("^/company/(\\d+)/department(/(\\d+))?(/(\\w+))?");
 
         RegexRequestMatcher regexRequestMatcher = new RegexRequestMatcher(pattern.pattern(), null);
 
