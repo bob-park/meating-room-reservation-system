@@ -1,10 +1,7 @@
 package com.m2rs.userservice.service.department.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import com.google.common.base.Preconditions;
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.company.CompanyResponse;
@@ -16,11 +13,12 @@ import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.repository.company.CompanyRepository;
 import com.m2rs.userservice.repository.department.DepartmentRepository;
+import com.m2rs.userservice.repository.department.query.SearchDepartmentQueryCondition;
 import com.m2rs.userservice.service.department.DepartmentService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -106,6 +104,28 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<DepartmentResponse> search(Id<Company, Long> comId,
         SearchDepartmentRequest searchRequest) {
-        return null;
+
+        checkNotNull(comId, "comId must be provided.");
+
+        SearchDepartmentQueryCondition condition =
+            searchRequest.getQueryCondition(comId.value());
+
+        List<Department> result = departmentRepository.search(condition);
+
+        return result.stream()
+            .map(item -> DepartmentResponse.builder()
+                .id(item.getId())
+                .company(CompanyResponse.builder()
+                    .id(item.getCompany().getId())
+                    .name(item.getCompany().getName())
+                    .logoPath(item.getCompany().getLogoPath())
+                    .createdDate(item.getCompany().getCreatedDate())
+                    .lastModifiedDate(item.getCompany().getLastModifiedDate())
+                    .build())
+                .name(item.getName())
+                .createdDate(item.getCreatedDate())
+                .lastModifiedDate(item.getLastModifiedDate())
+                .build())
+            .collect(Collectors.toList());
     }
 }

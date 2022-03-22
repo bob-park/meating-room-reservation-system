@@ -7,9 +7,11 @@ import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.department.CreateDepartmentRequest;
 import com.m2rs.userservice.model.api.department.DepartmentResponse;
 import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
+import com.m2rs.userservice.model.api.department.SearchDepartmentRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.service.department.DepartmentService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,5 +46,11 @@ public class DepartmentController {
         @RequestBody ModifyDepartmentRequest modifyRequest) {
         return ok(departmentService.modifyDepartment(Id.of(Department.class, departmentId),
             modifyRequest));
+    }
+
+    @GetMapping(path = "list")
+    public ApiResult<List<DepartmentResponse>> getList(@PathVariable Long comId,
+        SearchDepartmentRequest searchRequest) {
+        return ok(departmentService.search(Id.of(Company.class, comId), searchRequest));
     }
 }
