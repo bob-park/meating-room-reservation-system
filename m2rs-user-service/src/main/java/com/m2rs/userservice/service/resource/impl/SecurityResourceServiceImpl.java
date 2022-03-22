@@ -1,7 +1,6 @@
-package com.m2rs.userservice.service.resource.imp;
+package com.m2rs.userservice.service.resource.impl;
 
 import com.google.common.collect.Maps;
-import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
 import com.m2rs.userservice.repository.resource.ResourceRepository;
 import com.m2rs.userservice.service.resource.SecurityResourceService;
@@ -52,7 +51,6 @@ public class SecurityResourceServiceImpl implements SecurityResourceService {
 
         return result;
     }
-
 
     private RequestMatcher createRequestMatcher(String path, String httpMethod, ResourceKind kind) {
 

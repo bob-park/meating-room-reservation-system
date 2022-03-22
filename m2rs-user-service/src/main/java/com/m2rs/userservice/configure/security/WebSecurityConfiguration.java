@@ -49,7 +49,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -171,7 +170,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      metadata source
      */
     @Bean
-    public FilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
+    public UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource() {
         return new UrlFilterInvocationSecurityMetadataSource(
             urlResourcesMapFactoryBean().getObject(), securityResourceService);
     }
