@@ -180,6 +180,22 @@ public class UserServiceImpl implements UserService {
             .build();
     }
 
+    @Transactional
+    @Override
+    public UserResponse removeUser(Id<User, Long> id) {
+
+        checkNotNull(id, "id must be providex.");
+
+        User user = userRepository.findById(id.value())
+            .orElseThrow(() -> new NotFoundException(User.class, id.value()));
+
+        userRepository.delete(user);
+
+        return UserResponse.builder()
+            .id(user.getId())
+            .build();
+    }
+
     @Override
     public Boolean isExistEmail(Id<Company, Long> comId, String email) {
 
