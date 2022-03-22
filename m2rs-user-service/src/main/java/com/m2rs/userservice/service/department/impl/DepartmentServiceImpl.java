@@ -2,6 +2,7 @@ package com.m2rs.userservice.service.department.impl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.m2rs.core.commons.exception.DataReferenceException;
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
 import com.m2rs.userservice.model.api.company.CompanyResponse;
@@ -11,6 +12,7 @@ import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
 import com.m2rs.userservice.model.api.department.SearchDepartmentRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
+import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.repository.company.CompanyRepository;
 import com.m2rs.userservice.repository.department.DepartmentRepository;
 import com.m2rs.userservice.repository.department.query.SearchDepartmentQueryCondition;
@@ -127,5 +129,26 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .lastModifiedDate(item.getLastModifiedDate())
                 .build())
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public DepartmentResponse removeDepartment(Id<Department, Long> departmentId) {
+
+        checkNotNull(departmentId, "departmentId must be provided.");
+
+        Department department = departmentRepository.findById(departmentId.value())
+            .orElseThrow(() -> new NotFoundException(Department.class, departmentId.value()));
+
+        if (!department.getUsers().isEmpty()) {
+            throw new DataReferenceException(Department.class, User.class);
+        }
+
+        departmentRepository.delete(department);
+
+        return DepartmentResponse.builder()
+            .id(department.getId())
+            .build();
+
     }
 }

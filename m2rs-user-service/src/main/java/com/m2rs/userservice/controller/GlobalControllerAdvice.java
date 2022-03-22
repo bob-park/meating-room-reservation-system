@@ -1,5 +1,6 @@
 package com.m2rs.userservice.controller;
 
+import com.m2rs.core.commons.exception.DataReferenceException;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ import static com.m2rs.core.commons.model.api.response.ApiResult.error;
 public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public <T> ApiResult<T> badRequest(IllegalArgumentException e) {
+    @ExceptionHandler({IllegalArgumentException.class, DataReferenceException.class})
+    public <T> ApiResult<T> badRequest(Exception e) {
         log.warn(e.getMessage());
 
         return error(e);

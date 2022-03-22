@@ -13,12 +13,15 @@ import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.service.department.DepartmentService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class DepartmentController {
 
     private final DepartmentService departmentService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public ApiResult<DepartmentResponse> createDepartment(@PathVariable Long comId,
         @RequestBody CreateDepartmentRequest request) {
@@ -46,6 +50,12 @@ public class DepartmentController {
         @RequestBody ModifyDepartmentRequest modifyRequest) {
         return ok(departmentService.modifyDepartment(Id.of(Department.class, departmentId),
             modifyRequest));
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(path = "{departmentId}")
+    public ApiResult<DepartmentResponse> removeDepartment(@PathVariable Long departmentId) {
+        return ok(departmentService.removeDepartment(Id.of(Department.class, departmentId)));
     }
 
     @GetMapping(path = "list")

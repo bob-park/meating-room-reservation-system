@@ -19,4 +19,6 @@ public interface DepartmentService {
     DepartmentResponse getDepartment(Id<Company, Long> comId, Id<Department, Long> departmentId);
 
     List<DepartmentResponse> search(Id<Company, Long> comId, SearchDepartmentRequest searchRequest);
+
+    DepartmentResponse removeDepartment(Id<Department, Long> departmentId);
 }
