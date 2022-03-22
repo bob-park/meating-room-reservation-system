@@ -9,15 +9,17 @@ import lombok.Getter;
 public class JwtClaim {
 
     private final Long id;
+    private final Long comId;
     private final Long departmentId;
     private final String email;
     private final String name;
     private final RoleType roleType;
 
     @Builder
-    private JwtClaim(Long id, Long departmentId, String email, String name,
+    private JwtClaim(Long id, Long comId, Long departmentId, String email, String name,
         RoleType roleType) {
         this.id = id;
+        this.comId = comId;
         this.departmentId = departmentId;
         this.email = email;
         this.name = name;
@@ -28,6 +30,7 @@ public class JwtClaim {
         DefaultClaims claims = new DefaultClaims();
 
         claims.put("id", getId());
+        claims.put("comId", getComId());
         claims.put("departmentId", getDepartmentId());
         claims.put("email", getEmail());
         claims.put("name", getName());

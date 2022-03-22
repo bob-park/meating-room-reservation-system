@@ -10,7 +10,7 @@ import com.m2rs.core.commons.model.api.response.Pagination;
 @Getter
 public class ServicePage<T> {
 
-    public final Pagination page;
+    private final Pagination page;
     private final List<T> contents;
 
     @Builder

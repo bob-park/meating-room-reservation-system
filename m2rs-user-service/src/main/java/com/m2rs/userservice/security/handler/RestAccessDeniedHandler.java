@@ -20,7 +20,7 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
         AccessDeniedException accessDeniedException) throws IOException, ServletException {
 
-        response.setStatus(HttpStatus.SC_UNAUTHORIZED);
+        response.setStatus(HttpStatus.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
         mapper.writeValue(response.getWriter(), error(accessDeniedException));

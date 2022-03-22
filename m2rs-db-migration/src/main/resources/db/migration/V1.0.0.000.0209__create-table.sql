@@ -57,6 +57,7 @@ CREATE TABLE resources
 (
     id                 bigint       NOT NULL primary key,
     resource_name      varchar(255) NOT NULL,
+    resource_kind      varchar(10)  NOT NULL,
     http_method        varchar(10),
     order_num          int(10) not null,
     resource_type      varchar(10)  not null,

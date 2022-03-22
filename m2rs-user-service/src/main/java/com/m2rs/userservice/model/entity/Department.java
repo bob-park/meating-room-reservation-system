@@ -1,5 +1,9 @@
 package com.m2rs.userservice.model.entity;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+
+import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
+import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -19,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "departments")
-public class Department {
+public class Department extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
@@ -46,8 +50,12 @@ public class Department {
         company.addDepartment(this);
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
         users.add(user);
+    }
+
+    public void modify(ModifyDepartmentRequest modifyRequest) {
+        this.name = defaultIfNull(modifyRequest.getName(), this.name);
     }
 
 

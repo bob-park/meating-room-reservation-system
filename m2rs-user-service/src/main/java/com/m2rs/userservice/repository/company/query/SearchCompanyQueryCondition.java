@@ -8,14 +8,14 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class SearchCompanyCondition {
+public class SearchCompanyQueryCondition {
 
     private final String name;
     private final LocalDateTime createdDateFrom;
     private final LocalDateTime createdDateTo;
 
     @Builder
-    private SearchCompanyCondition(String name, LocalDateTime createdDateFrom,
+    private SearchCompanyQueryCondition(String name, LocalDateTime createdDateFrom,
         LocalDateTime createdDateTo) {
         this.name = name;
         this.createdDateFrom = createdDateFrom;
