@@ -14,9 +14,10 @@ import com.m2rs.meetingroomservice.model.api.company.CompanyResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.CreateMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.MeetingRoomResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.ModifyMeetingRoomRequest;
+import com.m2rs.meetingroomservice.model.api.meetingroom.SearchMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.query.SearchMeetingRoomQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.MeetingRoomService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,19 +37,39 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
     private final UserServiceClient userServiceClient;
 
     @Override
-    public List<MeetingRoomResponse> search(MeetingRoomSearchCondition condition) {
+    public List<MeetingRoomResponse> search(SearchMeetingRoomRequest searchRequest) {
 
-        List<MeetingRoom> result = meetingRoomRepository.search(condition);
+        List<MeetingRoom> result = meetingRoomRepository.search(searchRequest.getQueryCondition());
 
         return result.stream()
             .map(item -> MeetingRoomResponse.builder()
                 .id(item.getId())
                 .comId(item.getComId())
                 .name(item.getName())
+                .isActive(item.getIsActive())
                 .createdDate(item.getCreatedDate())
                 .lastModifiedDate(item.getLastModifiedDate())
                 .build())
             .collect(Collectors.toList());
+
+    }
+
+    @Override
+    public MeetingRoomResponse find(Id<MeetingRoom, Long> id) {
+
+        checkNotNull(id, "id must be provided.");
+
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(id.value())
+            .orElseThrow(() -> new NotFoundException(MeetingRoom.class, id.value()));
+
+        return MeetingRoomResponse.builder()
+            .id(meetingRoom.getId())
+            .comId(meetingRoom.getComId())
+            .name(meetingRoom.getName())
+            .isActive(meetingRoom.getIsActive())
+            .createdDate(meetingRoom.getCreatedDate())
+            .lastModifiedDate(meetingRoom.getLastModifiedDate())
+            .build();
 
     }
 

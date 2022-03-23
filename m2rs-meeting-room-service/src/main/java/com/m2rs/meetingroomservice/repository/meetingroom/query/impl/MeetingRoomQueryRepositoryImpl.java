@@ -3,9 +3,8 @@ package com.m2rs.meetingroomservice.repository.meetingroom.query.impl;
 import static com.m2rs.meetingroomservice.model.entity.QMeetingRoom.meetingRoom;
 
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
-import com.m2rs.meetingroomservice.model.entity.QMeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomQueryRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.query.SearchMeetingRoomQueryCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -23,7 +22,7 @@ public class MeetingRoomQueryRepositoryImpl implements MeetingRoomQueryRepositor
     }
 
     @Override
-    public List<MeetingRoom> search(MeetingRoomSearchCondition condition) {
+    public List<MeetingRoom> search(SearchMeetingRoomQueryCondition condition) {
         return query.selectFrom(meetingRoom)
             .where(mappingCondition(condition))
             .orderBy(meetingRoom.name.asc())
@@ -31,7 +30,7 @@ public class MeetingRoomQueryRepositoryImpl implements MeetingRoomQueryRepositor
     }
 
     // == mapping condition == //
-    private Predicate mappingCondition(MeetingRoomSearchCondition condition) {
+    private Predicate mappingCondition(SearchMeetingRoomQueryCondition condition) {
 
         BooleanBuilder bool = new BooleanBuilder();
 

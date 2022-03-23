@@ -6,7 +6,7 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class MeetingRoomSearchCondition {
+public class SearchMeetingRoomQueryCondition {
 
     private final Long comId;
     private final Boolean isActive;
@@ -14,7 +14,7 @@ public class MeetingRoomSearchCondition {
     private final String name;
 
     @Builder
-    private MeetingRoomSearchCondition(Long comId, Boolean isActive, String name) {
+    private SearchMeetingRoomQueryCondition(Long comId, Boolean isActive, String name) {
         this.comId = comId;
         this.isActive = isActive;
         this.name = name;

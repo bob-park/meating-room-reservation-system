@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface MeetingRoomQueryRepository {
 
-    List<MeetingRoom> search(MeetingRoomSearchCondition condition);
+    List<MeetingRoom> search(SearchMeetingRoomQueryCondition condition);
 
 }

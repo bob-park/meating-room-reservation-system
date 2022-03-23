@@ -7,11 +7,11 @@ import com.m2rs.core.model.Id;
 import com.m2rs.meetingroomservice.model.api.meetingroom.CreateMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.MeetingRoomResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.ModifyMeetingRoomRequest;
+import com.m2rs.meetingroomservice.model.api.meetingroom.SearchMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
-import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.query.SearchMeetingRoomQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.MeetingRoomService;
 import java.util.List;
-import javax.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,9 +38,9 @@ public class MeetingRoomController {
         return ok(meetingRoomService.create(createRequest));
     }
 
-    @GetMapping(path = "list")
-    public ApiResult<List<MeetingRoomResponse>> getList(MeetingRoomSearchCondition condition) {
-        return ok(meetingRoomService.search(condition));
+    @GetMapping(path = "{meetingRoomId}")
+    public ApiResult<MeetingRoomResponse> find(@PathVariable Long meetingRoomId) {
+        return ok(meetingRoomService.find(Id.of(MeetingRoom.class, meetingRoomId)));
     }
 
     @PutMapping(path = "{meetingRoomId}")
@@ -48,6 +48,11 @@ public class MeetingRoomController {
         @RequestBody ModifyMeetingRoomRequest modifyRequest) {
         return ok(meetingRoomService.modify(Id.of(MeetingRoom.class, meetingRoomId),
             modifyRequest));
+    }
+
+    @GetMapping(path = "list")
+    public ApiResult<List<MeetingRoomResponse>> getList(SearchMeetingRoomRequest searchRequest) {
+        return ok(meetingRoomService.search(searchRequest));
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
