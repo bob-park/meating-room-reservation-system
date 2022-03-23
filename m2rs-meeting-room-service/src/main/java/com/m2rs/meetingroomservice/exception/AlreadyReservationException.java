@@ -1,10 +1,10 @@
 package com.m2rs.meetingroomservice.exception;
 
-import com.m2rs.core.commons.exception.ServiceRuntimeException;
+import com.m2rs.core.commons.exception.DataException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class AlreadyReservationException extends ServiceRuntimeException {
+public class AlreadyReservationException extends DataException {
 
     private static final DateTimeFormatter DEFAULT_DATE_TIME_FORMAT =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
