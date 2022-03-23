@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.http.HttpHeaders;
@@ -16,10 +17,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RequiredArgsConstructor
 @EnableJpaAuditing
+@EnableAspectJAutoProxy
 @Configuration
 public class AppConfiguration {
 
-    private static final String BEARER_PREFIX = "Bearer";
+    public static final String BEARER_PREFIX = "Bearer";
 
     private final JwtClaimInfo jwtClaimInfo;
 
