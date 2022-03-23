@@ -2,7 +2,9 @@ package com.m2rs.meetingroomservice.model.entity;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
+import com.m2rs.meetingroomservice.model.api.meetingroom.ModifyMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.entity.base.BaseTimeEntity;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,7 +36,7 @@ public class MeetingRoom extends BaseTimeEntity {
 
     @Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "meetingRoom")
-    private List<MeetingRoomReservation> meetingRoomReservationList;
+    private List<MeetingRoomReservation> meetingRoomReservationList = new ArrayList<>();
 
     @Builder
     private MeetingRoom(Long id, Long comId, String name, Boolean isActive) {
@@ -44,7 +46,12 @@ public class MeetingRoom extends BaseTimeEntity {
         this.isActive = defaultIfNull(isActive, true);
     }
 
-    public void addReservation(MeetingRoomReservation reservation){
+    public void modify(ModifyMeetingRoomRequest modifyRequest) {
+        this.name = defaultIfNull(modifyRequest.getName(), this.name);
+        this.isActive = defaultIfNull(modifyRequest.getIsActive(), this.isActive);
+    }
+
+    public void addReservation(MeetingRoomReservation reservation) {
         meetingRoomReservationList.add(reservation);
     }
 }
