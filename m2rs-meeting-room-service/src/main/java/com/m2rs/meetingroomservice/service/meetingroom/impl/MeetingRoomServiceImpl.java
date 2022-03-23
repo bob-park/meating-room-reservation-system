@@ -6,6 +6,7 @@ import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.commons.exception.task.AlreadyExecuteException;
 import com.m2rs.core.commons.model.api.response.ApiResult;
 import com.m2rs.core.model.Id;
 import com.m2rs.meetingroomservice.feign.client.UserServiceClient;
@@ -92,7 +93,33 @@ public class MeetingRoomServiceImpl implements MeetingRoomService {
         MeetingRoom meetingRoom = meetingRoomRepository.findById(id.value())
             .orElseThrow(() -> new NotFoundException(MeetingRoom.class, id.value()));
 
-        meetingRoom.modify(modifyRequest);
+        meetingRoom.modifyName(modifyRequest.getName());
+
+        return MeetingRoomResponse.builder()
+            .id(meetingRoom.getId())
+            .comId(meetingRoom.getComId())
+            .name(meetingRoom.getName())
+            .isActive(meetingRoom.getIsActive())
+            .createdDate(meetingRoom.getCreatedDate())
+            .lastModifiedDate(meetingRoom.getLastModifiedDate())
+            .build();
+    }
+
+
+    @Transactional
+    @Override
+    public MeetingRoomResponse changeActive(Id<MeetingRoom, Long> id, boolean isActive) {
+
+        checkNotNull(id, "id must be provided.");
+
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(id.value())
+            .orElseThrow(() -> new NotFoundException(MeetingRoom.class, id.value()));
+
+        if (Boolean.TRUE.equals(meetingRoom.getIsActive()) == isActive) {
+            throw new AlreadyExecuteException();
+        }
+
+        meetingRoom.setIsActive(isActive);
 
         return MeetingRoomResponse.builder()
             .id(meetingRoom.getId())

@@ -46,9 +46,12 @@ public class MeetingRoom extends BaseTimeEntity {
         this.isActive = defaultIfNull(isActive, true);
     }
 
-    public void modify(ModifyMeetingRoomRequest modifyRequest) {
-        this.name = defaultIfNull(modifyRequest.getName(), this.name);
-        this.isActive = defaultIfNull(modifyRequest.getIsActive(), this.isActive);
+    public void modifyName(String updateName) {
+        this.name = defaultIfNull(updateName, this.name);
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public void addReservation(MeetingRoomReservation reservation) {

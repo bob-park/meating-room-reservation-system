@@ -16,4 +16,6 @@ public interface MeetingRoomService {
 
     MeetingRoomResponse modify(Id<MeetingRoom, Long> id, ModifyMeetingRoomRequest modifyRequest);
 
+    MeetingRoomResponse changeActive(Id<MeetingRoom, Long> id, boolean isActive);
+
 }

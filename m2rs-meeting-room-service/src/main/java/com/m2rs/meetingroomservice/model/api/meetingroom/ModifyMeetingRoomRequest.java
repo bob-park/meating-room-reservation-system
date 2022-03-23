@@ -6,6 +6,5 @@ import lombok.Getter;
 public class ModifyMeetingRoomRequest {
 
     private String name;
-    private Boolean isActive;
 
 }

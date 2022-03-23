@@ -11,13 +11,17 @@ import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.query.MeetingRoomSearchCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.MeetingRoomService;
 import java.util.List;
+import javax.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class MeetingRoomController {
 
     private final MeetingRoomService meetingRoomService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public ApiResult<MeetingRoomResponse> createMeetingRoom(
         @RequestBody CreateMeetingRoomRequest createRequest) {
@@ -45,4 +50,14 @@ public class MeetingRoomController {
             modifyRequest));
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping(path = "{meetingRoomId}/inactive")
+    public ApiResult<MeetingRoomResponse> inactive(@PathVariable Long meetingRoomId) {
+        return ok(meetingRoomService.changeActive(Id.of(MeetingRoom.class, meetingRoomId), false));
+    }
+
+    @PutMapping(path = "{meetingRoomId}/active")
+    public ApiResult<MeetingRoomResponse> active(@PathVariable Long meetingRoomId) {
+        return ok(meetingRoomService.changeActive(Id.of(MeetingRoom.class, meetingRoomId), true));
+    }
 }
