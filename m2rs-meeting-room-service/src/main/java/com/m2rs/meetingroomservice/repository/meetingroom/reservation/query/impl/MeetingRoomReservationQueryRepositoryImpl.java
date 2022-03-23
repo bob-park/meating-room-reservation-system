@@ -39,12 +39,15 @@ public class MeetingRoomReservationQueryRepositoryImpl implements
     }
 
     @Override
-    public boolean checkAvailableReservation(Id<MeetingRoom, Long> mrId, LocalDateTime startDate,
+    public boolean checkAvailableReservation(Id<MeetingRoom, Long> mrId,
+        Id<MeetingRoomReservation, Long> excludeMrrId,
+        LocalDateTime startDate,
         LocalDateTime endDate) {
 
         Long count = query.select(meetingRoomReservation.id.count())
             .from(meetingRoomReservation)
             .where(meetingRoomReservation.meetingRoom.id.eq(mrId.value())
+                .and(excludeMrrId(excludeMrrId))
                 .and(meetingRoomReservation.startDate.before(endDate))
                 .and(meetingRoomReservation.endDate.after(startDate)))
             .fetchOne();
@@ -88,5 +91,9 @@ public class MeetingRoomReservationQueryRepositoryImpl implements
 
     private BooleanExpression beforeEndDate(LocalDateTime endDate) {
         return endDate != null ? meetingRoomReservation.endDate.loe(endDate) : null;
+    }
+
+    private BooleanExpression excludeMrrId(Id<MeetingRoomReservation, Long> mrrId) {
+        return mrrId != null ? meetingRoomReservation.id.ne(mrrId.value()) : null;
     }
 }

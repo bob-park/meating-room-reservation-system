@@ -9,14 +9,12 @@ import lombok.ToString;
 @ToString
 public class CreateMeetingRoomReservationRequest {
 
-    private final Long mrId;
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
 
     @Builder
-    private CreateMeetingRoomReservationRequest(Long mrId, LocalDateTime startDate,
+    private CreateMeetingRoomReservationRequest(LocalDateTime startDate,
         LocalDateTime endDate) {
-        this.mrId = mrId;
         this.startDate = startDate;
         this.endDate = endDate;
     }
