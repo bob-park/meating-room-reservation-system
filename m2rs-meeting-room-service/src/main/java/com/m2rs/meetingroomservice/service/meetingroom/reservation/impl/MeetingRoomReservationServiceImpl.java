@@ -130,4 +130,22 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
             .lastModifiedDate(meetingRoomReservation.getLastModifiedDate())
             .build();
     }
+
+    @Transactional
+    @Override
+    public MeetingRoomReservationResponse removeReservation(
+        Id<MeetingRoomReservation, Long> mrrId) {
+
+        checkNotNull(mrrId, "mrrId must be provided");
+
+        MeetingRoomReservation meetingRoomReservation = meetingRoomReservationRepository.findById(
+                mrrId.value())
+            .orElseThrow(() -> new NotFoundException(MeetingRoomReservation.class, mrrId.value()));
+
+        meetingRoomReservationRepository.delete(meetingRoomReservation);
+
+        return MeetingRoomReservationResponse.builder()
+            .id(meetingRoomReservation.getId())
+            .build();
+    }
 }

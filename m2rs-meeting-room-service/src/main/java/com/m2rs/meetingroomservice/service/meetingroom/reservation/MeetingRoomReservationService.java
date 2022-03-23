@@ -21,4 +21,6 @@ public interface MeetingRoomReservationService {
         Id<MeetingRoomReservation, Long> mrrId,
         ModifyMeetingRoomReservationRequest modifyRequest);
 
+    MeetingRoomReservationResponse removeReservation(Id<MeetingRoomReservation, Long> mrrId);
+
 }
