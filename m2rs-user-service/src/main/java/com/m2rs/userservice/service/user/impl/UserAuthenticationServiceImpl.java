@@ -49,6 +49,10 @@ public class UserAuthenticationServiceImpl implements UserAuthenticationService 
             .roleTypes(Collections.singletonList(user.getUserRoles()
                 .getRole()
                 .getRolesName()))
+            .phone(user.getPhone())
+            .cellPhone(user.getCellPhone())
+            .createdDate(user.getCreatedDate())
+            .lastModifiedDate(user.getLastModifiedDate())
             .build();
     }
 }

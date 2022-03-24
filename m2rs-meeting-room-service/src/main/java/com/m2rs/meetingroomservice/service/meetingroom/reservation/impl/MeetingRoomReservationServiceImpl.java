@@ -1,20 +1,25 @@
 package com.m2rs.meetingroomservice.service.meetingroom.reservation.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
+import com.m2rs.core.security.model.RestPrincipal;
+import com.m2rs.meetingroomservice.authentication.context.RestAuthenticationContextHolder;
 import com.m2rs.meetingroomservice.exception.AlreadyReservationException;
+import com.m2rs.meetingroomservice.exception.ReservationUserDifferentException;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.CreateMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.MeetingRoomReservationResponse;
+import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeetingRoomReservationRequest;
+import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.SearchMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.MeetingRoomReservationRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,19 +37,20 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
 
     @Transactional
     @Override
-    public MeetingRoomReservationResponse createReservation(
+    public MeetingRoomReservationResponse createReservation(Id<MeetingRoom, Long> mrId,
         CreateMeetingRoomReservationRequest reservationRequest) {
 
-        checkArgument(isNotEmpty(reservationRequest.getMrId()), "mrId must be provided.");
-        checkArgument(isNotEmpty(reservationRequest.getStartDate()), "startDate must be provided.");
-        checkArgument(isNotEmpty(reservationRequest.getEndDate()), "endDate must be provided.");
+        checkNotNull(mrId, "mrId must be provided.");
+        checkNotNull(reservationRequest.getStartDate(), "startDate must be provided.");
+        checkNotNull(reservationRequest.getEndDate(), "endDate must be provided.");
 
-        MeetingRoom meetingRoom = meetingRoomRepository.findById(reservationRequest.getMrId())
+        MeetingRoom meetingRoom = meetingRoomRepository.findById(mrId.value())
             .orElseThrow(() ->
-                new NotFoundException(MeetingRoom.class, reservationRequest.getMrId()));
+                new NotFoundException(MeetingRoom.class, mrId.value()));
 
         boolean availableReservation = meetingRoomReservationRepository
-            .checkAvailableReservation(Id.of(MeetingRoom.class, reservationRequest.getMrId()),
+            .checkAvailableReservation(mrId,
+                null,
                 reservationRequest.getStartDate(),
                 reservationRequest.getEndDate());
 
@@ -72,10 +78,13 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
     }
 
     @Override
-    public List<MeetingRoomReservationResponse> searchReservation(
-        MeetingRoomReservationSearchCondition condition) {
+    public List<MeetingRoomReservationResponse> searchReservation(Id<MeetingRoom, Long> mrId,
+        SearchMeetingRoomReservationRequest searchRequest) {
 
-        List<MeetingRoomReservation> result = meetingRoomReservationRepository.search(condition);
+        checkNotNull(mrId, "mrId must be provided.");
+
+        List<MeetingRoomReservation> result =
+            meetingRoomReservationRepository.search(searchRequest.getQueryCondition(mrId));
 
         return result.stream()
             .map(item -> MeetingRoomReservationResponse.builder()
@@ -88,5 +97,75 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
                 .lastModifiedDate(item.getLastModifiedDate())
                 .build())
             .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public MeetingRoomReservationResponse modifyReservation(Id<MeetingRoom, Long> mrId,
+        Id<MeetingRoomReservation, Long> mrrId, ModifyMeetingRoomReservationRequest modifyRequest) {
+
+        checkNotNull(mrId, "mrId must be provided.");
+        checkNotNull(mrrId, "mrrId must be provided.");
+
+        meetingRoomRepository.findById(mrId.value())
+            .orElseThrow(() -> new NotFoundException(MeetingRoom.class, mrId.value()));
+
+        boolean availableReservation =
+            meetingRoomReservationRepository.checkAvailableReservation(mrId,
+                mrrId,
+                modifyRequest.getStartDate(),
+                modifyRequest.getEndDate());
+
+        if (!availableReservation) {
+            throw new AlreadyReservationException(modifyRequest.getStartDate(),
+                modifyRequest.getEndDate());
+        }
+
+        MeetingRoomReservation meetingRoomReservation =
+            meetingRoomReservationRepository.findById(mrrId.value())
+                .orElseThrow(() ->
+                    new NotFoundException(MeetingRoomReservation.class, mrrId.value()));
+
+        RestPrincipal principal = RestAuthenticationContextHolder.getContextHolder().getPrincipal();
+
+        if (!Objects.equals(principal.getId(), meetingRoomReservation.getUserId())) {
+            throw new ReservationUserDifferentException();
+        }
+
+        meetingRoomReservation.modify(modifyRequest);
+
+        return MeetingRoomReservationResponse.builder()
+            .id(meetingRoomReservation.getId())
+            .userId(meetingRoomReservation.getUserId())
+            .mrId(meetingRoomReservation.getMeetingRoom().getId())
+            .startDate(meetingRoomReservation.getStartDate())
+            .endDate(meetingRoomReservation.getEndDate())
+            .createdDate(meetingRoomReservation.getCreatedDate())
+            .lastModifiedDate(meetingRoomReservation.getLastModifiedDate())
+            .build();
+    }
+
+    @Transactional
+    @Override
+    public MeetingRoomReservationResponse removeReservation(
+        Id<MeetingRoomReservation, Long> mrrId) {
+
+        checkNotNull(mrrId, "mrrId must be provided");
+
+        MeetingRoomReservation meetingRoomReservation = meetingRoomReservationRepository.findById(
+                mrrId.value())
+            .orElseThrow(() -> new NotFoundException(MeetingRoomReservation.class, mrrId.value()));
+
+        RestPrincipal principal = RestAuthenticationContextHolder.getContextHolder().getPrincipal();
+
+        if (!Objects.equals(principal.getId(), meetingRoomReservation.getUserId())) {
+            throw new ReservationUserDifferentException();
+        }
+
+        meetingRoomReservationRepository.delete(meetingRoomReservation);
+
+        return MeetingRoomReservationResponse.builder()
+            .id(meetingRoomReservation.getId())
+            .build();
     }
 }

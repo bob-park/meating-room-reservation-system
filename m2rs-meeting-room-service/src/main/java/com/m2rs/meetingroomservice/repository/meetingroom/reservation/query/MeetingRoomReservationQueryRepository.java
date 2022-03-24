@@ -8,8 +8,11 @@ import java.util.List;
 
 public interface MeetingRoomReservationQueryRepository {
 
-    List<MeetingRoomReservation> search(MeetingRoomReservationSearchCondition condition);
+    List<MeetingRoomReservation> search(SearchMeetingRoomReservationQueryCondition condition);
 
-    boolean checkAvailableReservation(Id<MeetingRoom, Long> mrId, LocalDateTime startDate, LocalDateTime endDate);
+    boolean checkAvailableReservation(Id<MeetingRoom, Long> mrId,
+        Id<MeetingRoomReservation, Long> excludeMrrId,
+        LocalDateTime startDate,
+        LocalDateTime endDate);
 
 }
