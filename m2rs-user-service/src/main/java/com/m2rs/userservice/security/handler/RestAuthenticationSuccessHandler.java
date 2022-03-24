@@ -6,17 +6,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m2rs.userservice.security.model.RestAuthenticationResult;
 import com.m2rs.userservice.security.model.RestAuthenticationToken;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+@RequiredArgsConstructor
 public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -28,6 +31,7 @@ public class RestAuthenticationSuccessHandler implements AuthenticationSuccessHa
 
         response.setStatus(HttpStatus.SC_OK);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         mapper.writeValue(response.getWriter(), ok(details));
 
