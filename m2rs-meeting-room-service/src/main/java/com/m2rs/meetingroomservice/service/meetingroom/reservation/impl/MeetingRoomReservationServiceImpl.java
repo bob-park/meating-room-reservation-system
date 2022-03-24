@@ -11,11 +11,12 @@ import com.m2rs.meetingroomservice.exception.ReservationUserDifferentException;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.CreateMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.MeetingRoomReservationResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeetingRoomReservationRequest;
+import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.SearchMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.MeetingRoomReservationRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
 import java.util.Objects;
@@ -77,10 +78,13 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
     }
 
     @Override
-    public List<MeetingRoomReservationResponse> searchReservation(
-        MeetingRoomReservationSearchCondition condition) {
+    public List<MeetingRoomReservationResponse> searchReservation(Id<MeetingRoom, Long> mrId,
+        SearchMeetingRoomReservationRequest searchRequest) {
 
-        List<MeetingRoomReservation> result = meetingRoomReservationRepository.search(condition);
+        checkNotNull(mrId, "mrId must be provided.");
+
+        List<MeetingRoomReservation> result =
+            meetingRoomReservationRepository.search(searchRequest.getQueryCondition(mrId));
 
         return result.stream()
             .map(item -> MeetingRoomReservationResponse.builder()

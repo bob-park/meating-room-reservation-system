@@ -7,9 +7,8 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import com.m2rs.core.model.Id;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
-import com.m2rs.meetingroomservice.model.entity.QMeetingRoom;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationQueryRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -30,7 +29,7 @@ public class MeetingRoomReservationQueryRepositoryImpl implements
     }
 
     @Override
-    public List<MeetingRoomReservation> search(MeetingRoomReservationSearchCondition condition) {
+    public List<MeetingRoomReservation> search(SearchMeetingRoomReservationQueryCondition condition) {
         return query.selectFrom(meetingRoomReservation)
             .join(meetingRoomReservation.meetingRoom, meetingRoom).fetchJoin()
             .where(mappingCondition(condition))
@@ -56,7 +55,7 @@ public class MeetingRoomReservationQueryRepositoryImpl implements
     }
 
     // == mapping condition == //
-    private Predicate mappingCondition(MeetingRoomReservationSearchCondition condition) {
+    private Predicate mappingCondition(SearchMeetingRoomReservationQueryCondition condition) {
         BooleanBuilder builder = new BooleanBuilder();
 
         builder.and(afterStartDateFrom(condition.getStartDateFrom()))

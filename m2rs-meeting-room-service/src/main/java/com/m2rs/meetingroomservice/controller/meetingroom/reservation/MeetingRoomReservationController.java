@@ -7,9 +7,10 @@ import com.m2rs.core.model.Id;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.CreateMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.MeetingRoomReservationResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeetingRoomReservationRequest;
+import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.SearchMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
+import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,10 @@ public class MeetingRoomReservationController {
 
     @GetMapping(path = "list")
     public ApiResult<List<MeetingRoomReservationResponse>> getReservationList(
-        MeetingRoomReservationSearchCondition condition) {
-        return ok(meetingRoomReservationService.searchReservation(condition));
+        @PathVariable Long mrId,
+        SearchMeetingRoomReservationRequest searchRequest) {
+        return ok(meetingRoomReservationService.searchReservation(Id.of(MeetingRoom.class, mrId),
+            searchRequest));
     }
 
 }

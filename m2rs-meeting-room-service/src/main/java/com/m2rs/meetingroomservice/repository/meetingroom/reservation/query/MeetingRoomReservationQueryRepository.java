@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MeetingRoomReservationQueryRepository {
 
-    List<MeetingRoomReservation> search(MeetingRoomReservationSearchCondition condition);
+    List<MeetingRoomReservation> search(SearchMeetingRoomReservationQueryCondition condition);
 
     boolean checkAvailableReservation(Id<MeetingRoom, Long> mrId,
         Id<MeetingRoomReservation, Long> excludeMrrId,
