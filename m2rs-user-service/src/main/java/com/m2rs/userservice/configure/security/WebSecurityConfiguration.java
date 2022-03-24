@@ -4,6 +4,7 @@ package com.m2rs.userservice.configure.security;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.apache.commons.lang3.math.NumberUtils.toLong;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.m2rs.core.commons.exception.ServiceRuntimeException;
 import com.m2rs.core.security.model.JwtClaimInfo;
 import com.m2rs.core.security.model.RoleType;
@@ -62,8 +63,9 @@ import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final SecurityResourceService securityResourceService;
-
     private final RoleHierarchyService roleHierarchyService;
+
+    private final ObjectMapper mapper;
 
     private final JwtClaimInfo jwtClaimInfo;
 
@@ -132,17 +134,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler getAuthenticationSuccessHandler() {
-        return new RestAuthenticationSuccessHandler();
+        return new RestAuthenticationSuccessHandler(mapper);
     }
 
     @Bean
     public AuthenticationFailureHandler getAuthenticationFailureHandler() {
-        return new RestAuthenticationFailureHandler();
+        return new RestAuthenticationFailureHandler(mapper);
     }
 
     @Bean
     public AccessDeniedHandler getAccessDeniedHandler() {
-        return new RestAccessDeniedHandler();
+        return new RestAccessDeniedHandler(mapper);
     }
 
     /*

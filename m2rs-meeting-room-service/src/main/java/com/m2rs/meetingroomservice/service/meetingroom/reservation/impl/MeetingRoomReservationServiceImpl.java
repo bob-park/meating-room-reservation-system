@@ -4,7 +4,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
+import com.m2rs.core.security.model.RestPrincipal;
+import com.m2rs.meetingroomservice.authentication.context.RestAuthenticationContextHolder;
 import com.m2rs.meetingroomservice.exception.AlreadyReservationException;
+import com.m2rs.meetingroomservice.exception.ReservationUserDifferentException;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.CreateMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.MeetingRoomReservationResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeetingRoomReservationRequest;
@@ -15,6 +18,7 @@ import com.m2rs.meetingroomservice.repository.meetingroom.reservation.MeetingRoo
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.MeetingRoomReservationSearchCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,6 +122,12 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
                 .orElseThrow(() ->
                     new NotFoundException(MeetingRoomReservation.class, mrrId.value()));
 
+        RestPrincipal principal = RestAuthenticationContextHolder.getContextHolder().getPrincipal();
+
+        if (!Objects.equals(principal.getId(), meetingRoomReservation.getUserId())) {
+            throw new ReservationUserDifferentException();
+        }
+
         meetingRoomReservation.modify(modifyRequest);
 
         return MeetingRoomReservationResponse.builder()
@@ -141,6 +151,12 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
         MeetingRoomReservation meetingRoomReservation = meetingRoomReservationRepository.findById(
                 mrrId.value())
             .orElseThrow(() -> new NotFoundException(MeetingRoomReservation.class, mrrId.value()));
+
+        RestPrincipal principal = RestAuthenticationContextHolder.getContextHolder().getPrincipal();
+
+        if (!Objects.equals(principal.getId(), meetingRoomReservation.getUserId())) {
+            throw new ReservationUserDifferentException();
+        }
 
         meetingRoomReservationRepository.delete(meetingRoomReservation);
 
