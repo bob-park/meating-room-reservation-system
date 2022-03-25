@@ -36,15 +36,15 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 ==== Path Template
 include::{snippets}/company-controller-test/get-company-test/custom-path-param-fields.adoc[]
 
-==== Request 예시
+==== Request Example
 
 include::{snippets}/company-controller-test/get-company-test/http-request.adoc[]
 
-==== Response
+==== Response Body
 
 include::{snippets}/company-controller-test/get-company-test/custom-response-fields-result.adoc[]
 
-==== Response 예시
+==== Response Example
 
 include::{snippets}/company-controller-test/get-company-test/http-response.adoc[]
 
@@ -63,17 +63,67 @@ include::{snippets}/company-controller-test/modify-company-test/custom-path-para
 ==== Request parameters
 include::{snippets}/company-controller-test/modify-company-test/custom-request-fields.adoc[]
 
-==== Request 예시
+==== Request Example
 
 include::{snippets}/company-controller-test/modify-company-test/http-request.adoc[]
 
-==== Response
+==== Response Body
 
 include::{snippets}/company-controller-test/modify-company-test/custom-response-fields-result.adoc[]
 
-==== Response 예시
-
+==== Response Example
 include::{snippets}/company-controller-test/modify-company-test/http-response.adoc[]
 
 
 
+== Admin Company API
+
+=== Create Company
+
+해당 회사 정보가 추가 된다.
+
+==== Request Body
+include::{snippets}/admin-company-controller-test/create-company-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/create-company-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/admin-company-controller-test/create-company-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/create-company-test/http-response.adoc[]
+
+'''
+
+=== Remove Company
+
+해당 회사 정보가 삭제 된다.
+
+==== Path Parameters
+include::{snippets}/admin-company-controller-test/remove-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/remove-test/http-request.adoc[]
+
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/remove-test/http-response.adoc[]
+
+'''
+
+=== Search Company List
+
+해당 회사 정보 목록이 조회된다.
+
+==== Request Parameters
+include::{snippets}/admin-company-controller-test/search-company-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/search-company-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/admin-company-controller-test/search-company-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/search-company-test/http-response.adoc[]
