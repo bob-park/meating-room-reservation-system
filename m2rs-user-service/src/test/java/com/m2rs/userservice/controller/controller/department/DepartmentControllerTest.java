@@ -6,6 +6,7 @@ import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -23,9 +24,12 @@ import com.m2rs.userservice.repository.department.DepartmentRepository;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -61,18 +65,20 @@ class DepartmentControllerTest extends CommonControllerTest {
         /*
           mock companyRepository
          */
-        // mock companyRepository findById()
+        // findById()
         when(companyRepository.findById(any())).thenReturn(Optional.of(mockCompany));
 
         /*
           mock departmentRepository
          */
-        // mock departmentRepository search()
+        // search()
         when(departmentRepository.search(any()))
             .thenReturn(Collections.singletonList(mockDepartment));
-        // mock departmentRepository findById()
+        // findById()
         when(departmentRepository.findById(any())).thenReturn(Optional.of(mockDepartment));
-        // mock departmentRepository save()
+        //  getDepartment()
+        when(departmentRepository.getDepartment(any(), any())).thenReturn(Optional.of(mockDepartment));
+        // save()
         when(departmentRepository.save(any())).thenReturn(mockDepartment);
     }
 
@@ -98,6 +104,32 @@ class DepartmentControllerTest extends CommonControllerTest {
                 customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)
             ));
 
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @MethodSource("mockDepartmentTestPathVariables")
+    @DisplayName("get department test")
+    void getDepartmentTest(long comId, long departmentId) throws Exception {
+
+        mockMvc.perform(get(DEPARTMENT_API + "/{departmentId}", comId, departmentId))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)),
+                    parameterWithName("departmentId")
+                        .description("부서 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER))),
+                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)))
+        ;
+    }
+
+    private static Stream<Arguments> mockDepartmentTestPathVariables() {
+        return Stream.of(
+            Arguments.of(1, 1)
+        );
     }
 
 }
