@@ -4,7 +4,7 @@ _URI Template : {{path}}_
 
 {{#parameters}}
 |{{#tableCellContent}}`+{{name}}+`{{/tableCellContent}}
-|{{#tableCellContent}}`+{{#pathParamType}}{{.}}{{/pathParamType}}+`{{/tableCellContent}}
+|{{#tableCellContent}}`+{{#paramType}}{{.}}{{/paramType}}+`{{/tableCellContent}}
 |{{#tableCellContent}}{{^optional}}true{{/optional}}{{/tableCellContent}}
 |{{#tableCellContent}}{{#format}}{{.}}{{/format}}{{/tableCellContent}}
 |{{#tableCellContent}}{{description}}{{/tableCellContent}}

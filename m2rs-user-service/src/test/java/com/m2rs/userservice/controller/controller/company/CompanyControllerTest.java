@@ -1,5 +1,6 @@
 package com.m2rs.userservice.controller.controller.company;
 
+import static com.m2rs.core.document.generator.DocumentParamTypeGenerator.generateType;
 import static com.m2rs.core.document.utils.SnippetUtils.customPathParamFields;
 import static com.m2rs.core.document.utils.SnippetUtils.customRequestFields;
 import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
@@ -9,10 +10,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.m2rs.core.document.generator.DocumentPathParamTypeGenerator;
 import com.m2rs.userservice.commons.fields.company.CompanyResponseField;
 import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
@@ -29,7 +30,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.test.context.support.WithMockUser;
 
 class CompanyControllerTest extends CommonControllerTest {
@@ -55,6 +55,7 @@ class CompanyControllerTest extends CommonControllerTest {
         when(companyRepository.findById(any())).thenReturn(Optional.of(mockCompany));
     }
 
+    @WithMockUser(username = "admin", roles = "ADMIN")
     @ParameterizedTest
     @ValueSource(longs = 1L)
     @DisplayName("get company")
@@ -63,9 +64,9 @@ class CompanyControllerTest extends CommonControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(document.document(
-                customPathParamFields(RequestDocumentation.parameterWithName("comId")
+                customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
-                    .attributes(DocumentPathParamTypeGenerator.generateType(JsonFieldType.NUMBER))),
+                    .attributes(generateType(JsonFieldType.NUMBER))),
                 customResponseFields(CompanyResponseField.COMPANY_RESPONSE)));
     }
 
@@ -86,9 +87,9 @@ class CompanyControllerTest extends CommonControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(document.document(
-                customPathParamFields(RequestDocumentation.parameterWithName("comId")
+                customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
-                    .attributes(DocumentPathParamTypeGenerator.generateType(JsonFieldType.NUMBER))),
+                    .attributes(generateType(JsonFieldType.NUMBER))),
                 customRequestFields(fieldWithPath("name")
                     .type(JsonFieldType.STRING)
                     .description("회사 이름")

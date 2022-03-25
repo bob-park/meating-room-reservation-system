@@ -1,8 +1,11 @@
 package com.m2rs.core.document.utils;
 
+import com.m2rs.core.document.snippet.CustomCodeFieldSnippet;
+import com.m2rs.core.document.snippet.CustomRequestParamSnippet;
 import java.util.Arrays;
 import java.util.Collections;
 
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -16,6 +19,20 @@ import com.m2rs.core.document.snippet.CustomResponseFieldsSnippet;
 import static org.springframework.restdocs.payload.PayloadDocumentation.beneathPath;
 
 public interface SnippetUtils {
+
+    static CustomCodeFieldSnippet customCodeFields(
+        PayloadSubsectionExtractor<?> subsectionExtractor,
+        Map<String, Object> attributes,
+        FieldDescriptor... descriptors) {
+        return new CustomCodeFieldSnippet(
+            "custom-code", subsectionExtractor, Arrays.asList(descriptors), attributes, true);
+    }
+
+    static CustomRequestParamSnippet customRequestParam(
+        ParameterDescriptor... descriptors) {
+        return new CustomRequestParamSnippet(
+            "custom-request-param", Arrays.asList(descriptors), null, false);
+    }
 
     static CustomRequestFieldSnippet commonRequestFields(
         PayloadSubsectionExtractor<?> extractor, FieldDescriptor... descriptors) {
