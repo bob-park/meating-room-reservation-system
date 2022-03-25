@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,6 +18,7 @@ import com.m2rs.userservice.commons.fields.department.DepartmentResponseField;
 import com.m2rs.userservice.commons.security.annotation.WithMockCustomUser;
 import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.department.CreateDepartmentRequest;
+import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.repository.company.CompanyRepository;
@@ -77,7 +79,8 @@ class DepartmentControllerTest extends CommonControllerTest {
         // findById()
         when(departmentRepository.findById(any())).thenReturn(Optional.of(mockDepartment));
         //  getDepartment()
-        when(departmentRepository.getDepartment(any(), any())).thenReturn(Optional.of(mockDepartment));
+        when(departmentRepository.getDepartment(any(), any())).thenReturn(
+            Optional.of(mockDepartment));
         // save()
         when(departmentRepository.save(any())).thenReturn(mockDepartment);
     }
@@ -122,8 +125,32 @@ class DepartmentControllerTest extends CommonControllerTest {
                     parameterWithName("departmentId")
                         .description("부서 아이디")
                         .attributes(generateType(JsonFieldType.NUMBER))),
-                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)))
-        ;
+                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @MethodSource("mockDepartmentTestPathVariables")
+    @DisplayName("modify department test")
+    void modifyDepartmentTest(long comId, long departmentId) throws Exception {
+
+        ModifyDepartmentRequest modifyRequest = new ModifyDepartmentRequest();
+
+        modifyRequest.setName("test-department");
+
+        mockMvc.perform(put(DEPARTMENT_API + "/{departmentId}", comId, departmentId)
+                .headers(getDefaultHeaders())
+                .content(toJson(modifyRequest)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)),
+                    parameterWithName("departmentId")
+                        .description("부서 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER))),
+                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
     }
 
     private static Stream<Arguments> mockDepartmentTestPathVariables() {
