@@ -37,7 +37,7 @@ public interface SnippetUtils {
     }
 
     static CustomRequestFieldSnippet customRequestFields(FieldDescriptor... descriptors) {
-        return commonRequestFields(beneathPath("data").withSubsectionId("data"), descriptors);
+        return commonRequestFields(null, descriptors);
     }
 
     static CustomResponseFieldsSnippet customResponseFields(
