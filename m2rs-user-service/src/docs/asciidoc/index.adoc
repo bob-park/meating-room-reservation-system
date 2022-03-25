@@ -47,3 +47,33 @@ include::{snippets}/company-controller-test/get-company-test/custom-response-fie
 ==== Response 예시
 
 include::{snippets}/company-controller-test/get-company-test/http-response.adoc[]
+
+
+'''
+
+
+=== Modify Company
+
+해당 회사 정보가 수정된다.
+
+
+==== Path Template
+include::{snippets}/company-controller-test/modify-company-test/custom-path-param-fields.adoc[]
+
+==== Request parameters
+include::{snippets}/company-controller-test/modify-company-test/custom-request-fields.adoc[]
+
+==== Request 예시
+
+include::{snippets}/company-controller-test/modify-company-test/http-request.adoc[]
+
+==== Response
+
+include::{snippets}/company-controller-test/modify-company-test/custom-response-fields-result.adoc[]
+
+==== Response 예시
+
+include::{snippets}/company-controller-test/modify-company-test/http-response.adoc[]
+
+
+

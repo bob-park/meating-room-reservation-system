@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
-public abstract class CommonController {
+public abstract class CommonControllerTest {
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
