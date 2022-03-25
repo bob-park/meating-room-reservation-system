@@ -17,6 +17,21 @@ spring:
         format_sql: true
   flyway:
     enabled: false
+  zipkin:
+    enabled: false
+  sleuth:
+    jdbc:
+      p6spy:
+        enable-logging: false
+
+eureka:
+  client:
+    enabled: false
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 # user
 user:
@@ -26,3 +41,4 @@ user:
 jwt:
   client-secret: 12345
   issuer: user-service
+
