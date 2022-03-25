@@ -1,8 +1,12 @@
 package com.m2rs.userservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -10,6 +14,7 @@ import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -26,10 +31,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.subsectionWithPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(properties = {
-    "spring.cloud.config.enabled=false",
-    "eureka.client.enabled=false"
-})
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class CommonController {
 
@@ -38,6 +40,9 @@ public abstract class CommonController {
     protected MockMvc mockMvc;
 
     protected RestDocumentationResultHandler document;
+
+    @Autowired
+    protected ObjectMapper mapper;
 
     @BeforeEach
     void setup(WebApplicationContext context,
@@ -53,6 +58,7 @@ public abstract class CommonController {
                 .apply(
                     documentationConfiguration(restDocumentationExtension)
                         .uris())
+                .apply(SecurityMockMvcConfigurers.springSecurity())
                 .alwaysDo(document)
                 .build();
 
@@ -101,8 +107,12 @@ public abstract class CommonController {
                             .description("에러 메세지")
                             .type(JsonFieldType.STRING)
                             .optional()
-
                     )));
     }
 
+    protected String toJson(Object obj) throws JsonProcessingException {
+        return mapper.writeValueAsString(obj);
+    }
+
 }
+
