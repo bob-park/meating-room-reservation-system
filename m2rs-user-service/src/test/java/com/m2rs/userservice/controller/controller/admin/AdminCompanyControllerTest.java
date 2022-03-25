@@ -7,10 +7,6 @@ import static com.m2rs.core.document.utils.SnippetUtils.customRequestParam;
 import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -20,8 +16,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.commons.fields.common.CommonPageableRequestParamField;
 import com.m2rs.userservice.commons.fields.company.CompanyResponseField;
+import com.m2rs.userservice.commons.security.annotation.WithMockCustomUser;
 import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.company.CreateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
@@ -37,13 +35,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mockito.internal.stubbing.answers.CallsRealMethods;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.ParameterDescriptor;
-import org.springframework.security.test.context.support.WithMockUser;
 
 class AdminCompanyControllerTest extends CommonControllerTest {
 
@@ -68,7 +64,7 @@ class AdminCompanyControllerTest extends CommonControllerTest {
         when(companyRepository.save(any())).thenReturn(mockCompany);
     }
 
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockCustomUser(email = "admin@admin.com", roleType = RoleType.ROLE_ADMIN)
     @Test
     @DisplayName("search company test")
     void searchCompanyTest() throws Exception {
@@ -96,7 +92,7 @@ class AdminCompanyControllerTest extends CommonControllerTest {
             ));
     }
 
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockCustomUser(email = "admin@admin.com", roleType = RoleType.ROLE_ADMIN)
     @Test
     @DisplayName("create company test")
     void createCompanyTest() throws Exception {
@@ -116,11 +112,11 @@ class AdminCompanyControllerTest extends CommonControllerTest {
     }
 
 
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockCustomUser(email = "admin@admin.com", roleType = RoleType.ROLE_ADMIN)
     @ParameterizedTest
     @ValueSource(longs = 1L)
-    @DisplayName("remove test")
-    void removeTest(long comId) throws Exception {
+    @DisplayName("remove company test")
+    void removeCompanyTest(long comId) throws Exception {
 
         mockMvc.perform(delete(ADMIN_COMPANY_API + "/{comId}", comId))
             .andDo(print())

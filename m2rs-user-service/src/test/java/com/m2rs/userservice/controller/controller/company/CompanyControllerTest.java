@@ -14,7 +14,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.commons.fields.company.CompanyResponseField;
+import com.m2rs.userservice.commons.security.annotation.WithMockCustomUser;
 import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
@@ -55,7 +57,6 @@ class CompanyControllerTest extends CommonControllerTest {
         when(companyRepository.findById(any())).thenReturn(Optional.of(mockCompany));
     }
 
-    @WithMockUser(username = "admin", roles = "ADMIN")
     @ParameterizedTest
     @ValueSource(longs = 1L)
     @DisplayName("get company")
@@ -71,7 +72,7 @@ class CompanyControllerTest extends CommonControllerTest {
     }
 
 
-    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    @WithMockCustomUser(comId = 1, departmentId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
     @ParameterizedTest
     @ValueSource(longs = 1L)
     @DisplayName("modify company")
