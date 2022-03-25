@@ -13,9 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.m2rs.core.document.generator.DocumentPathParamTypeGenerator;
-import com.m2rs.core.security.model.RoleType;
 import com.m2rs.userservice.commons.fields.company.CompanyResponseField;
-import com.m2rs.userservice.controller.CommonController;
+import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.company.UpdateCompanyRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.repository.company.CompanyRepository;
@@ -33,7 +32,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.restdocs.request.RequestDocumentation;
 import org.springframework.security.test.context.support.WithMockUser;
 
-class CompanyControllerTest extends CommonController {
+class CompanyControllerTest extends CommonControllerTest {
 
     private static final String COMPANY_API = "/company";
 
