@@ -13,7 +13,6 @@ import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.User;
 import com.m2rs.userservice.service.user.UserService;
 import java.util.List;
-import javax.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;

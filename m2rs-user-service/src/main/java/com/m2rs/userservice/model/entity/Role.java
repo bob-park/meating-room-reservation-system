@@ -59,4 +59,14 @@ public class Role extends BaseTimeEntity {
         this.rolesName = rolesName;
         this.rolesDescription = rolesDescription;
     }
+
+    public void setParent(Role parent){
+        this.parentRole = parent;
+
+        parent.addChild(this);
+    }
+
+    public void addChild(Role child){
+        this.childRoles.add(child);
+    }
 }

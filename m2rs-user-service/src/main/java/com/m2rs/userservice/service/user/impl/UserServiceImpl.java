@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import com.m2rs.core.commons.exception.data.AlreadyExistDataException;
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.commons.exception.data.AlreadyExistDataException;
 import com.m2rs.core.commons.model.api.response.Pagination;
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
@@ -98,6 +98,8 @@ public class UserServiceImpl implements UserService {
             .roleTypes(Collections.singletonList(savedUser.getUserRoles()
                 .getRole()
                 .getRolesName()))
+            .createdDate(savedUser.getCreatedDate())
+            .lastModifiedDate(savedUser.getLastModifiedDate())
             .build();
     }
 
@@ -119,6 +121,8 @@ public class UserServiceImpl implements UserService {
                     .roleTypes(Collections.singletonList(item.getUserRoles()
                         .getRole()
                         .getRolesName()))
+                    .createdDate(item.getCreatedDate())
+                    .lastModifiedDate(item.getLastModifiedDate())
                     .build())
                 .collect(Collectors.toList()))
             .page(Pagination.builder()
