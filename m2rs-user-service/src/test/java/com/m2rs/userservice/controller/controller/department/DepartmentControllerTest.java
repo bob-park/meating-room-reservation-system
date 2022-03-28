@@ -2,10 +2,12 @@ package com.m2rs.userservice.controller.controller.department;
 
 import static com.m2rs.core.document.generator.DocumentParamTypeGenerator.generateType;
 import static com.m2rs.core.document.utils.SnippetUtils.customPathParamFields;
-import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customRequestParamFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -14,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.m2rs.core.security.model.RoleType;
+import com.m2rs.userservice.commons.fields.department.DepartmentRequestParamField;
 import com.m2rs.userservice.commons.fields.department.DepartmentResponseField;
 import com.m2rs.userservice.commons.security.annotation.WithMockCustomUser;
 import com.m2rs.userservice.controller.CommonControllerTest;
@@ -104,7 +107,7 @@ class DepartmentControllerTest extends CommonControllerTest {
                 customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
                     .attributes(generateType(JsonFieldType.NUMBER))),
-                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)
+                customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)
             ));
 
     }
@@ -125,7 +128,7 @@ class DepartmentControllerTest extends CommonControllerTest {
                     parameterWithName("departmentId")
                         .description("부서 아이디")
                         .attributes(generateType(JsonFieldType.NUMBER))),
-                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
+                customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
     }
 
     @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
@@ -150,7 +153,46 @@ class DepartmentControllerTest extends CommonControllerTest {
                     parameterWithName("departmentId")
                         .description("부서 아이디")
                         .attributes(generateType(JsonFieldType.NUMBER))),
-                customResponseFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
+                customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @MethodSource("mockDepartmentTestPathVariables")
+    @DisplayName("remove department")
+    void removeDepartmentTest(long comId, long departmentId) throws Exception {
+
+        mockMvc.perform(delete(DEPARTMENT_API + "/{departmentId}", comId, departmentId))
+            .andDo(print())
+            .andExpect(status().isNoContent())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)),
+                    parameterWithName("departmentId")
+                        .description("부서 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER))
+                )));
+
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @ValueSource(longs = 1)
+    @DisplayName("get department list")
+    void getListTest(long comId) throws Exception {
+
+        mockMvc.perform(get(DEPARTMENT_API + "/list", comId))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document.document(
+                customPathParamFields(
+                    parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER))),
+                customRequestParamFields(DepartmentRequestParamField.GET_DEPARTMENT_LIST),
+                customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
+
     }
 
     private static Stream<Arguments> mockDepartmentTestPathVariables() {

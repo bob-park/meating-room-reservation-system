@@ -2,8 +2,8 @@ package com.m2rs.userservice.controller.controller.company;
 
 import static com.m2rs.core.document.generator.DocumentParamTypeGenerator.generateType;
 import static com.m2rs.core.document.utils.SnippetUtils.customPathParamFields;
-import static com.m2rs.core.document.utils.SnippetUtils.customRequestFields;
-import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customRequestBodyFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -32,7 +32,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 class CompanyControllerTest extends CommonControllerTest {
 
@@ -68,7 +67,7 @@ class CompanyControllerTest extends CommonControllerTest {
                 customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
                     .attributes(generateType(JsonFieldType.NUMBER))),
-                customResponseFields(CompanyResponseField.COMPANY_RESPONSE)));
+                customResponseBodyFields(CompanyResponseField.COMPANY_RESPONSE)));
     }
 
 
@@ -91,11 +90,11 @@ class CompanyControllerTest extends CommonControllerTest {
                 customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
                     .attributes(generateType(JsonFieldType.NUMBER))),
-                customRequestFields(fieldWithPath("name")
+                customRequestBodyFields(fieldWithPath("name")
                     .type(JsonFieldType.STRING)
                     .description("회사 이름")
                     .optional()),
-                customResponseFields(CompanyResponseField.COMPANY_RESPONSE)));
+                customResponseBodyFields(CompanyResponseField.COMPANY_RESPONSE)));
     }
 
 

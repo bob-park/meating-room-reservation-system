@@ -23,7 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import static com.m2rs.core.document.utils.SnippetUtils.commonResponseFields;
+import static com.m2rs.core.document.utils.SnippetUtils.commonResponseBodyFields;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -73,7 +73,7 @@ public abstract class CommonControllerTest {
                 MockMvcRestDocumentation.document(
                     "commons-response",
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
-                    commonResponseFields(
+                    commonResponseBodyFields(
                         null,
                         subsectionWithPath("result")
                             .description("결과")

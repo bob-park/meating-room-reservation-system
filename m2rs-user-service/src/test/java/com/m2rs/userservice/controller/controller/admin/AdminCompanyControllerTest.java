@@ -2,9 +2,9 @@ package com.m2rs.userservice.controller.controller.admin;
 
 import static com.m2rs.core.document.generator.DocumentParamTypeGenerator.generateType;
 import static com.m2rs.core.document.utils.SnippetUtils.customPathParamFields;
-import static com.m2rs.core.document.utils.SnippetUtils.customRequestFields;
-import static com.m2rs.core.document.utils.SnippetUtils.customRequestParam;
-import static com.m2rs.core.document.utils.SnippetUtils.customResponseFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customRequestBodyFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customRequestParamFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -87,8 +87,8 @@ class AdminCompanyControllerTest extends CommonControllerTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andDo(document.document(
-                customRequestParam(requestParamFields.toArray(new ParameterDescriptor[]{})),
-                customResponseFields(CompanyResponseField.COMPANY_RESPONSE)
+                customRequestParamFields(requestParamFields.toArray(new ParameterDescriptor[]{})),
+                customResponseBodyFields(CompanyResponseField.COMPANY_RESPONSE)
             ));
     }
 
@@ -105,10 +105,10 @@ class AdminCompanyControllerTest extends CommonControllerTest {
                 .content(toJson(createRequest)))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andDo(document.document(customRequestFields(fieldWithPath("name")
+            .andDo(document.document(customRequestBodyFields(fieldWithPath("name")
                     .type(JsonFieldType.STRING)
                     .description("회사 이름")),
-                customResponseFields(CompanyResponseField.COMPANY_RESPONSE)));
+                customResponseBodyFields(CompanyResponseField.COMPANY_RESPONSE)));
     }
 
 
