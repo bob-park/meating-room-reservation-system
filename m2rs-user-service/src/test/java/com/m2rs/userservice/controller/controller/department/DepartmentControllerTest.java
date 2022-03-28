@@ -2,6 +2,7 @@ package com.m2rs.userservice.controller.controller.department;
 
 import static com.m2rs.core.document.generator.DocumentParamTypeGenerator.generateType;
 import static com.m2rs.core.document.utils.SnippetUtils.customPathParamFields;
+import static com.m2rs.core.document.utils.SnippetUtils.customRequestBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.customRequestParamFields;
 import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
@@ -11,6 +12,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -107,6 +109,9 @@ class DepartmentControllerTest extends CommonControllerTest {
                 customPathParamFields(parameterWithName("comId")
                     .description("회사 아이디")
                     .attributes(generateType(JsonFieldType.NUMBER))),
+                customRequestBodyFields(fieldWithPath("name")
+                    .description("부서 이름")
+                    .type(JsonFieldType.STRING)),
                 customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)
             ));
 
@@ -153,6 +158,9 @@ class DepartmentControllerTest extends CommonControllerTest {
                     parameterWithName("departmentId")
                         .description("부서 아이디")
                         .attributes(generateType(JsonFieldType.NUMBER))),
+                customRequestBodyFields(fieldWithPath("name")
+                    .description("부서 이름")
+                    .type(JsonFieldType.STRING)),
                 customResponseBodyFields(DepartmentResponseField.DEPARTMENT_RESPONSE)));
     }
 

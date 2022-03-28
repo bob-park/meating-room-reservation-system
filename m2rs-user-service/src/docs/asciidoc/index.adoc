@@ -25,7 +25,7 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 = APIs
 '''
 
-== Company API
+== Company APIs
 
 === Get Company
 
@@ -76,7 +76,7 @@ include::{snippets}/company-controller-test/modify-company-test/http-response.ad
 
 
 
-== Admin Company API
+== Admin Company APIs
 
 === Create Company
 
@@ -127,3 +127,100 @@ include::{snippets}/admin-company-controller-test/search-company-test/custom-res
 
 ==== Response Example
 include::{snippets}/admin-company-controller-test/search-company-test/http-response.adoc[]
+
+
+
+
+== Department APIs
+
+=== Get Department List
+
+해당 회사의 부서 정보 목록이 조회된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/get-list-test/custom-path-param-fields.adoc[]
+
+==== Request Parameters
+include::{snippets}/department-controller-test/get-list-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/get-list-test/http-request.adoc[]
+
+
+==== Response Body
+include::{snippets}/department-controller-test/get-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/get-list-test/http-response.adoc[]
+
+'''
+
+=== Get Department
+해당 부서 정보가 조회된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/get-department-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/get-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/get-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/get-department-test/http-response.adoc[]
+
+'''
+
+=== Create Department
+해당 부서의 정보가 생성된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/create-department-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/department-controller-test/create-department-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/create-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/create-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/create-department-test/http-response.adoc[]
+
+'''
+
+=== Modify Department
+해당 부서의 정보가 수정된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/modify-department-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/department-controller-test/modify-department-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/modify-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/modify-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/modify-department-test/http-response.adoc[]
+
+'''
+
+=== Remove Department
+해당 부서의 정보가 삭제된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/remove-department-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/remove-department-test/http-request.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/remove-department-test/http-response.adoc[]
+
