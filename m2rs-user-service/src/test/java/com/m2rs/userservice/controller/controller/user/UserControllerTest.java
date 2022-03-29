@@ -8,8 +8,11 @@ import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields
 import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -21,6 +24,7 @@ import com.m2rs.userservice.commons.fields.user.UserResponseBodyFields;
 import com.m2rs.userservice.commons.security.annotation.WithMockCustomUser;
 import com.m2rs.userservice.controller.CommonControllerTest;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
+import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.entity.Company;
 import com.m2rs.userservice.model.entity.Department;
 import com.m2rs.userservice.model.entity.Role;
@@ -127,10 +131,12 @@ class UserControllerTest extends CommonControllerTest {
         /*
          mock user repository
          */
+        when(userRepository.findById(any())).thenReturn(Optional.of(mockUser));
         when(userRepository.getUser(any(), any())).thenReturn(Optional.of(mockUser));
         when(userRepository.search(any(), any()))
             .thenReturn(new PageImpl<>(Collections.singletonList(mockUser)));
         when(userRepository.save(any())).thenReturn(mockUser);
+        when(userRepository.isExistEmail(any(), any())).thenReturn(false);
 
     }
 
@@ -193,6 +199,74 @@ class UserControllerTest extends CommonControllerTest {
                 customResponseBodyFields(UserResponseBodyFields.USER_RESPONSE)
             ));
 
+    }
+
+    @WithMockCustomUser(comId = 1, departmentId = 1, email = "user@user.com")
+    @ParameterizedTest
+    @MethodSource("mockUserTestPathVariables")
+    @DisplayName("modify user test")
+    void modifyUserTest(long comId, long userId) throws Exception {
+        ModifyUserRequest modifyRequest =
+            ModifyUserRequest.builder()
+                .name("user")
+                .password("12345")
+                .build();
+
+        mockMvc.perform(put(USER_API + "/{userId}", comId, userId)
+                .headers(getDefaultHeaders())
+                .content(toJson(modifyRequest)))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)),
+                    parameterWithName("userId")
+                        .description("사용자 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER))),
+                customRequestBodyFields(UserRequestBodyFields.MODIFY_USER_REQUEST),
+                customResponseBodyFields(UserResponseBodyFields.USER_RESPONSE)))
+        ;
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @MethodSource("mockUserTestPathVariables")
+    @DisplayName("remove user test")
+    void removeUserTest(long comId, long userId) throws Exception {
+
+        mockMvc.perform(delete(USER_API + "/{userId}", comId, userId))
+            .andDo(print())
+            .andExpect(status().isNoContent())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                        .description("회사 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)),
+                    parameterWithName("userId")
+                        .description("사용자 아이디")
+                        .attributes(generateType(JsonFieldType.NUMBER)))));
+
+    }
+
+    @WithMockCustomUser(comId = 1, email = "manager@manager.com", roleType = RoleType.ROLE_MANAGER)
+    @ParameterizedTest
+    @ValueSource(longs = 1L)
+    @DisplayName("exist email test")
+    void existEmailTest(long comId) throws Exception {
+        mockMvc.perform(get(USER_API + "/exist/email", comId)
+                .param("email", "user@user.com"))
+            .andDo(print())
+            .andExpect(status().isOk())
+            .andDo(document.document(
+                customPathParamFields(parameterWithName("comId")
+                    .description("회사 아이디")
+                    .attributes(generateType(JsonFieldType.NUMBER))),
+                customRequestParamFields(parameterWithName("email")
+                    .description("사용자 이메일")
+                    .attributes(generateType(JsonFieldType.STRING))),
+                customResponseBodyFields(fieldWithPath("exist")
+                    .description("존재 여부")
+                    .type(JsonFieldType.BOOLEAN))));
     }
 
     private static Stream<Arguments> mockUserTestPathVariables() {

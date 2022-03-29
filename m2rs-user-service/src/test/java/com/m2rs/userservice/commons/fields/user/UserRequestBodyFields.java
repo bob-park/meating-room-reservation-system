@@ -16,4 +16,11 @@ public class UserRequestBodyFields {
         fieldWithPath("cellPhone").description("사용자 휴대번호").type(JsonFieldType.STRING).optional()
     };
 
+    public static FieldDescriptor[] MODIFY_USER_REQUEST = {
+        fieldWithPath("password").description("사용자 패스워드").type(JsonFieldType.STRING).optional(),
+        fieldWithPath("name").description("사용자 이름").type(JsonFieldType.STRING).optional(),
+        fieldWithPath("phone").description("사용자 전화번호").type(JsonFieldType.STRING).optional(),
+        fieldWithPath("cellPhone").description("사용자 휴대번호").type(JsonFieldType.STRING).optional(),
+    };
+
 }
