@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
+import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -63,6 +64,8 @@ public class User extends BaseTimeEntity {
         this.name = name;
         this.phone = phone;
         this.cellPhone = cellPhone;
+
+        this.createdDate = LocalDateTime.now();
     }
 
     public void setDepartment(Department department) {

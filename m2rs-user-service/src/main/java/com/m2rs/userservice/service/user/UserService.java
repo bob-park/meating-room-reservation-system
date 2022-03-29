@@ -2,6 +2,7 @@ package com.m2rs.userservice.service.user;
 
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
+import com.m2rs.userservice.model.api.user.CheckExistEmailResponse;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.SearchUserRequest;
@@ -23,6 +24,6 @@ public interface UserService {
 
     UserResponse removeUser(Id<User, Long> id);
 
-    Boolean isExistEmail(Id<Company, Long> comId, String email);
+    CheckExistEmailResponse isExistEmail(Id<Company, Long> comId, String email);
 
 }

@@ -5,12 +5,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
-import com.m2rs.core.commons.exception.data.AlreadyExistDataException;
 import com.m2rs.core.commons.exception.NotFoundException;
+import com.m2rs.core.commons.exception.data.AlreadyExistDataException;
 import com.m2rs.core.commons.model.api.response.Pagination;
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.RoleType;
+import com.m2rs.userservice.model.api.user.CheckExistEmailResponse;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.SearchUserRequest;
@@ -98,6 +99,8 @@ public class UserServiceImpl implements UserService {
             .roleTypes(Collections.singletonList(savedUser.getUserRoles()
                 .getRole()
                 .getRolesName()))
+            .createdDate(savedUser.getCreatedDate())
+            .lastModifiedDate(savedUser.getLastModifiedDate())
             .build();
     }
 
@@ -119,6 +122,8 @@ public class UserServiceImpl implements UserService {
                     .roleTypes(Collections.singletonList(item.getUserRoles()
                         .getRole()
                         .getRolesName()))
+                    .createdDate(item.getCreatedDate())
+                    .lastModifiedDate(item.getLastModifiedDate())
                     .build())
                 .collect(Collectors.toList()))
             .page(Pagination.builder()
@@ -173,6 +178,9 @@ public class UserServiceImpl implements UserService {
             .id(user.getId())
             .email(user.getEmail())
             .name(user.getName())
+            .roleTypes(Collections.singletonList(user.getUserRoles()
+                .getRole()
+                .getRolesName()))
             .phone(user.getPhone())
             .cellPhone(user.getCellPhone())
             .createdDate(user.getCreatedDate())
@@ -184,7 +192,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse removeUser(Id<User, Long> id) {
 
-        checkNotNull(id, "id must be providex.");
+        checkNotNull(id, "id must be provided.");
 
         User user = userRepository.findById(id.value())
             .orElseThrow(() -> new NotFoundException(User.class, id.value()));
@@ -197,11 +205,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isExistEmail(Id<Company, Long> comId, String email) {
+    public CheckExistEmailResponse isExistEmail(Id<Company, Long> comId, String email) {
 
         checkNotNull(comId, "comId must be provided.");
         checkArgument(StringUtils.isNotBlank(email), "email must be provided.");
 
-        return userRepository.isExistEmail(comId, email);
+        boolean result = userRepository.isExistEmail(comId, email);
+
+        return CheckExistEmailResponse.builder()
+            .exist(result)
+            .build();
     }
 }

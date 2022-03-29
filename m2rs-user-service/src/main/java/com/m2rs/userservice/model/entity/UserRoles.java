@@ -37,7 +37,8 @@ public class UserRoles {
     private Role role;
 
     @Builder
-    private UserRoles(User user, Role role) {
+    private UserRoles(Long id, User user, Role role) {
+        this.id = id;
         this.user = user;
         this.role = role;
     }

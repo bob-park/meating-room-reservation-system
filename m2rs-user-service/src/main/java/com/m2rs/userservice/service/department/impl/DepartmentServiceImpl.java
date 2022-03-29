@@ -54,7 +54,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return DepartmentResponse.builder()
             .id(savedDepartment.getId())
+            .company(CompanyResponse.builder()
+                .id(savedDepartment.getCompany().getId())
+                .name(savedDepartment.getCompany().getName())
+                .logoPath(savedDepartment.getCompany().getLogoPath())
+                .createdDate(savedDepartment.getCompany().getCreatedDate())
+                .lastModifiedDate(savedDepartment.getCompany().getLastModifiedDate())
+                .build())
             .name(savedDepartment.getName())
+            .createdDate(savedDepartment.getCreatedDate())
+            .lastModifiedDate(savedDepartment.getLastModifiedDate())
             .build();
     }
 
@@ -72,7 +81,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 
         return DepartmentResponse.builder()
             .id(department.getId())
+            .company(CompanyResponse.builder()
+                .id(department.getCompany().getId())
+                .name(department.getCompany().getName())
+                .logoPath(department.getCompany().getLogoPath())
+                .createdDate(department.getCompany().getCreatedDate())
+                .lastModifiedDate(department.getCompany().getLastModifiedDate())
+                .build())
             .name(department.getName())
+            .createdDate(department.getCreatedDate())
+            .lastModifiedDate(department.getLastModifiedDate())
             .build();
     }
 

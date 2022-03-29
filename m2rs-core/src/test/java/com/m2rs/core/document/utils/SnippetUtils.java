@@ -1,8 +1,11 @@
 package com.m2rs.core.document.utils;
 
+import com.m2rs.core.document.snippet.CustomCodeFieldSnippet;
+import com.m2rs.core.document.snippet.CustomRequestParamSnippet;
 import java.util.Arrays;
 import java.util.Collections;
 
+import java.util.Map;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -17,13 +20,27 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.beneathP
 
 public interface SnippetUtils {
 
-    static CustomRequestFieldSnippet commonRequestFields(
+    static CustomCodeFieldSnippet customCodeFields(
+        PayloadSubsectionExtractor<?> subsectionExtractor,
+        Map<String, Object> attributes,
+        FieldDescriptor... descriptors) {
+        return new CustomCodeFieldSnippet(
+            "custom-code", subsectionExtractor, Arrays.asList(descriptors), attributes, true);
+    }
+
+    static CustomRequestParamSnippet customRequestParamFields(
+        ParameterDescriptor... descriptors) {
+        return new CustomRequestParamSnippet(
+            "custom-request-param", Arrays.asList(descriptors), null, false);
+    }
+
+    static CustomRequestFieldSnippet commonRequestBodyFields(
         PayloadSubsectionExtractor<?> extractor, FieldDescriptor... descriptors) {
         return new CustomRequestFieldSnippet(
             "custom-request", extractor, Arrays.asList(descriptors), null, true);
     }
 
-    static CustomResponseFieldsSnippet commonResponseFields(
+    static CustomResponseFieldsSnippet commonResponseBodyFields(
         PayloadSubsectionExtractor<?> extractor, FieldDescriptor... descriptors) {
         return new CustomResponseFieldsSnippet(
             "custom-response", extractor, Arrays.asList(descriptors), null, true);
@@ -36,14 +53,14 @@ public interface SnippetUtils {
             "custom-path-param", Arrays.asList(descriptors), null, false);
     }
 
-    static CustomRequestFieldSnippet customRequestFields(FieldDescriptor... descriptors) {
-        return commonRequestFields(beneathPath("data").withSubsectionId("data"), descriptors);
+    static CustomRequestFieldSnippet customRequestBodyFields(FieldDescriptor... descriptors) {
+        return commonRequestBodyFields(null, descriptors);
     }
 
-    static CustomResponseFieldsSnippet customResponseFields(
+    static CustomResponseFieldsSnippet customResponseBodyFields(
         FieldDescriptor... descriptors) {
 
-        return commonResponseFields(beneathPath("result").withSubsectionId("result"), descriptors);
+        return commonResponseBodyFields(beneathPath("result").withSubsectionId("result"), descriptors);
     }
 
     static HttpHeaders getDefaultHeaders() {

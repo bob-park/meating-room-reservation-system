@@ -25,22 +25,310 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 = APIs
 '''
 
-== Company API
+== Company APIs
 
 === Get Company
 
 ====  설명
 
-해당 API 는 현재 시스템에 등록된 회사 목록을 조회한다.
+회사 아이디에 해당하는 회사 정보가 조회된다.
 
-==== Request 예시
+==== Path Template
+include::{snippets}/company-controller-test/get-company-test/custom-path-param-fields.adoc[]
 
-include::{snippets}/company-controller-test/search-company-test/http-request.adoc[]
+==== Request Example
 
-==== Response
+include::{snippets}/company-controller-test/get-company-test/http-request.adoc[]
 
-include::{snippets}/company-controller-test/search-company-test/custom-response-fields-result.adoc[]
+==== Response Body
 
-==== Response 예시
+include::{snippets}/company-controller-test/get-company-test/custom-response-fields-result.adoc[]
 
-include::{snippets}/company-controller-test/search-company-test/http-response.adoc[]
+==== Response Example
+
+include::{snippets}/company-controller-test/get-company-test/http-response.adoc[]
+
+
+'''
+
+
+=== Modify Company
+
+해당 회사 정보가 수정된다.
+
+
+==== Path Template
+include::{snippets}/company-controller-test/modify-company-test/custom-path-param-fields.adoc[]
+
+==== Request parameters
+include::{snippets}/company-controller-test/modify-company-test/custom-request-fields.adoc[]
+
+==== Request Example
+
+include::{snippets}/company-controller-test/modify-company-test/http-request.adoc[]
+
+==== Response Body
+
+include::{snippets}/company-controller-test/modify-company-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/company-controller-test/modify-company-test/http-response.adoc[]
+
+
+
+== Admin Company APIs
+
+=== Create Company
+
+해당 회사 정보가 추가 된다.
+
+==== Request Body
+include::{snippets}/admin-company-controller-test/create-company-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/create-company-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/admin-company-controller-test/create-company-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/create-company-test/http-response.adoc[]
+
+'''
+
+=== Remove Company
+
+해당 회사 정보가 삭제 된다.
+
+==== Path Parameters
+include::{snippets}/admin-company-controller-test/remove-company-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/remove-company-test/http-request.adoc[]
+
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/remove-company-test/http-response.adoc[]
+
+'''
+
+=== Search Company List
+
+해당 회사 정보 목록이 조회된다.
+
+==== Request Parameters
+include::{snippets}/admin-company-controller-test/search-company-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/admin-company-controller-test/search-company-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/admin-company-controller-test/search-company-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/admin-company-controller-test/search-company-test/http-response.adoc[]
+
+
+
+
+== Department APIs
+
+=== Get Department List
+
+해당 회사의 부서 정보 목록이 조회된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/get-list-test/custom-path-param-fields.adoc[]
+
+==== Request Parameters
+include::{snippets}/department-controller-test/get-list-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/get-list-test/http-request.adoc[]
+
+
+==== Response Body
+include::{snippets}/department-controller-test/get-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/get-list-test/http-response.adoc[]
+
+'''
+
+=== Get Department
+해당 부서 정보가 조회된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/get-department-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/get-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/get-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/get-department-test/http-response.adoc[]
+
+'''
+
+=== Create Department
+해당 부서의 정보가 생성된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/create-department-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/department-controller-test/create-department-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/create-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/create-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/create-department-test/http-response.adoc[]
+
+'''
+
+=== Modify Department
+해당 부서의 정보가 수정된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/modify-department-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/department-controller-test/modify-department-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/modify-department-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/department-controller-test/modify-department-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/modify-department-test/http-response.adoc[]
+
+'''
+
+=== Remove Department
+해당 부서의 정보가 삭제된다.
+
+==== Path Parameters
+include::{snippets}/department-controller-test/remove-department-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/department-controller-test/remove-department-test/http-request.adoc[]
+
+==== Response Example
+include::{snippets}/department-controller-test/remove-department-test/http-response.adoc[]
+
+
+== User APIs
+
+=== Get User
+해당 사용자가 조회된다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/get-user-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/get-user-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/user-controller-test/get-user-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/get-user-test/http-response.adoc[]
+
+'''
+
+=== Get User List
+해당 회사의 사용자 목록이 조회된다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/get-user-list-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/get-user-list-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/user-controller-test/get-user-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/get-user-list-test/http-response.adoc[]
+
+'''
+
+=== Create User
+해당 사용자가 추가된다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/create-user-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/user-controller-test/create-user-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/create-user-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/user-controller-test/create-user-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/create-user-test/http-response.adoc[]
+
+'''
+
+=== Modify User
+해당 사용자 정보가 수정된다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/modify-user-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/user-controller-test/modify-user-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/modify-user-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/user-controller-test/modify-user-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/modify-user-test/http-response.adoc[]
+
+'''
+
+=== Remove User
+해당 사용자 정보가 삭제된다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/remove-user-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/remove-user-test/http-request.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/remove-user-test/http-response.adoc[]
+
+'''
+
+=== Check Exist User Email
+해당 사용자 email 이 존재하는지 확인한다.
+
+==== Path Parameters
+include::{snippets}/user-controller-test/exist-email-test/custom-path-param-fields.adoc[]
+
+==== Request Parameters
+include::{snippets}/user-controller-test/exist-email-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/user-controller-test/exist-email-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/user-controller-test/exist-email-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/user-controller-test/exist-email-test/http-response.adoc[]

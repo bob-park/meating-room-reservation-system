@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
 import com.m2rs.userservice.model.api.department.ModifyDepartmentRequest;
 import com.m2rs.userservice.model.entity.base.BaseTimeEntity;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -39,9 +40,12 @@ public class Department extends BaseTimeEntity {
     private List<User> users = new ArrayList<>();
 
     @Builder
-    private Department(Long id, String name) {
+    private Department(Long id, String name, LocalDateTime cratedDate,
+        LocalDateTime lastModifiedDate) {
         this.id = id;
         this.name = name;
+        this.createdDate = cratedDate;
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public void setCompany(Company company) {

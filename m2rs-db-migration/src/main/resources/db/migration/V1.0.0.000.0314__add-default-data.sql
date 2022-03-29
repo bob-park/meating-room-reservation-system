@@ -37,7 +37,7 @@ values (1, 1, 1),
 -- default resources
 insert into m2rs_db.resources (id, resource_name, resource_kind, http_method, order_num, resource_type)
 values  (1, '/admin/**', 'PATH', null, 1, 'URL'),
-        (1011, '^/company/(\\d+)', 'REGEX', null, 1011, 'URL'),
+        (1011, '^/company/(\\d+)', 'REGEX', 'PUT', 1011, 'URL'),
         (1012, '^/company/(\\d+)', 'REGEX', 'GET', 1012, 'URL'),
         (1015, '^/company/(\\d+)/logo', 'REGEX', 'GET', 1015, 'URL'),
         (1101, '^/company/(\\d+)/user', 'REGEX', 'POST', 1101, 'URL'),
@@ -51,7 +51,7 @@ values  (1, '/admin/**', 'PATH', null, 1, 'URL'),
 -- default resources_roles
 insert into m2rs_db.resources_roles (id, resource_id, role_id)
 values  (1, 1, 1),
-        (1011, 1011, 1),
+        (1011, 1011, 2),
         (1101, 1101, 2),
         (1105, 1105, 3),
         (1110, 1110, 3),
