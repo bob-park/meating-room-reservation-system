@@ -5,6 +5,7 @@ import static com.m2rs.core.commons.model.api.response.ApiResult.ok;
 import com.m2rs.core.commons.model.api.response.ApiResult;
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
+import com.m2rs.userservice.model.api.user.CheckExistEmailResponse;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.SearchUserRequest;
@@ -69,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping(path = "exist/email")
-    public ApiResult<Boolean> existEmail(@PathVariable Long comId, @RequestParam String email) {
+    public ApiResult<CheckExistEmailResponse> existEmail(@PathVariable Long comId, @RequestParam String email) {
         return ok(userService.isExistEmail(Id.of(Company.class, comId), email));
     }
 

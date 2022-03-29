@@ -11,6 +11,7 @@ import com.m2rs.core.commons.model.api.response.Pagination;
 import com.m2rs.core.commons.model.service.page.ServicePage;
 import com.m2rs.core.model.Id;
 import com.m2rs.core.security.model.RoleType;
+import com.m2rs.userservice.model.api.user.CheckExistEmailResponse;
 import com.m2rs.userservice.model.api.user.CreateUserRequest;
 import com.m2rs.userservice.model.api.user.ModifyUserRequest;
 import com.m2rs.userservice.model.api.user.SearchUserRequest;
@@ -204,11 +205,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isExistEmail(Id<Company, Long> comId, String email) {
+    public CheckExistEmailResponse isExistEmail(Id<Company, Long> comId, String email) {
 
         checkNotNull(comId, "comId must be provided.");
         checkArgument(StringUtils.isNotBlank(email), "email must be provided.");
 
-        return userRepository.isExistEmail(comId, email);
+        boolean result = userRepository.isExistEmail(comId, email);
+
+        return CheckExistEmailResponse.builder()
+            .exist(result)
+            .build();
     }
 }
