@@ -2,8 +2,8 @@ package com.m2rs.meetingroomservice.model.entity;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 
-import com.m2rs.meetingroomservice.model.api.meetingroom.ModifyMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.entity.base.BaseTimeEntity;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -44,6 +44,8 @@ public class MeetingRoom extends BaseTimeEntity {
         this.comId = comId;
         this.name = name;
         this.isActive = defaultIfNull(isActive, true);
+
+        this.createdDate = LocalDateTime.now();
     }
 
     public void modifyName(String updateName) {
