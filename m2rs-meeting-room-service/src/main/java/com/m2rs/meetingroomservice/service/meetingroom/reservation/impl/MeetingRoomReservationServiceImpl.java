@@ -1,6 +1,7 @@
 package com.m2rs.meetingroomservice.service.meetingroom.reservation.impl;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkArgument;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 import com.m2rs.core.commons.exception.NotFoundException;
 import com.m2rs.core.model.Id;
@@ -16,7 +17,6 @@ import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
 import com.m2rs.meetingroomservice.repository.meetingroom.MeetingRoomRepository;
 import com.m2rs.meetingroomservice.repository.meetingroom.reservation.MeetingRoomReservationRepository;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
 import java.util.Objects;
@@ -40,9 +40,10 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
     public MeetingRoomReservationResponse createReservation(Id<MeetingRoom, Long> mrId,
         CreateMeetingRoomReservationRequest reservationRequest) {
 
-        checkNotNull(mrId, "mrId must be provided.");
-        checkNotNull(reservationRequest.getStartDate(), "startDate must be provided.");
-        checkNotNull(reservationRequest.getEndDate(), "endDate must be provided.");
+        checkArgument(isNotEmpty(mrId), "mrId must be provided.");
+        checkArgument(isNotEmpty(reservationRequest.getTitle()), "title must be provided.");
+        checkArgument(isNotEmpty(reservationRequest.getStartDate()), "startDate must be provided.");
+        checkArgument(isNotEmpty(reservationRequest.getEndDate()), "endDate must be provided.");
 
         MeetingRoom meetingRoom = meetingRoomRepository.findById(mrId.value())
             .orElseThrow(() ->
@@ -59,43 +60,33 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
                 reservationRequest.getEndDate());
         }
 
-        MeetingRoomReservation savedReservation =
-            meetingRoomReservationRepository.save(MeetingRoomReservation.builder()
-                .meetingRoom(meetingRoom)
-                .startDate(reservationRequest.getStartDate())
-                .endDate(reservationRequest.getEndDate())
-                .build());
-
-        return MeetingRoomReservationResponse.builder()
-            .id(savedReservation.getId())
-            .userId(savedReservation.getUserId())
-            .mrId(savedReservation.getMeetingRoom().getId())
-            .startDate(savedReservation.getStartDate())
-            .endDate(savedReservation.getEndDate())
-            .createdDate(savedReservation.getCreatedDate())
-            .lastModifiedDate(savedReservation.getLastModifiedDate())
+        MeetingRoomReservation reservation = MeetingRoomReservation.builder()
+            .title(reservationRequest.getTitle())
+            .description(reservationRequest.getDescription())
+            .numberOfUsers(reservationRequest.getNumberOfUsers())
+            .startDate(reservationRequest.getStartDate())
+            .endDate(reservationRequest.getEndDate())
             .build();
+
+        reservation.setMeetingRoom(meetingRoom);
+
+        MeetingRoomReservation savedReservation =
+            meetingRoomReservationRepository.save(reservation);
+
+        return toResponse(savedReservation);
     }
 
     @Override
     public List<MeetingRoomReservationResponse> searchReservation(Id<MeetingRoom, Long> mrId,
         SearchMeetingRoomReservationRequest searchRequest) {
 
-        checkNotNull(mrId, "mrId must be provided.");
+        checkArgument(isNotEmpty(mrId), "mrId must be provided.");
 
         List<MeetingRoomReservation> result =
             meetingRoomReservationRepository.search(searchRequest.getQueryCondition(mrId));
 
         return result.stream()
-            .map(item -> MeetingRoomReservationResponse.builder()
-                .id(item.getId())
-                .mrId(item.getMeetingRoom().getId())
-                .userId(item.getUserId())
-                .startDate(item.getStartDate())
-                .endDate(item.getEndDate())
-                .createdDate(item.getCreatedDate())
-                .lastModifiedDate(item.getLastModifiedDate())
-                .build())
+            .map(this::toResponse)
             .collect(Collectors.toList());
     }
 
@@ -104,8 +95,8 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
     public MeetingRoomReservationResponse modifyReservation(Id<MeetingRoom, Long> mrId,
         Id<MeetingRoomReservation, Long> mrrId, ModifyMeetingRoomReservationRequest modifyRequest) {
 
-        checkNotNull(mrId, "mrId must be provided.");
-        checkNotNull(mrrId, "mrrId must be provided.");
+        checkArgument(isNotEmpty(mrId), "mrId must be provided.");
+        checkArgument(isNotEmpty(mrrId), "mrrId must be provided.");
 
         meetingRoomRepository.findById(mrId.value())
             .orElseThrow(() -> new NotFoundException(MeetingRoom.class, mrId.value()));
@@ -134,15 +125,7 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
 
         meetingRoomReservation.modify(modifyRequest);
 
-        return MeetingRoomReservationResponse.builder()
-            .id(meetingRoomReservation.getId())
-            .userId(meetingRoomReservation.getUserId())
-            .mrId(meetingRoomReservation.getMeetingRoom().getId())
-            .startDate(meetingRoomReservation.getStartDate())
-            .endDate(meetingRoomReservation.getEndDate())
-            .createdDate(meetingRoomReservation.getCreatedDate())
-            .lastModifiedDate(meetingRoomReservation.getLastModifiedDate())
-            .build();
+        return toResponse(meetingRoomReservation);
     }
 
     @Transactional
@@ -150,7 +133,7 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
     public MeetingRoomReservationResponse removeReservation(
         Id<MeetingRoomReservation, Long> mrrId) {
 
-        checkNotNull(mrrId, "mrrId must be provided");
+        checkArgument(isNotEmpty(mrrId), "mrrId must be provided");
 
         MeetingRoomReservation meetingRoomReservation = meetingRoomReservationRepository.findById(
                 mrrId.value())
@@ -166,6 +149,21 @@ public class MeetingRoomReservationServiceImpl implements MeetingRoomReservation
 
         return MeetingRoomReservationResponse.builder()
             .id(meetingRoomReservation.getId())
+            .build();
+    }
+
+    private MeetingRoomReservationResponse toResponse(MeetingRoomReservation entity) {
+        return MeetingRoomReservationResponse.builder()
+            .id(entity.getId())
+            .userId(entity.getUserId())
+            .mrId(entity.getMeetingRoom().getId())
+            .title(entity.getTitle())
+            .description(entity.getDescription())
+            .numberOfUsers(entity.getNumberOfUsers())
+            .startDate(entity.getStartDate())
+            .endDate(entity.getEndDate())
+            .createdDate(entity.getCreatedDate())
+            .lastModifiedDate(entity.getLastModifiedDate())
             .build();
     }
 }

@@ -19,7 +19,7 @@ public class GlobalControllerAdvice {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({IllegalArgumentException.class, DataException.class})
-    public <T> ApiResult<T> badRequest(IllegalArgumentException e) {
+    public <T> ApiResult<T> badRequest(RuntimeException e) {
         log.warn(e.getMessage());
 
         return error(e);
