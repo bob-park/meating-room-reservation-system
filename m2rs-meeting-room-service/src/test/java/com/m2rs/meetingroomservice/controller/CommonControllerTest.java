@@ -1,4 +1,4 @@
-package com.m2rs.m2rsmeetingroomservice.controller;
+package com.m2rs.meetingroomservice.controller;
 
 import static com.m2rs.core.document.utils.SnippetUtils.commonResponseBodyFields;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -27,7 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class CommonControllerTest {
 
