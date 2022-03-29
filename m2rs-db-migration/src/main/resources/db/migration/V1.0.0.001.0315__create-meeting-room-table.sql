@@ -15,12 +15,15 @@ create table meeting_rooms
 -- meeting_room_reservations
 create table meeting_room_reservations
 (
-    id                 bigint   not null primary key,
-    user_id            bigint   not null,
-    mr_id              bigint   not null,
-    start_date         datetime not null,
-    end_date           datetime not null,
-    created_date       datetime not null default now(),
+    id                 bigint       not null primary key,
+    user_id            bigint       not null,
+    mr_id              bigint       not null,
+    title              varchar(255) not null,
+    description        varchar(2000),
+    numberOfUsers      int          not null default 2,
+    start_date         datetime     not null,
+    end_date           datetime     not null,
+    created_date       datetime     not null default now(),
     last_modified_date datetime,
 
     foreign key (user_id) references users (id),
