@@ -1,0 +1,52 @@
+= M2RS #_Meeting Room Service_# API Docs
+:toc: left
+:toc-title: INDEX
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectlinks:
+:docinfo: shared-head
+
+[[introduction]]
+== 소개
+
+이 API Docs 는 `User Service` API Guide 이다.
+
+[[common]]
+== Commons
+
+`User Service` API 의 Response 표준은 아래와 같다.
+
+=== Response 필드
+
+include::{snippets}/commons-response/custom-response-fields.adoc[]
+
+[[rest_api_doc]]
+= APIs
+'''
+
+== Meeting Room APIs
+
+=== Create Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 추가 된다.
+
+==== Request Body
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/http-response.adoc[]
+
+'''
+
+
+
