@@ -2,7 +2,6 @@ package com.m2rs.meetingroomservice.controller.meetingroom;
 
 import static com.m2rs.core.document.utils.SnippetUtils.customRequestBodyFields;
 import static com.m2rs.core.document.utils.SnippetUtils.customResponseBodyFields;
-import static com.m2rs.core.document.utils.SnippetUtils.getDefaultHeaders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -82,7 +81,6 @@ class MeetingRoomControllerTest extends CommonControllerTest {
             .andDo(document.document(
                 customRequestBodyFields(MeetingRoomRequestBodyFields.CREATE_REQUEST_FIELDS),
                 customResponseBodyFields(MeetingRoomResponseBodyFields.MEETING_ROOM_RESPONSE)));
-
     }
 
 
