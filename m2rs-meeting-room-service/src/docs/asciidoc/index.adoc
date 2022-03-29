@@ -28,6 +28,46 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 
 == Meeting Room APIs
 
+=== Get Meeting Room
+
+==== 설명
+
+해당 회의실 단일 정보가 조회 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/http-response.adoc[]
+
+== Meeting Room APIs
+
+=== Get Meeting Room List
+
+==== 설명
+
+해당 회의실 목록가 조회 된다.
+
+==== Request Parameters
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/http-response.adoc[]
+
+'''
+
 === Create Meeting Room
 
 ==== 설명
@@ -48,5 +88,66 @@ include::{snippets}/meeting-room-controller-test/create-meeting-room-test/http-r
 
 '''
 
+
+=== Modify Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 수정 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/http-response.adoc[]
+
+'''
+
+
+=== Inactive Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 비활성화 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/http-request.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/http-response.adoc[]
+
+'''
+
+=== Active Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 비활성화 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/http-response.adoc[]
+
+'''
 
 
