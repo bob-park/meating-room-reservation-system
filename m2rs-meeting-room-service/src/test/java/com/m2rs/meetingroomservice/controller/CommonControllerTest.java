@@ -10,10 +10,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.m2rs.core.document.utils.SnippetUtils;
+import com.m2rs.core.security.model.JwtClaim;
+import com.m2rs.core.security.model.JwtClaimInfo;
+import com.m2rs.core.security.model.RoleType;
+import com.m2rs.core.security.utils.JwtUtils;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
@@ -26,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class CommonControllerTest {
 
@@ -35,6 +44,9 @@ public abstract class CommonControllerTest {
 
     @Autowired
     protected ObjectMapper mapper;
+
+    @Autowired
+    JwtClaimInfo jwtClaimInfo;
 
     @BeforeEach
     void setup(WebApplicationContext context,
@@ -103,6 +115,38 @@ public abstract class CommonControllerTest {
 
     protected String toJson(Object obj) throws JsonProcessingException {
         return mapper.writeValueAsString(obj);
+    }
+
+    protected HttpHeaders getDefaultHeaders() {
+
+        HttpHeaders defaultHeaders = SnippetUtils.getDefaultHeaders();
+
+        Map<String, String> defaultHeadersMap = defaultHeaders.toSingleValueMap();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        for (Entry<String, String> entry : defaultHeadersMap.entrySet()) {
+            String headerName = entry.getKey();
+            String headerValue = entry.getValue();
+
+            headers.add(headerName, headerValue);
+        }
+
+        headers.setBearerAuth(generateJwt());
+
+        return headers;
+
+    }
+
+    private String generateJwt() {
+        return JwtUtils.newToken(JwtClaim.builder()
+                .id(1L)
+                .comId(1L)
+                .departmentId(1L)
+                .name("test-user")
+                .roleType(RoleType.ROLE_USER)
+                .build().toClaims(),
+            jwtClaimInfo);
     }
 
 }
