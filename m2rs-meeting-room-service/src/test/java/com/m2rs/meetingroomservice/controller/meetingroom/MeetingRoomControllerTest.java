@@ -92,8 +92,6 @@ class MeetingRoomControllerTest extends CommonControllerTest {
         when(meetingRoomRepository.search(any())).thenReturn(
             Collections.singletonList(mockActiveMeetingRoom));
 
-
-
     }
 
     @Test
