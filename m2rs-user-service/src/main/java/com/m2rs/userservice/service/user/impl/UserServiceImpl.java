@@ -192,7 +192,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse removeUser(Id<User, Long> id) {
 
-        checkNotNull(id, "id must be providex.");
+        checkNotNull(id, "id must be provided.");
 
         User user = userRepository.findById(id.value())
             .orElseThrow(() -> new NotFoundException(User.class, id.value()));
