@@ -40,28 +40,42 @@ public class MeetingRoomReservation extends BaseUserEntity {
     @JoinColumn(name = "mr_id")
     private MeetingRoom meetingRoom;
 
+    private String title;
+    private String description;
+
+    private Integer numberOfUsers;
+
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
     @Builder
-    private MeetingRoomReservation(Long id,
-        MeetingRoom meetingRoom, LocalDateTime startDate, LocalDateTime endDate) {
+    private MeetingRoomReservation(Long id, String title, String description, Integer numberOfUsers,
+        LocalDateTime startDate, LocalDateTime endDate) {
 
-        checkNotNull(meetingRoom, "meetingRoom must be provided.");
+        checkNotNull(title, "title must be provided.");
         checkNotNull(startDate, "startDate must be provided.");
         checkNotNull(endDate, "endDate must be provided.");
 
         checkArgument(startDate.isBefore(endDate), "startDate must be less than endDate.");
 
         this.id = id;
-        this.meetingRoom = meetingRoom;
+
+        this.title = title;
+        this.description = description;
+        this.numberOfUsers = defaultIfNull(numberOfUsers, 2);
+
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
     public void modify(ModifyMeetingRoomReservationRequest modifyRequest) {
-        this.startDate = modifyRequest.getStartDate();
-        this.endDate = modifyRequest.getEndDate();
+        this.title = defaultIfNull(modifyRequest.getTitle(), this.title);
+        this.description = defaultIfNull(modifyRequest.getDescription(), this.description);
+
+        this.numberOfUsers = defaultIfNull(modifyRequest.getNumberOfUsers(), this.numberOfUsers);
+
+        this.startDate = defaultIfNull(modifyRequest.getStartDate(), this.startDate);
+        this.endDate = defaultIfNull(modifyRequest.getEndDate(), this.endDate);
     }
 
     public void setMeetingRoom(MeetingRoom meetingRoom) {
