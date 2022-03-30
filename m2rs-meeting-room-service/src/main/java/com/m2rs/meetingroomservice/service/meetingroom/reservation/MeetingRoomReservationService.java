@@ -7,7 +7,6 @@ import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeeti
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.SearchMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import java.util.List;
 
 public interface MeetingRoomReservationService {

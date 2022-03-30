@@ -10,7 +10,6 @@ import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.ModifyMeeti
 import com.m2rs.meetingroomservice.model.api.meetingroom.reservation.SearchMeetingRoomReservationRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoomReservation;
-import com.m2rs.meetingroomservice.repository.meetingroom.reservation.query.SearchMeetingRoomReservationQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.reservation.MeetingRoomReservationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +31,7 @@ public class MeetingRoomReservationController {
 
     private final MeetingRoomReservationService meetingRoomReservationService;
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "")
     public ApiResult<MeetingRoomReservationResponse> createReservation(@PathVariable Long mrId,
         @RequestBody CreateMeetingRoomReservationRequest reservationRequest) {
