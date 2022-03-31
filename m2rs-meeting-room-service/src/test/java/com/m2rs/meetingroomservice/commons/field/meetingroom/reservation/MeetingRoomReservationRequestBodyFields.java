@@ -36,8 +36,7 @@ public class MeetingRoomReservationRequestBodyFields {
             .type(JsonFieldType.NUMBER)
             .optional(),
         fieldWithPath("startDate").description("시작 시간")
-            .type(JsonFieldType.STRING)
-            .attributes(DocumentFormatGenerator.generate(DateTimeFormatter.ISO_DATE_TIME)),
+            .type(JsonFieldType.STRING),
         fieldWithPath("endDate").description("종료 시간")
             .type(JsonFieldType.STRING)
     };

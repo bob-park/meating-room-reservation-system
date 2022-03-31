@@ -148,8 +148,8 @@ class MeetingRoomReservationControllerTest extends CommonControllerTest {
 
     @ParameterizedTest
     @MethodSource("mockReservationTestPathVariables")
-    @DisplayName("remove meeting room reservation")
-    void removeMeetingRoomReservation(long mrId, long mrrId) throws Exception {
+    @DisplayName("remove meeting room reservation test")
+    void removeMeetingRoomReservationTest(long mrId, long mrrId) throws Exception {
 
         mockMvc.perform(delete(RESERVATION_API + "/{mrrId}", mrId, mrrId)
                 .headers(getDefaultHeaders()))
