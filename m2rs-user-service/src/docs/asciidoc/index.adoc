@@ -25,6 +25,27 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 = APIs
 '''
 
+== Login APIs
+
+=== Login
+
+==== 설명
+해당 사용자가 인증되며, Access Token 을 반환한다.
+
+==== Request Body
+include::{snippets}/login-controller-test/login-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/login-controller-test/login-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/login-controller-test/login-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/login-controller-test/login-test/http-response.adoc[]
+
+
+
 == Company APIs
 
 === Get Company
