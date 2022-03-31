@@ -9,7 +9,6 @@ import com.m2rs.meetingroomservice.model.api.meetingroom.MeetingRoomResponse;
 import com.m2rs.meetingroomservice.model.api.meetingroom.ModifyMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.api.meetingroom.SearchMeetingRoomRequest;
 import com.m2rs.meetingroomservice.model.entity.MeetingRoom;
-import com.m2rs.meetingroomservice.repository.meetingroom.query.SearchMeetingRoomQueryCondition;
 import com.m2rs.meetingroomservice.service.meetingroom.MeetingRoomService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

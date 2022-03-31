@@ -1,14 +1,19 @@
 package com.m2rs.meetingroomservice.model.api.meetingroom;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CreateMeetingRoomRequest {
 
-    private final Long comId;
-    private final String name;
+    private Long comId;
 
-    public CreateMeetingRoomRequest(Long comId, String name) {
+    private String name;
+
+    @Builder
+    private CreateMeetingRoomRequest(Long comId, String name) {
         this.comId = comId;
         this.name = name;
     }

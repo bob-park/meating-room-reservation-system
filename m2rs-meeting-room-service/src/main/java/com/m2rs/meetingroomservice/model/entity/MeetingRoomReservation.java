@@ -66,6 +66,8 @@ public class MeetingRoomReservation extends BaseUserEntity {
 
         this.startDate = startDate;
         this.endDate = endDate;
+
+        this.createdDate = LocalDateTime.now();
     }
 
     public void modify(ModifyMeetingRoomReservationRequest modifyRequest) {

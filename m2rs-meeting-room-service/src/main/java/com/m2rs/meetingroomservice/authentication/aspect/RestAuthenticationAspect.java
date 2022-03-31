@@ -38,6 +38,10 @@ public class RestAuthenticationAspect {
 
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
+        if (StringUtils.isBlank(header)) {
+            return joinPoint.proceed();
+        }
+
         String token = header.replace(AppConfiguration.BEARER_PREFIX, "");
 
         boolean isExistToken = StringUtils.isNotBlank(token);

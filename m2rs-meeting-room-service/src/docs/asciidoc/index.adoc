@@ -1,0 +1,232 @@
+= M2RS #_Meeting Room Service_# API Docs
+:toc: left
+:toc-title: INDEX
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toclevels: 2
+:sectlinks:
+:docinfo: shared-head
+
+[[introduction]]
+== 소개
+
+이 API Docs 는 `User Service` API Guide 이다.
+
+[[common]]
+== Commons
+
+`User Service` API 의 Response 표준은 아래와 같다.
+
+=== Response 필드
+
+include::{snippets}/commons-response/custom-response-fields.adoc[]
+
+[[rest_api_doc]]
+= APIs
+'''
+
+== Meeting Room APIs
+
+=== Get Meeting Room
+
+==== 설명
+
+해당 회의실 단일 정보가 조회 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-test/http-response.adoc[]
+
+'''
+
+=== Get Meeting Room List
+
+==== 설명
+
+해당 회의실 목록가 조회 된다.
+
+==== Request Parameters
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/get-meeting-room-list-test/http-response.adoc[]
+
+'''
+
+=== Create Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 추가 된다.
+
+==== Request Body
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/create-meeting-room-test/http-response.adoc[]
+
+'''
+
+
+=== Modify Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 수정 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/modify-meeting-room-test/http-response.adoc[]
+
+'''
+
+
+=== Inactive Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 비활성화 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/http-request.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/inactive-meeting-room-test/http-response.adoc[]
+
+'''
+
+=== Active Meeting Room
+
+==== 설명
+
+해당 회의실 정보가 비활성화 된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-controller-test/active-meeting-room-test/http-response.adoc[]
+
+
+== Meeting Room Reservation APIs
+
+=== Get Meeting Room Reservation List
+
+==== 설명
+조건에 해당하는 회의실 예약이 조회된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-reservation-controller-test/get-meeting-room-reservation-list-test/custom-path-param-fields.adoc[]
+
+==== Request Parameters
+include::{snippets}/meeting-room-reservation-controller-test/get-meeting-room-reservation-list-test/custom-request-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-reservation-controller-test/get-meeting-room-reservation-list-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-reservation-controller-test/get-meeting-room-reservation-list-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/meeting-room-reservation-controller-test/get-meeting-room-reservation-list-test/http-response.adoc[]
+
+'''
+
+=== Create Meeting Room Reservation
+
+==== 설명
+해당 회의실 예약이 추가된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-reservation-controller-test/create-meeting-room-reservation-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/meeting-room-reservation-controller-test/create-meeting-room-reservation-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-reservation-controller-test/create-meeting-room-reservation-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-reservation-controller-test/create-meeting-room-reservation-test/custom-response-fields-result.adoc[]
+
+==== Response example
+include::{snippets}/meeting-room-reservation-controller-test/create-meeting-room-reservation-test/http-response.adoc[]
+
+'''
+
+=== Modify Meeting Room Reservation
+
+==== 설명
+해당 회의실 예약 정보가 수정된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-reservation-controller-test/modify-meeting-room-reservation-test/custom-path-param-fields.adoc[]
+
+==== Request Body
+include::{snippets}/meeting-room-reservation-controller-test/modify-meeting-room-reservation-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-reservation-controller-test/modify-meeting-room-reservation-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/meeting-room-reservation-controller-test/modify-meeting-room-reservation-test/custom-response-fields-result.adoc[]
+
+==== Response example
+include::{snippets}/meeting-room-reservation-controller-test/modify-meeting-room-reservation-test/http-response.adoc[]
+
+'''
+
+=== Remove Meeting Room Reservation
+
+==== 설명
+해당 회의실 예약 정보가 삭제된다.
+
+==== Path Parameters
+include::{snippets}/meeting-room-reservation-controller-test/remove-meeting-room-reservation-test/custom-path-param-fields.adoc[]
+
+==== Request Example
+include::{snippets}/meeting-room-reservation-controller-test/remove-meeting-room-reservation-test/http-request.adoc[]
+
+==== Response example
+include::{snippets}/meeting-room-reservation-controller-test/remove-meeting-room-reservation-test/http-response.adoc[]

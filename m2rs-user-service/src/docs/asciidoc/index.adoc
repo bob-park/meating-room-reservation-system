@@ -25,6 +25,27 @@ include::{snippets}/commons-response/custom-response-fields.adoc[]
 = APIs
 '''
 
+== Login APIs
+
+=== Login
+
+==== 설명
+해당 사용자가 인증되며, Access Token 을 반환한다.
+
+==== Request Body
+include::{snippets}/login-controller-test/login-test/custom-request-fields.adoc[]
+
+==== Request Example
+include::{snippets}/login-controller-test/login-test/http-request.adoc[]
+
+==== Response Body
+include::{snippets}/login-controller-test/login-test/custom-response-fields-result.adoc[]
+
+==== Response Example
+include::{snippets}/login-controller-test/login-test/http-response.adoc[]
+
+
+
 == Company APIs
 
 === Get Company
@@ -54,6 +75,8 @@ include::{snippets}/company-controller-test/get-company-test/http-response.adoc[
 
 === Modify Company
 
+
+====  설명
 해당 회사 정보가 수정된다.
 
 
@@ -80,6 +103,7 @@ include::{snippets}/company-controller-test/modify-company-test/http-response.ad
 
 === Create Company
 
+====  설명
 해당 회사 정보가 추가 된다.
 
 ==== Request Body
@@ -98,6 +122,7 @@ include::{snippets}/admin-company-controller-test/create-company-test/http-respo
 
 === Remove Company
 
+====  설명
 해당 회사 정보가 삭제 된다.
 
 ==== Path Parameters
@@ -114,6 +139,7 @@ include::{snippets}/admin-company-controller-test/remove-company-test/http-respo
 
 === Search Company List
 
+====  설명
 해당 회사 정보 목록이 조회된다.
 
 ==== Request Parameters
@@ -135,6 +161,7 @@ include::{snippets}/admin-company-controller-test/search-company-test/http-respo
 
 === Get Department List
 
+====  설명
 해당 회사의 부서 정보 목록이 조회된다.
 
 ==== Path Parameters
@@ -156,6 +183,8 @@ include::{snippets}/department-controller-test/get-list-test/http-response.adoc[
 '''
 
 === Get Department
+
+====  설명
 해당 부서 정보가 조회된다.
 
 ==== Path Parameters
@@ -173,6 +202,8 @@ include::{snippets}/department-controller-test/get-department-test/http-response
 '''
 
 === Create Department
+
+====  설명
 해당 부서의 정보가 생성된다.
 
 ==== Path Parameters
@@ -193,6 +224,8 @@ include::{snippets}/department-controller-test/create-department-test/http-respo
 '''
 
 === Modify Department
+
+====  설명
 해당 부서의 정보가 수정된다.
 
 ==== Path Parameters
@@ -213,6 +246,8 @@ include::{snippets}/department-controller-test/modify-department-test/http-respo
 '''
 
 === Remove Department
+
+====  설명
 해당 부서의 정보가 삭제된다.
 
 ==== Path Parameters
@@ -228,6 +263,8 @@ include::{snippets}/department-controller-test/remove-department-test/http-respo
 == User APIs
 
 === Get User
+
+====  설명
 해당 사용자가 조회된다.
 
 ==== Path Parameters
@@ -245,6 +282,8 @@ include::{snippets}/user-controller-test/get-user-test/http-response.adoc[]
 '''
 
 === Get User List
+
+====  설명
 해당 회사의 사용자 목록이 조회된다.
 
 ==== Path Parameters
@@ -262,6 +301,8 @@ include::{snippets}/user-controller-test/get-user-list-test/http-response.adoc[]
 '''
 
 === Create User
+
+====  설명
 해당 사용자가 추가된다.
 
 ==== Path Parameters
@@ -282,6 +323,8 @@ include::{snippets}/user-controller-test/create-user-test/http-response.adoc[]
 '''
 
 === Modify User
+
+====  설명
 해당 사용자 정보가 수정된다.
 
 ==== Path Parameters
@@ -302,6 +345,8 @@ include::{snippets}/user-controller-test/modify-user-test/http-response.adoc[]
 '''
 
 === Remove User
+
+====  설명
 해당 사용자 정보가 삭제된다.
 
 ==== Path Parameters
@@ -316,6 +361,8 @@ include::{snippets}/user-controller-test/remove-user-test/http-response.adoc[]
 '''
 
 === Check Exist User Email
+
+====  설명
 해당 사용자 email 이 존재하는지 확인한다.
 
 ==== Path Parameters
