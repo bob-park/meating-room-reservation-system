@@ -12,9 +12,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javax.servlet.Filter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
@@ -43,6 +45,10 @@ public abstract class CommonControllerTest {
     @Autowired
     protected ObjectMapper mapper;
 
+    @Autowired
+    @Qualifier("getRestLoginProcessingFilter")
+    private Filter securityFilterChain;
+
     @BeforeEach
     void setup(WebApplicationContext context,
         RestDocumentationContextProvider restDocumentationExtension) throws Exception {
@@ -59,6 +65,7 @@ public abstract class CommonControllerTest {
                     documentationConfiguration(restDocumentationExtension)
                         .uris())
                 .apply(SecurityMockMvcConfigurers.springSecurity())
+                .addFilter(securityFilterChain)
                 .alwaysDo(document)
                 .build();
 
