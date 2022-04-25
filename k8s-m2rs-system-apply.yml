@@ -13,6 +13,7 @@ metadata:
   name: m2rs-db
 spec:
   replicas: 1
+  serviceName: m2rs-db-service
   selector:
     matchLabels:
       app: m2rs-db
@@ -35,6 +36,7 @@ metadata:
   name: m2rs-zipkin
 spec:
   replicas: 1
+  serviceName: m2rs-db-service
   selector:
     matchLabels:
       app: m2rs-zipkin
