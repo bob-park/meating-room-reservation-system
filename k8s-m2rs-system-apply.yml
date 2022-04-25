@@ -1,5 +1,38 @@
+## db config
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: m2rs-db-config
+data:
+  MARIADB_ROOT_PASSWORD: hwpark12345!
+---
+## db
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
+metadata:
+  labels:
+    app: m2rs-db
+  name: m2rs-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-db
+  template:
+    metadata:
+      lagels:
+        app: m2rs-db
+    spec:
+      containers:
+        - name: m2rs-db
+          images: mariadb
+          envForm:
+            - configMapRef:
+                name: m2rs-db-config
+---
+## zipkin
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
   labels:
     app: m2rs-zipkin
@@ -11,9 +44,12 @@ spec:
       app: m2rs-zipkin
   template:
     metadata:
-      labels:
+      lagels:
         app: m2rs-zipkin
     spec:
       containers:
         - name: m2rs-zipkin
           images: openzipkin/zipkin
+---
+## service discovery
+
