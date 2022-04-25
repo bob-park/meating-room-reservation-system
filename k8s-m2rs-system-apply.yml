@@ -26,7 +26,7 @@ spec:
       containers:
         - name: m2rs-db
           images: mariadb
-          envForm:
+          envFrom:
             - configMapRef:
                 name: m2rs-db-config
 ---
