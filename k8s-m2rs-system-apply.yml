@@ -20,7 +20,7 @@ spec:
       app: m2rs-db
   template:
     metadata:
-      lagels:
+      labels:
         app: m2rs-db
     spec:
       containers:
