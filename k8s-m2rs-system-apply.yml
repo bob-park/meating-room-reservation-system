@@ -10,8 +10,6 @@ data:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  labels:
-    app: m2rs-db
   name: m2rs-db
 spec:
   replicas: 1
@@ -34,8 +32,6 @@ spec:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  labels:
-    app: m2rs-zipkin
   name: m2rs-zipkin
 spec:
   replicas: 1
