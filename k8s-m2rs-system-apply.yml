@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: m2rs-zipkin
+  name: m2rs-zipkin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-zipkin
+  template:
+    metadata:
+      labels:
+        app: m2rs-zipkin
+    spec:
+      containers:
+        - name: m2rs-zipkin
+          images: openzipkin/zipkin
