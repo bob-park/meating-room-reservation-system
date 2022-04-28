@@ -1,0 +1,32 @@
+## db
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: m2rs-discovery-service
+spec:
+  replicas: 1
+  serviceName: m2rs-discovery-service
+  selector:
+    matchLabels:
+      app: m2rs-discovery
+  template:
+    metadata:
+      labels:
+        app: m2rs-discovery
+    spec:
+      containers:
+        - name: m2rs-discovery-service
+          image: hwpark11/m2rs-discovery-service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: m2rs-discovery-service-domain
+spec:
+  selector:
+    app: m2rs-discovery
+  ports:
+    - name: http
+      port: 8761
+      targetPort: 8761
+  type: LoadBalancer
