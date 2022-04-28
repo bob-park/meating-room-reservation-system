@@ -1,0 +1,19 @@
+## zipkin
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: m2rs-zipkin
+spec:
+  replicas: 1
+  serviceName: m2rs-db-service
+  selector:
+    matchLabels:
+      app: m2rs-zipkin
+  template:
+    metadata:
+      labels:
+        app: m2rs-zipkin
+    spec:
+      containers:
+        - name: m2rs-zipkin
+          image: openzipkin/zipkin
