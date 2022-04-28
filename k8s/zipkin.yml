@@ -5,7 +5,7 @@ metadata:
   name: m2rs-zipkin
 spec:
   replicas: 1
-  serviceName: m2rs-db-service
+  serviceName: m2rs-zipkin-service
   selector:
     matchLabels:
       app: m2rs-zipkin
@@ -17,3 +17,16 @@ spec:
       containers:
         - name: m2rs-zipkin
           image: openzipkin/zipkin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: m2rs-zipkin-service-domain
+spec:
+  selector:
+    app: m2rs-zipkin
+  ports:
+    - name: http
+      port: 9411
+      targetPort: 9411
+  type: LoadBalancer
