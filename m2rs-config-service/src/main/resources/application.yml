@@ -7,15 +7,17 @@ spring:
   application:
     name: config-service
   ## Local file system
-  profiles:
-    active: native
+#  profiles:
+#    active: native
   cloud:
     config:
       server:
         ## Local file system
-        native:
-          search-locations:
-            - file:${config-path}
+#        native:
+#          search-locations:
+#            - file:${config-path}
+        git:
+          uri: ${config-git-uri}
 
 # eureka
 eureka:
