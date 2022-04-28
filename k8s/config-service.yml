@@ -1,0 +1,33 @@
+## db
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: m2rs-config-service
+spec:
+  replicas: 1
+  serviceName: m2rs-config-service
+  selector:
+    matchLabels:
+      app: m2rs-config
+  template:
+    metadata:
+      labels:
+        app: m2rs-config
+    spec:
+      containers:
+        - name: m2rs-config-service
+          image: hwpark11/m2rs-config-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-config-service-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: m2rs-config-service-domain
+spec:
+  selector:
+    app: m2rs-db
+  ports:
+    - port: 8888
+  clusterIP: None
