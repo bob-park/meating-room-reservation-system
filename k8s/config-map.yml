@@ -5,3 +5,12 @@ metadata:
   name: m2rs-db-config
 data:
   MARIADB_ROOT_PASSWORD: "12345"
+---
+## config service
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: m2rs-config-service-config
+data:
+  eureka-server-url: "http//m2rs-discovery-service-0:8761/eureka"
+  config-git-uri: "https://github.com/bob-park/meeting-room-reservation-system-config.git"
