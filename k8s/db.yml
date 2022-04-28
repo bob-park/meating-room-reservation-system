@@ -30,4 +30,4 @@ spec:
     app: m2rs-db
   ports:
     - port: 3306
-  clusterIP: none
+  clusterIP: None
