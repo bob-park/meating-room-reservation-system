@@ -2,10 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: m2rs-zipkin
+  labels:
+    app: m2rs-zipkin-service
+  name: m2rs-zipkin-service
 spec:
   replicas: 1
-  serviceName: m2rs-zipkin-service
   selector:
     matchLabels:
       app: m2rs-zipkin

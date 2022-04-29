@@ -2,10 +2,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: m2rs-api-gateway-service
   name: m2rs-api-gateway-service
 spec:
   replicas: 1
-  serviceName: m2rs-api-gateway-service
   selector:
     matchLabels:
       app: m2rs-api-gateway
