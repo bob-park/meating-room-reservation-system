@@ -70,7 +70,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${eureka-server-url}
+      defaultZone: ${EUREKA_SERVER_URL}
 
 logging:
   level:
