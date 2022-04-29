@@ -27,7 +27,7 @@ metadata:
   name: m2rs-config-service-domain
 spec:
   selector:
-    app: m2rs-db
+    app: m2rs-config
   ports:
     - name: http
       port: 8888
