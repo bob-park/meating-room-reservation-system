@@ -7,7 +7,6 @@ metadata:
   name: m2rs-discovery-service
 spec:
   replicas: 1
-  serviceName: m2rs-discovery-service
   selector:
     matchLabels:
       app: m2rs-discovery
