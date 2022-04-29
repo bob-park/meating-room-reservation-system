@@ -28,8 +28,8 @@ services:
     ports:
       - "8888:8888"
     environment:
-      eureka-server-url: http://m2rs-discovery-service:8761/eureka
-      config-path: /root/home/config
+      EUREKA_SERVER_URL: http://m2rs-discovery-service:8761/eureka
+      CONFIG_PATH: /root/home/config
     volumes:
       - "/Users/hwpark/Documents/hwpark-workspace/m2rs/config:/root/home/config"
     depends_on:
@@ -46,7 +46,7 @@ services:
     networks:
       - my-network
     environment:
-      config-server-url: http://m2rs-config-service:8888
+      CONFIG_SERVER_URL: http://m2rs-config-service:8888
     depends_on:
       m2rs-config-service:
         condition: service_healthy
@@ -63,8 +63,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      eureka-server-url: http://m2rs-discovery-service:8761/eureka
-      config-server-url: http://m2rs-config-service:8888
+      EUREKA_SERVER_URL: http://m2rs-discovery-service:8761/eureka
+      CONFIG_SERVER_URL: http://m2rs-config-service:8888
     depends_on:
       m2rs-config-service:
         condition: service_healthy
@@ -74,8 +74,8 @@ services:
     networks:
       - my-network
     environment:
-      eureka-server-url: http://m2rs-discovery-service:8761/eureka
-      config-server-url: http://m2rs-config-service:8888
+      EUREKA_SERVER_URL: http://m2rs-discovery-service:8761/eureka
+      CONFIG_SERVER_URL: http://m2rs-config-service:8888
     depends_on:
       m2rs-db-migration:
         condition: service_healthy
@@ -85,8 +85,8 @@ services:
     networks:
       - my-network
     environment:
-      eureka-server-url: http://m2rs-discovery-service:8761/eureka
-      config-server-url: http://m2rs-config-service:8888
+      EUREKA_SERVER_URL: http://m2rs-discovery-service:8761/eureka
+      CONFIG_SERVER_URL: http://m2rs-config-service:8888
     depends_on:
       m2rs-db-migration:
         condition: service_healthy
