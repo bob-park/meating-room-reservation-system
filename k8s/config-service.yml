@@ -19,7 +19,7 @@ spec:
           image: hwpark11/m2rs-config-service
           envFrom:
             - configMapRef:
-                name: m2rs-config-service-config
+                name: m2rs-common-config
 ---
 apiVersion: v1
 kind: Service
