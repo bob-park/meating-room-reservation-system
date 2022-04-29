@@ -2,6 +2,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: m2rs-discovery-service
   name: m2rs-discovery-service
 spec:
   replicas: 1
