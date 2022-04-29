@@ -13,4 +13,5 @@ metadata:
   name: m2rs-common-config
 data:
   EUREKA_SERVER_URL: "http://m2rs-discovery-service-domain:8761/eureka"
+  CONFIG_SERVER_URL: "http://m2rs-config-service-domain:8888"
   CONFIG_GIT_URI: "https://github.com/bob-park/meeting-room-reservation-system-config.git"
