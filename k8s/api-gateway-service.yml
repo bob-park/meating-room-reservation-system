@@ -18,6 +18,9 @@ spec:
       containers:
         - name: m2rs-discovery-service
           image: hwpark11/m2rs-api-gateway-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-common-config
 ---
 apiVersion: v1
 kind: Service
