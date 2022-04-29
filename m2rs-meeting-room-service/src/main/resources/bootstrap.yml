@@ -1,5 +1,5 @@
 spring:
   cloud:
     config:
-      uri: ${config-server-url}
+      uri: ${CONFIG_SERVER_URL}
       name: meeting-room-service
