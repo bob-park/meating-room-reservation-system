@@ -1,6 +1,6 @@
 ## db
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: m2rs-db-migration-service
 spec:
