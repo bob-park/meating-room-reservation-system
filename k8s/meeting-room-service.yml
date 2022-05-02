@@ -1,0 +1,23 @@
+## user service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: m2rs-meeting-room-service
+  name: m2rs-meeting-room-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-meeting-room
+  template:
+    metadata:
+      labels:
+        app: m2rs-meeting-room
+    spec:
+      containers:
+        - name: m2rs-meeting-room-service
+          image: hwpark11/m2rs-meeting-room-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-common-config

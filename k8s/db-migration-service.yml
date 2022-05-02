@@ -1,0 +1,23 @@
+## db
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: m2rs-db-migration-service
+  name: m2rs-db-migration-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-db-migration
+  template:
+    metadata:
+      labels:
+        app: m2rs-db-migration
+    spec:
+      containers:
+        - name: m2rs-db-migration-service
+          image: hwpark11/m2rs-db-migration-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-common-config

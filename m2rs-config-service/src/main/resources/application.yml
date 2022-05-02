@@ -17,7 +17,7 @@ spring:
 #          search-locations:
 #            - file:${config-path}
         git:
-          uri: ${config-git-uri}
+          uri: ${CONFIG_GIT_URI}
 
 # eureka
 eureka:
@@ -27,7 +27,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: ${eureka-server-url}
+      defaultZone: ${EUREKA_SERVER_URL}
 
 ## management
 management:

@@ -1,0 +1,23 @@
+## user service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: m2rs-user-service
+  name: m2rs-user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-user
+  template:
+    metadata:
+      labels:
+        app: m2rs-user
+    spec:
+      containers:
+        - name: m2rs-user-service
+          image: hwpark11/m2rs-user-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-common-config

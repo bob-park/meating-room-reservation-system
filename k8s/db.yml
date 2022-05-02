@@ -1,11 +1,12 @@
 ## db
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
+  labels:
+    app: m2rs-db-service
   name: m2rs-db-service
 spec:
   replicas: 1
-  serviceName: m2rs-db-service
   selector:
     matchLabels:
       app: m2rs-db

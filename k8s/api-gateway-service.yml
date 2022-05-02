@@ -1,0 +1,36 @@
+## api gateway service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: m2rs-api-gateway-service
+  name: m2rs-api-gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: m2rs-api-gateway
+  template:
+    metadata:
+      labels:
+        app: m2rs-api-gateway
+    spec:
+      containers:
+        - name: m2rs-api-gateway-service
+          image: hwpark11/m2rs-api-gateway-service
+          envFrom:
+            - configMapRef:
+                name: m2rs-common-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: m2rs-api-gateway-service-domain
+spec:
+  selector:
+    app: m2rs-api-gateway
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  type: LoadBalancer

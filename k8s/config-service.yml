@@ -1,11 +1,12 @@
 ## db
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
+  labels:
+    app: m2rs-config-service
   name: m2rs-config-service
 spec:
   replicas: 1
-  serviceName: m2rs-config-service
   selector:
     matchLabels:
       app: m2rs-config
@@ -27,9 +28,9 @@ metadata:
   name: m2rs-config-service-domain
 spec:
   selector:
-    app: m2rs-db
+    app: m2rs-config
   ports:
     - name: http
       port: 8888
       targetPort: 8888
-  clusterIP: None
+  type: ClusterIP
