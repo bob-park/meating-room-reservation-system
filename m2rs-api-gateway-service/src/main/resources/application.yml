@@ -55,7 +55,7 @@ spring:
             - Path=/meeting-room-service/docs/**
             - Method=GET
           filters:
-            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - RewritePath=/meeting-room-service/(?<segment>.*), /$\{segment}
         - id: meeting-room-service # meeting-room-service
           uri: lb://meeting-room-service
           predicates:
