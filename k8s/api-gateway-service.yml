@@ -16,7 +16,7 @@ spec:
         app: m2rs-api-gateway
     spec:
       containers:
-        - name: m2rs-discovery-service
+        - name: m2rs-api-gateway-service
           image: hwpark11/m2rs-api-gateway-service
           envFrom:
             - configMapRef:
