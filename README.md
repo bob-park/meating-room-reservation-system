@@ -16,7 +16,7 @@
 #### Discovery
 * `Netflix Eureka` 
 
-#### `String Cloud`
+#### `Spring Cloud`
 * Config Server / Client
 * Resilience4j
 * openfeign
